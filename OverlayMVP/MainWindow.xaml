@@ -1,0 +1,55 @@
+<Window x:Class="OverlayMVP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ARC Overlay"
+        Width="520"
+        Height="330"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False">
+  <Border Background="#AA0A1A2F" CornerRadius="14" BorderThickness="1" BorderBrush="#44FFFFFF" Padding="14">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+
+      <DockPanel Grid.Row="0">
+        <TextBlock Text="ARC MISSION OVERLAY" FontSize="16" FontWeight="Bold" Foreground="#FF9AD1FF" DockPanel.Dock="Left"/>
+        <TextBlock Text="{Binding ConnectionStatus}" Foreground="#DDFFFFFF" DockPanel.Dock="Right"/>
+      </DockPanel>
+
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,12,0,8">
+        <TextBlock Text="Faction Focus:" Foreground="#DDFFFFFF" VerticalAlignment="Center"/>
+        <ComboBox Width="180" Margin="10,0,0,0" SelectedValue="{Binding FactionFocus}" SelectedValuePath="Tag">
+          <ComboBoxItem Content="Caldari" Tag="CALDARI"/>
+          <ComboBoxItem Content="ORE" Tag="ORE"/>
+          <ComboBoxItem Content="CONCORD" Tag="CONCORD"/>
+          <ComboBoxItem Content="EDENCOM" Tag="EDENCOM"/>
+          <ComboBoxItem Content="Sisters of EVE" Tag="SOE"/>
+        </ComboBox>
+        <Button Content="Sync Now" Width="90" Margin="12,0,0,0" Command="{Binding SyncNowCommand}"/>
+      </StackPanel>
+
+      <StackPanel Grid.Row="2">
+        <TextBlock Text="{Binding MissionTitle}" FontSize="18" Foreground="White" FontWeight="Bold"/>
+        <TextBlock Text="{Binding MissionLore}" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="#DDFFFFFF"/>
+        <Border Background="#22000000" CornerRadius="10" Padding="10" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Text="In-game link (hint)" Foreground="#FF9AD1FF" FontWeight="Bold"/>
+            <TextBlock Text="{Binding InGameHint}" Foreground="#DDFFFFFF" TextWrapping="Wrap" Margin="0,6,0,0"/>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <TextBlock Grid.Row="3"
+                 Text="Hotkeys: Ctrl+Shift+O (show/hide) • Ctrl+Shift+C (click-through)"
+                 Foreground="#99FFFFFF"
+                 Margin="0,10,0,0"/>
+    </Grid>
+  </Border>
+</Window>
