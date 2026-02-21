@@ -34,11 +34,13 @@ namespace OverlayMVP.Services
         {
             using var con = Open();
             using var cmd = con.CreateCommand();
+
+            // Fresh schema (token-based)
             cmd.CommandText = @"
 CREATE TABLE IF NOT EXISTS overlay_config(
   id INTEGER PRIMARY KEY CHECK (id=1),
   api_base_url TEXT NOT NULL,
-  api_key TEXT NOT NULL,
+  overlay_token TEXT NOT NULL,
   alpha_omega TEXT NOT NULL,
   faction_focus TEXT NOT NULL
 );
@@ -49,6 +51,68 @@ CREATE TABLE IF NOT EXISTS meta(
 );
 ";
             cmd.ExecuteNonQuery();
+
+            // Migration: if an older table exists with api_key, migrate it into overlay_token
+            // This is safe even if it doesn't exist.
+            try
+            {
+                using var mig = con.CreateCommand();
+                mig.CommandText = @"
+PRAGMA table_info(overlay_config);
+";
+                using var r = mig.ExecuteReader();
+                bool hasApiKey = false;
+                while (r.Read())
+                {
+                    var name = r.GetString(1);
+                    if (string.Equals(name, "api_key", StringComparison.OrdinalIgnoreCase))
+                        hasApiKey = true;
+                }
+
+                if (hasApiKey)
+                {
+                    // Create new table, copy, swap
+                    using var tx = con.BeginTransaction();
+
+                    using var c1 = con.CreateCommand();
+                    c1.Transaction = tx;
+                    c1.CommandText = @"
+CREATE TABLE IF NOT EXISTS overlay_config_new(
+  id INTEGER PRIMARY KEY CHECK (id=1),
+  api_base_url TEXT NOT NULL,
+  overlay_token TEXT NOT NULL,
+  alpha_omega TEXT NOT NULL,
+  faction_focus TEXT NOT NULL
+);";
+                    c1.ExecuteNonQuery();
+
+                    using var c2 = con.CreateCommand();
+                    c2.Transaction = tx;
+                    c2.CommandText = @"
+INSERT INTO overlay_config_new(id, api_base_url, overlay_token, alpha_omega, faction_focus)
+SELECT id, api_base_url, api_key, alpha_omega, faction_focus
+FROM overlay_config
+WHERE id=1;
+";
+                    c2.ExecuteNonQuery();
+
+                    using var c3 = con.CreateCommand();
+                    c3.Transaction = tx;
+                    c3.CommandText = "DROP TABLE overlay_config;";
+                    c3.ExecuteNonQuery();
+
+                    using var c4 = con.CreateCommand();
+                    c4.Transaction = tx;
+                    c4.CommandText = "ALTER TABLE overlay_config_new RENAME TO overlay_config;";
+                    c4.ExecuteNonQuery();
+
+                    tx.Commit();
+                }
+            }
+            catch
+            {
+                // If migration fails, leave schema as-is; the wizard will rewrite config.
+            }
         }
     }
 }

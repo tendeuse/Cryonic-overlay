@@ -1,6 +1,7 @@
-// filename: OverlayMVP/Views/FirstRunWindow.xaml.cs
+// filename: Views/FirstRunWindow.xaml.cs
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using OverlayMVP.Services;
 using OverlayMVP.ViewModels;
@@ -11,6 +12,7 @@ namespace OverlayMVP.Views
     {
         private readonly AppDb _db;
         private readonly FirstRunViewModel _vm;
+        private readonly PairingClient _pairing = new PairingClient();
 
         public FirstRunWindow(AppDb db)
         {
@@ -19,24 +21,16 @@ namespace OverlayMVP.Views
             _vm = new FirstRunViewModel();
             DataContext = _vm;
 
-            // Auto-fill defaults:
-            if (string.IsNullOrWhiteSpace(_vm.ApiBaseUrl))
-                _vm.ApiBaseUrl = Defaults.ApiBaseUrl;
-
+            // Auto-fill safe defaults (URL + initial selections)
+            _vm.ApiBaseUrl = Defaults.ApiBaseUrl;
             _vm.AlphaOmega = Defaults.AlphaOmega;
             _vm.FactionFocus = Defaults.FactionFocus;
-
-            // If you choose to embed a key (not recommended), you can prefill it here:
-            if (!string.IsNullOrWhiteSpace(Defaults.ApiKey))
-                ApiKeyBox.Password = Defaults.ApiKey;
         }
 
-        private void SaveAndLaunch_Click(object sender, RoutedEventArgs e)
+        private async void SaveAndLaunch_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                _vm.ApiKey = ApiKeyBox.Password;
-
                 if (!_vm.Validate(out var err))
                 {
                     _vm.Status = err;
@@ -46,10 +40,13 @@ namespace OverlayMVP.Views
 
                 _db.EnsureSchema();
 
+                _vm.Status = "Pairing… exchanging code for token.";
+                var (token, expiresAt) = await _pairing.ExchangeCodeAsync(_vm.ApiBaseUrl, _vm.PairCode);
+
                 var cfg = new OverlayConfig
                 {
                     ApiBaseUrl = _vm.ApiBaseUrl,
-                    ApiKey = _vm.ApiKey,
+                    OverlayToken = token,
                     AlphaOmega = _vm.AlphaOmega,
                     FactionFocus = _vm.FactionFocus
                 };
@@ -65,7 +62,7 @@ namespace OverlayMVP.Views
                 File.WriteAllText(logPath, ex.ToString());
 
                 MessageBox.Show(
-                    $"Save & Launch failed:\n\n{ex.Message}\n\nLog written to:\n{logPath}",
+                    $"Pair & Launch failed:\n\n{ex.Message}\n\nLog written to:\n{logPath}",
                     "Overlay Setup Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error

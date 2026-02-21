@@ -487,3 +487,4 @@ E:\ARC-Overlay\OverlayMVP\obj\Release\net8.0-windows\win-x64\refint\OverlayMVP.d
 E:\ARC-Overlay\OverlayMVP\obj\Release\net8.0-windows\win-x64\OverlayMVP.pdb
 E:\ARC-Overlay\OverlayMVP\obj\Release\net8.0-windows\win-x64\OverlayMVP.genruntimeconfig.cache
 E:\ARC-Overlay\OverlayMVP\obj\Release\net8.0-windows\win-x64\ref\OverlayMVP.dll
+E:\ARC-Overlay\OverlayMVP\obj\Release\net8.0-windows\win-x64\OverlayMVP.sourcelink.json
