@@ -1,9 +1,0 @@
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\OverlayMVP.pdb
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\Assets\seed_packs.json
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\PenImc_cor3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\PresentationNative_cor3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\vcruntime140_cor3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\wpfgfx_cor3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\e_sqlite3.dll
-E:\ARC-Overlay\OverlayMVP\bin\Release\net8.0-windows\win-x64\publish\OverlayMVP.exe
