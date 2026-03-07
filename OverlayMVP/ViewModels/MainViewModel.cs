@@ -20,58 +20,83 @@ namespace OverlayMVP.ViewModels
         private readonly OverlayApiClient _api;
         private readonly OverlayConfig    _cfg;
 
-        // Background polling
         private CancellationTokenSource? _pollCts;
-        private const int PollingIntervalMs = 10_000; // 10 seconds
+        private const int PollingIntervalMs = 10_000;
 
         // ----------------------------------------------------------------
-        // Observable properties — bound in XAML
+        // Localization — expose singleton so XAML can bind {Binding Loc.XXX}
         // ----------------------------------------------------------------
+        public LocalizationManager Loc => LocalizationManager.Instance;
 
-        [ObservableProperty] private string connectionStatus = "Connecting…";
-        [ObservableProperty] private bool   isConnected      = false;
-        [ObservableProperty] private bool   isClickThrough   = false;
+        // ----------------------------------------------------------------
+        // Observable properties
+        // ----------------------------------------------------------------
+        [ObservableProperty] private string connectionStatus  = "";
+        [ObservableProperty] private bool   isConnected       = false;
+        [ObservableProperty] private bool   isClickThrough    = false;
         [ObservableProperty] private string clickThroughLabel = "🖱️ Interactive";
 
-        // Character panel
-        [ObservableProperty] private string characterName   = "—";
-        [ObservableProperty] private string corporation     = "—";
-        [ObservableProperty] private string shipType        = "—";
-        [ObservableProperty] private string solarSystem     = "—";
-        [ObservableProperty] private string securityStatus  = "—";
-        [ObservableProperty] private string securityColour  = "#FFFFFF";
+        // Character
+        [ObservableProperty] private string characterName  = "—";
+        [ObservableProperty] private string corporation    = "—";
+        [ObservableProperty] private string shipType       = "—";
+        [ObservableProperty] private string solarSystem    = "—";
+        [ObservableProperty] private string securityStatus = "—";
+        [ObservableProperty] private string securityColour = "#FFFFFF";
 
-        // Missions panel
-        [ObservableProperty] private string missionSummary  = "No active missions.";
-        [ObservableProperty] private int    missionCount    = 0;
+        // Missions
+        [ObservableProperty] private string missionSummary = "";
+        [ObservableProperty] private int    missionCount   = 0;
 
-        // Intel panel
-        [ObservableProperty] private string intelStatus     = "No recent intel.";
-        [ObservableProperty] private bool   hasAlerts       = false;
+        // Intel
+        [ObservableProperty] private string intelStatus = "";
+        [ObservableProperty] private bool   hasAlerts   = false;
 
         // Faction
         [ObservableProperty] private string factionFocus;
 
-        // Collections (for ItemsControl in XAML)
+        // Collections
         public ObservableCollection<Mission>     Missions { get; } = new();
         public ObservableCollection<IntelReport> Intel    { get; } = new();
 
         // ----------------------------------------------------------------
         // Constructor
         // ----------------------------------------------------------------
-
         public MainViewModel(AppDb db, OverlayConfig cfg)
         {
-            _db          = db;
-            _cfg         = cfg;
+            _db           = db;
+            _cfg          = cfg;
             _factionFocus = cfg.FactionFocus;
-            _api         = new OverlayApiClient(cfg.ApiBaseUrl, cfg.OverlayToken);
+            _api          = new OverlayApiClient(cfg.ApiBaseUrl, cfg.OverlayToken);
+
+            // Initialize status strings from localization
+            ConnectionStatus = Loc.StatusConnecting;
+            MissionSummary   = Loc.MissionsNone;
+            IntelStatus      = Loc.IntelNone;
+        }
+
+        // ----------------------------------------------------------------
+        // Language toggle command
+        // ----------------------------------------------------------------
+        [RelayCommand]
+        public void ToggleLanguage()
+        {
+            Loc.Toggle();
+            // Refresh status strings that are composed at runtime
+            MissionSummary = MissionCount == 0
+                ? Loc.MissionsNone
+                : $"{MissionCount} {(Loc.Language == OverlayLanguage.EN ? "mission(s) active" : "mission(s) active(s)")}";
+            IntelStatus    = Intel.Count == 0
+                ? Loc.IntelNone
+                : $"⚠️ {Intel.Count} {(Loc.Language == OverlayLanguage.EN ? "active report(s)" : "rapport(s) actif(s)")}";
+            ClickThroughLabel = IsClickThrough
+                ? (Loc.Language == OverlayLanguage.EN ? "👁️ Click-Through ON" : "👁️ Clic-Passant ACTIF")
+                : (Loc.Language == OverlayLanguage.EN ? "🖱️ Interactive"     : "🖱️ Interactif");
         }
 
         // ----------------------------------------------------------------
         // Lifecycle
         // ----------------------------------------------------------------
-
         public void StartPolling()
         {
             _pollCts = new CancellationTokenSource();
@@ -89,9 +114,8 @@ namespace OverlayMVP.ViewModels
         }
 
         // ----------------------------------------------------------------
-        // Commands
+        // Refresh / Sync
         // ----------------------------------------------------------------
-
         [RelayCommand]
         public async Task RefreshAsync()
         {
@@ -108,7 +132,7 @@ namespace OverlayMVP.ViewModels
                         CharacterName  = data.Character.CharacterName;
                         Corporation    = data.Character.Corporation;
                         ShipType       = string.IsNullOrEmpty(data.Character.ShipType)
-                                            ? "Unknown Ship" : data.Character.ShipType;
+                                            ? "—" : data.Character.ShipType;
                         SolarSystem    = data.Character.SolarSystem;
                         SecurityStatus = data.Character.SecurityStatus.ToString("F1");
                         SecurityColour = data.Character.SecurityColour;
@@ -116,24 +140,21 @@ namespace OverlayMVP.ViewModels
 
                     // Missions
                     Missions.Clear();
-                    foreach (var m in data.Missions)
-                        Missions.Add(m);
-
+                    foreach (var m in data.Missions) Missions.Add(m);
                     MissionCount   = data.Missions.Count;
                     MissionSummary = data.Missions.Count == 0
-                        ? "No active missions."
-                        : $"{data.Missions.Count} mission(s) active";
+                        ? Loc.MissionsNone
+                        : $"{data.Missions.Count} {(Loc.Language == OverlayLanguage.EN ? "mission(s) active" : "mission(s) active(s)")}";
 
                     // Intel
                     Intel.Clear();
-                    foreach (var i in data.Intel)
-                        Intel.Add(i);
-
+                    foreach (var i in data.Intel) Intel.Add(i);
                     HasAlerts   = data.Intel.Count > 0;
                     IntelStatus = data.Intel.Count == 0
-                        ? "No recent intel." : $"⚠️ {data.Intel.Count} active report(s)";
+                        ? Loc.IntelNone
+                        : $"⚠️ {data.Intel.Count} {(Loc.Language == OverlayLanguage.EN ? "active report(s)" : "rapport(s) actif(s)")}";
 
-                    ConnectionStatus = $"✅ Online  •  {DateTime.Now:HH:mm:ss}";
+                    ConnectionStatus = $"{Loc.StatusOnline}  •  {DateTime.Now:HH:mm:ss}";
                     IsConnected      = true;
                 });
             }
@@ -141,29 +162,19 @@ namespace OverlayMVP.ViewModels
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ConnectionStatus = $"❌ Offline  •  {ex.Message[..Math.Min(ex.Message.Length, 40)]}";
+                    ConnectionStatus = $"{Loc.StatusOffline}  •  {ex.Message[..Math.Min(ex.Message.Length, 40)]}";
                     IsConnected      = false;
                 });
             }
         }
 
-        // ---- Intel reporting commands ----
-
-        [RelayCommand]
-        public async Task ReportGateCampAsync()
-            => await PostIntelAsync(IntelType.GateCamp, "Gate camp reported");
-
-        [RelayCommand]
-        public async Task ReportPiratesAsync()
-            => await PostIntelAsync(IntelType.Pirate, "Pirates reported");
-
-        [RelayCommand]
-        public async Task ReportRoamingAsync()
-            => await PostIntelAsync(IntelType.Roaming, "Roaming gang reported");
-
-        [RelayCommand]
-        public async Task ReportClearAsync()
-            => await PostIntelAsync(IntelType.Clear, "System clear");
+        // ----------------------------------------------------------------
+        // Intel commands
+        // ----------------------------------------------------------------
+        [RelayCommand] public async Task ReportGateCampAsync()  => await PostIntelAsync(IntelType.GateCamp, "Gate camp reported");
+        [RelayCommand] public async Task ReportPiratesAsync()   => await PostIntelAsync(IntelType.Pirate,   "Pirates reported");
+        [RelayCommand] public async Task ReportRoamingAsync()   => await PostIntelAsync(IntelType.Roaming,  "Roaming gang reported");
+        [RelayCommand] public async Task ReportClearAsync()     => await PostIntelAsync(IntelType.Clear,    "System clear");
 
         private async Task PostIntelAsync(IntelType type, string notes)
         {
@@ -175,57 +186,45 @@ namespace OverlayMVP.ViewModels
             }
             catch (Exception ex)
             {
-                ConnectionStatus = $"⚠️ Intel post failed: {ex.Message[..Math.Min(ex.Message.Length, 40)]}";
+                ConnectionStatus = $"⚠️ {Loc.ErrIntelFailed}: {ex.Message[..Math.Min(ex.Message.Length, 30)]}";
             }
         }
 
-        // ---- Mission action commands ----
-
+        // ----------------------------------------------------------------
+        // Mission commands
+        // ----------------------------------------------------------------
         [RelayCommand]
         public async Task AssignMissionAsync(int missionId)
         {
-            try
-            {
-                await _api.AssignMissionAsync(missionId);
-                await RefreshAsync();
-            }
-            catch (Exception ex)
-            {
-                ConnectionStatus = $"⚠️ Assign failed: {ex.Message[..Math.Min(ex.Message.Length, 40)]}";
-            }
+            try   { await _api.AssignMissionAsync(missionId);  await RefreshAsync(); }
+            catch (Exception ex) { ConnectionStatus = $"⚠️ {Loc.ErrAssignFailed}: {ex.Message[..Math.Min(ex.Message.Length,30)]}"; }
         }
 
         [RelayCommand]
         public async Task CompleteMissionAsync(int missionId)
         {
-            try
-            {
-                await _api.CompleteMissionAsync(missionId);
-                await RefreshAsync();
-            }
-            catch (Exception ex)
-            {
-                ConnectionStatus = $"⚠️ Complete failed: {ex.Message[..Math.Min(ex.Message.Length, 40)]}";
-            }
+            try   { await _api.CompleteMissionAsync(missionId); await RefreshAsync(); }
+            catch (Exception ex) { ConnectionStatus = $"⚠️ {Loc.ErrCompleteFailed}: {ex.Message[..Math.Min(ex.Message.Length,30)]}"; }
         }
 
-        // ---- Click-through toggle (called from code-behind) ----
-
+        // ----------------------------------------------------------------
+        // Click-through state (called from code-behind)
+        // ----------------------------------------------------------------
         public void ToggleClickThrough(bool isNowClickThrough)
         {
             IsClickThrough    = isNowClickThrough;
-            ClickThroughLabel = isNowClickThrough ? "👁️ Click-Through ON" : "🖱️ Interactive";
+            ClickThroughLabel = isNowClickThrough
+                ? (Loc.Language == OverlayLanguage.EN ? "👁️ Click-Through ON" : "👁️ Clic-Passant ACTIF")
+                : (Loc.Language == OverlayLanguage.EN ? "🖱️ Interactive"     : "🖱️ Interactif");
         }
 
         // ---- Faction save ----
-
         partial void OnFactionFocusChanged(string value)
         {
             _cfg.FactionFocus = value;
             _cfg.Save(_db);
         }
 
-        // ----------------------------------------------------------------
         public void Dispose()
         {
             _pollCts?.Cancel();

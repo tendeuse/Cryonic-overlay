@@ -3,8 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ARC Overlay"
-        Width="480"
-        Height="620"
+        Width="480" Height="640"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -13,7 +12,6 @@
         ResizeMode="CanResizeWithGrip">
 
   <Window.Resources>
-    <!-- Panel style -->
     <Style x:Key="Panel" TargetType="Border">
       <Setter Property="Background" Value="#1A0D1F2E"/>
       <Setter Property="BorderBrush" Value="#33AADDFF"/>
@@ -22,31 +20,22 @@
       <Setter Property="Padding" Value="10"/>
       <Setter Property="Margin" Value="0,0,0,8"/>
     </Style>
-
-    <!-- Section header -->
     <Style x:Key="SectionHeader" TargetType="TextBlock">
       <Setter Property="Foreground" Value="#FF9AD1FF"/>
       <Setter Property="FontSize" Value="10"/>
       <Setter Property="FontWeight" Value="Bold"/>
       <Setter Property="Margin" Value="0,0,0,6"/>
-      <Setter Property="LetterSpacing" Value="1"/>
     </Style>
-
-    <!-- Data label -->
     <Style x:Key="DataLabel" TargetType="TextBlock">
       <Setter Property="Foreground" Value="#AACCDDFF"/>
       <Setter Property="FontSize" Value="10"/>
     </Style>
-
-    <!-- Data value -->
     <Style x:Key="DataValue" TargetType="TextBlock">
       <Setter Property="Foreground" Value="#FFEEFFFF"/>
       <Setter Property="FontSize" Value="11"/>
       <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
-
-    <!-- Intel button -->
-    <Style x:Key="IntelBtn" TargetType="Button">
+    <Style x:Key="OverlayBtn" TargetType="Button">
       <Setter Property="Height" Value="32"/>
       <Setter Property="FontSize" Value="10"/>
       <Setter Property="FontWeight" Value="Bold"/>
@@ -58,91 +47,84 @@
             <Border Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="5"
-                    Padding="8,4">
+                    CornerRadius="5" Padding="8,4">
               <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
             <ControlTemplate.Triggers>
-              <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Opacity" Value="0.85"/>
-              </Trigger>
-              <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Opacity" Value="0.6"/>
-              </Trigger>
+              <Trigger Property="IsMouseOver" Value="True"><Setter Property="Opacity" Value="0.82"/></Trigger>
+              <Trigger Property="IsPressed"   Value="True"><Setter Property="Opacity" Value="0.55"/></Trigger>
             </ControlTemplate.Triggers>
           </ControlTemplate>
         </Setter.Value>
       </Setter>
     </Style>
-
-    <!-- Mission item button -->
-    <Style x:Key="MissionBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
+    <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource OverlayBtn}">
       <Setter Property="Height" Value="22"/>
       <Setter Property="FontSize" Value="9"/>
-      <Setter Property="Padding" Value="6,2"/>
     </Style>
   </Window.Resources>
 
-  <!-- Outer drag border -->
-  <Border Background="#CC060E1C"
-          CornerRadius="12"
-          BorderThickness="1"
-          BorderBrush="#44AADDFF">
-
+  <Border Background="#CC060E1C" CornerRadius="12"
+          BorderThickness="1" BorderBrush="#44AADDFF">
     <Grid>
       <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>  <!-- Title bar -->
-        <RowDefinition Height="*"/>     <!-- Scrollable content -->
-        <RowDefinition Height="Auto"/>  <!-- Footer hotkeys -->
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
       </Grid.RowDefinitions>
 
-      <!-- ═══════════════════════════════════════════════════ TITLE BAR -->
-      <Border Grid.Row="0"
-              Background="#220A1A2F"
-              CornerRadius="12,12,0,0"
-              Padding="12,8"
-              MouseLeftButtonDown="TitleBar_MouseDown">
+      <!-- ══════════════════════════════════════════ TITLE BAR -->
+      <Border Grid.Row="0" Background="#220A1A2F" CornerRadius="12,12,0,0"
+              Padding="12,8" MouseLeftButtonDown="TitleBar_MouseDown">
         <DockPanel>
-          <TextBlock Text="🛸  ARC MISSION OVERLAY"
-                     FontSize="13"
-                     FontWeight="Bold"
+          <!-- App title — localized -->
+          <TextBlock Text="{Binding Loc.AppTitle}"
+                     FontSize="12" FontWeight="Bold"
                      Foreground="#FF9AD1FF"
                      DockPanel.Dock="Left"
                      VerticalAlignment="Center"/>
+
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-            <TextBlock Text="{Binding ConnectionStatus}"
-                       Foreground="#AAFFFFFF"
-                       FontSize="9"
-                       VerticalAlignment="Center"
-                       Margin="0,0,8,0"/>
-            <Button Content="✕"
-                    Width="20" Height="20"
-                    FontSize="10"
-                    Background="Transparent"
-                    Foreground="#88FFFFFF"
-                    BorderThickness="0"
+            <!-- Language toggle -->
+            <Button Content="{Binding Loc.LanguageButtonLabel}"
+                    Width="42" Height="22"
+                    FontSize="9" FontWeight="Bold"
+                    Background="#22001A30"
+                    BorderBrush="#4499BBFF"
+                    Foreground="#FF9AD1FF"
+                    Margin="0,0,6,0"
                     Cursor="Hand"
+                    Command="{Binding ToggleLanguageCommand}"
+                    Style="{StaticResource SmallBtn}"/>
+            <!-- Connection status -->
+            <TextBlock Text="{Binding ConnectionStatus}"
+                       Foreground="#AAFFFFFF" FontSize="9"
+                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <!-- Close -->
+            <Button Content="✕" Width="20" Height="20" FontSize="10"
+                    Background="Transparent" Foreground="#88FFFFFF"
+                    BorderThickness="0" Cursor="Hand"
                     Click="CloseBtn_Click"/>
           </StackPanel>
         </DockPanel>
       </Border>
 
-      <!-- ═══════════════════════════════════════════════ MAIN CONTENT -->
+      <!-- ══════════════════════════════════════ MAIN CONTENT -->
       <ScrollViewer Grid.Row="1"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     Padding="10,8">
         <StackPanel>
 
-          <!-- ─── CHARACTER PANEL ─── -->
+          <!-- ─── PILOT STATUS ─── -->
           <Border Style="{StaticResource Panel}">
             <StackPanel>
-              <TextBlock Text="👤  PILOT STATUS" Style="{StaticResource SectionHeader}"/>
+              <TextBlock Text="{Binding Loc.PanelPilot}" Style="{StaticResource SectionHeader}"/>
               <Grid>
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="54"/>
                   <ColumnDefinition Width="*"/>
-                  <ColumnDefinition Width="Auto"/>
+                  <ColumnDefinition Width="44"/>
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -151,46 +133,39 @@
                   <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Pilot" Style="{StaticResource DataLabel}" Margin="0,0,6,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CharacterName}" Style="{StaticResource DataValue}" Margin="0,0,12,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="Corp" Style="{StaticResource DataLabel}" Margin="0,0,6,4"/>
-                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Corporation}" Style="{StaticResource DataValue}" Margin="0,0,0,4"
-                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Loc.LabelPilot}" Style="{StaticResource DataLabel}" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CharacterName}"  Style="{StaticResource DataValue}" Margin="0,0,8,4"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Loc.LabelCorp}"  Style="{StaticResource DataLabel}" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Corporation}"    Style="{StaticResource DataValue}" Margin="0,0,0,4" TextTrimming="CharacterEllipsis"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Ship" Style="{StaticResource DataLabel}" Margin="0,0,6,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ShipType}" Style="{StaticResource DataValue}" Margin="0,0,12,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="Sec" Style="{StaticResource DataLabel}" Margin="0,0,6,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding Loc.LabelShip}"  Style="{StaticResource DataLabel}" Margin="0,0,4,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ShipType}"        Style="{StaticResource DataValue}" Margin="0,0,8,4"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Loc.LabelSec}"   Style="{StaticResource DataLabel}" Margin="0,0,4,4"/>
                 <TextBlock Grid.Row="1" Grid.Column="3" Margin="0,0,0,4">
                   <TextBlock.Inlines>
-                    <Run Text="{Binding SecurityStatus}"
-                         Foreground="{Binding SecurityColour}"
-                         FontWeight="Bold"/>
+                    <Run Text="{Binding SecurityStatus}" Foreground="{Binding SecurityColour}" FontWeight="Bold"/>
                   </TextBlock.Inlines>
                 </TextBlock>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="System" Style="{StaticResource DataLabel}" Margin="0,0,6,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Loc.LabelSystem}" Style="{StaticResource DataLabel}" Margin="0,0,4,0"/>
                 <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
-                           Text="{Binding SolarSystem}"
-                           Style="{StaticResource DataValue}"
-                           FontSize="12"/>
+                           Text="{Binding SolarSystem}" Style="{StaticResource DataValue}" FontSize="12"/>
               </Grid>
             </StackPanel>
           </Border>
 
-          <!-- ─── INTEL / ALERT PANEL ─── -->
+          <!-- ─── INTEL & ALERTS ─── -->
           <Border Style="{StaticResource Panel}">
             <StackPanel>
               <DockPanel Margin="0,0,0,8">
-                <TextBlock Text="⚠️  INTEL &amp; ALERTS" Style="{StaticResource SectionHeader}"
+                <TextBlock Text="{Binding Loc.PanelIntel}" Style="{StaticResource SectionHeader}"
                            DockPanel.Dock="Left" Margin="0"/>
                 <TextBlock Text="{Binding IntelStatus}"
-                           Foreground="{Binding HasAlerts, Converter={x:Null}}"
-                           FontSize="9" Foreground="#FFCC44"
-                           DockPanel.Dock="Right" VerticalAlignment="Center"
-                           HorizontalAlignment="Right"/>
+                           Foreground="#FFCC44" FontSize="9"
+                           DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
               </DockPanel>
 
-              <!-- Report buttons row 1 -->
+              <!-- Row 1: Gate Camp + Pirates -->
               <Grid Margin="0,0,0,6">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*"/>
@@ -198,42 +173,38 @@
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
-                        Content="⛔  Gate Camp"
-                        Style="{StaticResource IntelBtn}"
-                        Background="#661A0A0A" BorderBrush="#88FF4444"
-                        Foreground="#FFFF6666"
+                        Content="{Binding Loc.BtnGateCamp}"
+                        Style="{StaticResource OverlayBtn}"
+                        Background="#661A0A0A" BorderBrush="#88FF4444" Foreground="#FFFF6666"
                         Command="{Binding ReportGateCampCommand}"/>
                 <Button Grid.Column="2"
-                        Content="💀  Pirates"
-                        Style="{StaticResource IntelBtn}"
-                        Background="#66200A0A" BorderBrush="#88FF6600"
-                        Foreground="#FFFF8844"
+                        Content="{Binding Loc.BtnPirates}"
+                        Style="{StaticResource OverlayBtn}"
+                        Background="#66200A0A" BorderBrush="#88FF6600" Foreground="#FFFF8844"
                         Command="{Binding ReportPiratesCommand}"/>
               </Grid>
 
-              <!-- Report buttons row 2 -->
-              <Grid>
+              <!-- Row 2: Roaming + Clear -->
+              <Grid Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*"/>
                   <ColumnDefinition Width="4"/>
                   <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
-                        Content="⚠️  Roaming Gang"
-                        Style="{StaticResource IntelBtn}"
-                        Background="#66201A00" BorderBrush="#88FFCC00"
-                        Foreground="#FFFFCC44"
+                        Content="{Binding Loc.BtnRoaming}"
+                        Style="{StaticResource OverlayBtn}"
+                        Background="#66201A00" BorderBrush="#88FFCC00" Foreground="#FFFFCC44"
                         Command="{Binding ReportRoamingCommand}"/>
                 <Button Grid.Column="2"
-                        Content="✅  System Clear"
-                        Style="{StaticResource IntelBtn}"
-                        Background="#660A200A" BorderBrush="#8844FF88"
-                        Foreground="#FF66FF88"
+                        Content="{Binding Loc.BtnClear}"
+                        Style="{StaticResource OverlayBtn}"
+                        Background="#660A200A" BorderBrush="#8844FF88" Foreground="#FF66FF88"
                         Command="{Binding ReportClearCommand}"/>
               </Grid>
 
               <!-- Recent intel list -->
-              <ItemsControl ItemsSource="{Binding Intel}" Margin="0,8,0,0">
+              <ItemsControl ItemsSource="{Binding Intel}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
                     <Border Background="#110A1520" BorderBrush="#22AADDFF"
@@ -250,7 +221,7 @@
                           <Run Text="{Binding System}" FontWeight="Bold" Foreground="#FFEEFFFF"/>
                           <Run Text=" — "/>
                           <Run Text="{Binding TypeLabel}" Foreground="#FFCC8844"/>
-                          <Run Text=" "/>
+                          <Run Text="  x"/>
                           <Run Text="{Binding Count}" Foreground="#FFAADDFF"/>
                         </TextBlock>
                       </DockPanel>
@@ -261,18 +232,17 @@
             </StackPanel>
           </Border>
 
-          <!-- ─── MISSIONS PANEL ─── -->
+          <!-- ─── MISSIONS ─── -->
           <Border Style="{StaticResource Panel}">
             <StackPanel>
               <DockPanel Margin="0,0,0,8">
-                <TextBlock Text="📋  ACTIVE MISSIONS" Style="{StaticResource SectionHeader}"
+                <TextBlock Text="{Binding Loc.PanelMissions}" Style="{StaticResource SectionHeader}"
                            DockPanel.Dock="Left" Margin="0"/>
                 <TextBlock Text="{Binding MissionSummary}"
                            Foreground="#FF9AD1FF" FontSize="9"
                            DockPanel.Dock="Right" VerticalAlignment="Center"/>
               </DockPanel>
 
-              <!-- Mission list -->
               <ItemsControl ItemsSource="{Binding Missions}">
                 <ItemsControl.ItemTemplate>
                   <DataTemplate>
@@ -280,30 +250,25 @@
                             BorderThickness="1" CornerRadius="6"
                             Padding="10,8" Margin="0,0,0,6">
                       <StackPanel>
-                        <!-- Mission title row -->
+                        <!-- Title row -->
                         <DockPanel Margin="0,0,0,4">
-                          <TextBlock DockPanel.Dock="Right"
-                                     FontSize="9" Foreground="#88FFFFFF"
-                                     VerticalAlignment="Center">
-                            <Run Text="#{" Foreground="#44FFFFFF"/>
+                          <TextBlock DockPanel.Dock="Right" FontSize="9" Foreground="#88FFFFFF" VerticalAlignment="Center">
+                            <Run Text="#" Foreground="#44FFFFFF"/>
                             <Run Text="{Binding Id}" Foreground="#FFAADDFF" FontWeight="Bold"/>
-                            <Run Text="}" Foreground="#44FFFFFF"/>
                           </TextBlock>
                           <TextBlock>
                             <Run Text="{Binding StatusEmoji}"/>
                             <Run Text=" "/>
-                            <Run Text="{Binding Title}" Foreground="White"
-                                 FontWeight="SemiBold" FontSize="11"/>
+                            <Run Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" FontSize="11"/>
                           </TextBlock>
                         </DockPanel>
 
                         <!-- Description -->
                         <TextBlock Text="{Binding Description}"
                                    Foreground="#AACCDDFF" FontSize="9"
-                                   TextWrapping="Wrap"
-                                   Margin="0,0,0,6"
-                                   MaxHeight="40"
-                                   TextTrimming="CharacterEllipsis"/>
+                                   TextWrapping="Wrap" MaxHeight="40"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="0,0,0,6"/>
 
                         <!-- Reward + Status -->
                         <DockPanel Margin="0,0,0,6">
@@ -316,23 +281,19 @@
                           </TextBlock>
                         </DockPanel>
 
-                        <!-- Action buttons -->
+                        <!-- Action buttons — labels from Loc -->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                          <Button Content="Assign to Me"
-                                  Style="{StaticResource MissionBtn}"
-                                  Background="#331A2A00" BorderBrush="#5566DD88"
-                                  Foreground="#FF88FF99"
+                          <Button Content="{Binding DataContext.Loc.BtnAssign, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Style="{StaticResource SmallBtn}"
+                                  Background="#331A2A00" BorderBrush="#5566DD88" Foreground="#FF88FF99"
                                   Margin="0,0,6,0"
                                   CommandParameter="{Binding Id}"
-                                  Command="{Binding DataContext.AssignMissionCommand,
-                                    RelativeSource={RelativeSource AncestorType=Window}}"/>
-                          <Button Content="Complete ✅"
-                                  Style="{StaticResource MissionBtn}"
-                                  Background="#330A2A0A" BorderBrush="#5544FF66"
-                                  Foreground="#FF66FF88"
+                                  Command="{Binding DataContext.AssignMissionCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                          <Button Content="{Binding DataContext.Loc.BtnComplete, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Style="{StaticResource SmallBtn}"
+                                  Background="#330A2A0A" BorderBrush="#5544FF66" Foreground="#FF66FF88"
                                   CommandParameter="{Binding Id}"
-                                  Command="{Binding DataContext.CompleteMissionCommand,
-                                    RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                  Command="{Binding DataContext.CompleteMissionCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                         </StackPanel>
                       </StackPanel>
                     </Border>
@@ -341,41 +302,27 @@
               </ItemsControl>
 
               <!-- Sync button -->
-              <Button Content="🔄  Sync Now"
+              <Button Content="{Binding Loc.BtnSync}"
                       Height="28" FontSize="10" FontWeight="Bold"
-                      Background="#22001A30" BorderBrush="#4499BBFF"
-                      Foreground="#FF9AD1FF"
-                      Margin="0,4,0,0"
-                      Cursor="Hand"
-                      Command="{Binding RefreshCommand}">
-                <Button.Template>
-                  <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="1" CornerRadius="5"
-                            Padding="8,4">
-                      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                  </ControlTemplate>
-                </Button.Template>
-              </Button>
+                      Background="#22001A30" BorderBrush="#4499BBFF" Foreground="#FF9AD1FF"
+                      Margin="0,4,0,0" Cursor="Hand"
+                      Command="{Binding RefreshCommand}"
+                      Style="{StaticResource OverlayBtn}"/>
             </StackPanel>
           </Border>
 
-          <!-- ─── FACTION PANEL ─── -->
+          <!-- ─── FACTION FOCUS ─── -->
           <Border Style="{StaticResource Panel}">
             <StackPanel>
-              <TextBlock Text="🎯  FACTION FOCUS" Style="{StaticResource SectionHeader}"/>
+              <TextBlock Text="{Binding Loc.PanelFaction}" Style="{StaticResource SectionHeader}"/>
               <ComboBox SelectedValue="{Binding FactionFocus}"
                         SelectedValuePath="Tag"
-                        Background="#110A1520"
-                        Foreground="White"
-                        BorderBrush="#33AADDFF"
-                        Height="28">
-                <ComboBoxItem Content="Caldari"       Tag="CALDARI"/>
-                <ComboBoxItem Content="ORE"           Tag="ORE"/>
-                <ComboBoxItem Content="CONCORD"       Tag="CONCORD"/>
-                <ComboBoxItem Content="EDENCOM"       Tag="EDENCOM"/>
+                        Background="#110A1520" Foreground="White"
+                        BorderBrush="#33AADDFF" Height="28">
+                <ComboBoxItem Content="Caldari"        Tag="CALDARI"/>
+                <ComboBoxItem Content="ORE"            Tag="ORE"/>
+                <ComboBoxItem Content="CONCORD"        Tag="CONCORD"/>
+                <ComboBoxItem Content="EDENCOM"        Tag="EDENCOM"/>
                 <ComboBoxItem Content="Sisters of EVE" Tag="SOE"/>
               </ComboBox>
             </StackPanel>
@@ -384,20 +331,14 @@
         </StackPanel>
       </ScrollViewer>
 
-      <!-- ═══════════════════════════════════════════════════ FOOTER -->
-      <Border Grid.Row="2"
-              Background="#110A1020"
-              CornerRadius="0,0,12,12"
-              Padding="12,6">
+      <!-- ══════════════════════════════════════════════ FOOTER -->
+      <Border Grid.Row="2" Background="#110A1020" CornerRadius="0,0,12,12" Padding="12,6">
         <DockPanel>
           <TextBlock DockPanel.Dock="Right"
                      Text="{Binding ClickThroughLabel}"
-                     Foreground="#88FFFFFF" FontSize="9"
-                     VerticalAlignment="Center"/>
-          <TextBlock Text="Ctrl+Shift+O hide  •  Ctrl+Shift+C click-through  •  Ctrl+Shift+I intel  •  Ctrl+Shift+X clear"
-                     Foreground="#55FFFFFF"
-                     FontSize="8"
-                     VerticalAlignment="Center"/>
+                     Foreground="#88FFFFFF" FontSize="9" VerticalAlignment="Center"/>
+          <TextBlock Text="{Binding Loc.FooterHotkeys}"
+                     Foreground="#55FFFFFF" FontSize="8" VerticalAlignment="Center"/>
         </DockPanel>
       </Border>
 
