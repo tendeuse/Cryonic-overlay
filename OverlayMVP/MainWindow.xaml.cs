@@ -9,7 +9,7 @@ namespace OverlayMVP
     public partial class MainWindow : Window
     {
         private readonly MainViewModel  _vm;
-        private readonly HotkeyManager _hotkeys;
+        private HotkeyManager? _hotkeys;
         private          IntPtr         _hwnd;
         private          bool           _visible = true;
 

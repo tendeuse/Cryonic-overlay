@@ -66,7 +66,7 @@ namespace OverlayMVP.ViewModels
         {
             _db           = db;
             _cfg          = cfg;
-            _factionFocus = cfg.FactionFocus;
+            FactionFocus = cfg.FactionFocus ?? string.Empty;
             _api          = new OverlayApiClient(cfg.ApiBaseUrl, cfg.OverlayToken);
 
             // Initialize status strings from localization
