@@ -1,0 +1,182 @@
+// filename: Services/OverlayApiClient.cs
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+using OverlayMVP.Models;
+
+namespace OverlayMVP.Services
+{
+    public sealed class OverlayApiClient : IDisposable
+    {
+        // ----------------------------------------------------------------
+        // JSON options — camelCase from Python/FastAPI backend
+        // ----------------------------------------------------------------
+        private static readonly JsonSerializerOptions _json = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        };
+
+        private readonly HttpClient _http;
+        private readonly string     _baseUrl;
+        private readonly string     _token;
+
+        public OverlayApiClient(string baseUrl, string token)
+        {
+            _baseUrl = baseUrl.TrimEnd('/');
+            _token   = token;
+
+            _http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+            _http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _token);
+        }
+
+        // ----------------------------------------------------------------
+        // Missions
+        // ----------------------------------------------------------------
+
+        public async Task<List<Mission>> GetMissionsAsync(
+            string? status = null,
+            CancellationToken ct = default)
+        {
+            var url = $"{_baseUrl}/overlay/api/v1/missions";
+            if (status is not null) url += $"?status={Uri.EscapeDataString(status)}";
+
+            var resp = await _http.GetAsync(url, ct);
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            var data = JsonSerializer.Deserialize<MissionListResponse>(text, _json);
+            return data?.Missions ?? new List<Mission>();
+        }
+
+        public async Task<Mission?> AssignMissionAsync(int missionId, CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/missions/{missionId}/assign";
+            var resp = await _http.PostAsync(url, null, ct);
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return JsonSerializer.Deserialize<Mission>(text, _json);
+        }
+
+        public async Task<Mission?> CompleteMissionAsync(int missionId, CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/missions/{missionId}/complete";
+            var resp = await _http.PostAsync(url, null, ct);
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return JsonSerializer.Deserialize<Mission>(text, _json);
+        }
+
+        // ----------------------------------------------------------------
+        // Character / ESI (proxied via backend — token never leaves server)
+        // ----------------------------------------------------------------
+
+        public async Task<CharacterInfo?> GetCharacterAsync(CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/character";
+            var resp = await _http.GetAsync(url, ct);
+            if (resp.StatusCode == System.Net.HttpStatusCode.NoContent) return null;
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return JsonSerializer.Deserialize<CharacterInfo>(text, _json);
+        }
+
+        // ----------------------------------------------------------------
+        // Intel reports
+        // ----------------------------------------------------------------
+
+        public async Task<List<IntelReport>> GetIntelAsync(CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/intel";
+            var resp = await _http.GetAsync(url, ct);
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            var list = JsonSerializer.Deserialize<List<IntelReport>>(text, _json);
+            return list ?? new List<IntelReport>();
+        }
+
+        public async Task PostIntelAsync(
+            string system,
+            IntelType type,
+            int count,
+            string notes,
+            CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/intel";
+            var body = JsonSerializer.Serialize(new
+            {
+                system,
+                type   = type.ToString().ToLowerInvariant(),
+                count,
+                notes
+            });
+
+            using var req = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(body, Encoding.UTF8, "application/json")
+            };
+            var resp = await _http.SendAsync(req, ct);
+            await EnsureSuccessAsync(resp);
+        }
+
+        // ----------------------------------------------------------------
+        // Full snapshot (missions + character + intel in one call)
+        // ----------------------------------------------------------------
+
+        public async Task<OverlayDataResponse?> GetSnapshotAsync(CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/overlay/api/v1/snapshot";
+            var resp = await _http.GetAsync(url, ct);
+            if (resp.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                // Backend doesn't have snapshot endpoint yet — fall back to individual calls
+                var missions  = await GetMissionsAsync(ct: ct);
+                var character = await GetCharacterAsync(ct);
+                var intel     = await GetIntelAsync(ct);
+                return new OverlayDataResponse
+                {
+                    Missions  = missions,
+                    Character = character,
+                    Intel     = intel
+                };
+            }
+
+            await EnsureSuccessAsync(resp);
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return JsonSerializer.Deserialize<OverlayDataResponse>(text, _json);
+        }
+
+        // ----------------------------------------------------------------
+        // Helpers
+        // ----------------------------------------------------------------
+
+        private static async Task EnsureSuccessAsync(HttpResponseMessage resp)
+        {
+            if (!resp.IsSuccessStatusCode)
+            {
+                var body = await resp.Content.ReadAsStringAsync();
+                throw new Exception($"API error {(int)resp.StatusCode}: {body}");
+            }
+        }
+
+        public void Dispose() => _http.Dispose();
+    }
+
+    // Reuse the same response wrapper as in MissionModels
+    internal sealed class MissionListResponse
+    {
+        [JsonPropertyName("missions")]
+        public List<Mission> Missions { get; set; } = new();
+    }
+}
