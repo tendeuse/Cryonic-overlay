@@ -56,6 +56,36 @@ namespace OverlayMVP.Services
             return data?.Missions ?? new List<Mission>();
         }
 
+        public async Task<List<FactionStanding>> GetStandingsAsync(
+            CancellationToken ct = default)
+        {
+            try
+            {
+                var url  = $"{_baseUrl}/overlay/api/v1/standings";
+                var resp = await _http.GetAsync(url, ct);
+                if (!resp.IsSuccessStatusCode) return new List<FactionStanding>();
+                var text = await resp.Content.ReadAsStringAsync(ct);
+                return JsonSerializer.Deserialize<List<FactionStanding>>(text, _json)
+                       ?? new List<FactionStanding>();
+            }
+            catch { return new List<FactionStanding>(); }
+        }
+
+        public async Task<Mission?> CreateMissionAsync(
+            string title,
+            string description = "",
+            CancellationToken ct = default)
+        {
+            var url     = $"{_baseUrl}/overlay/api/v1/missions";
+            var payload = new { title, description };
+            var json    = JsonSerializer.Serialize(payload, _json);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            var resp    = await _http.PostAsync(url, content, ct);
+            await EnsureSuccessAsync(resp);
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return JsonSerializer.Deserialize<Mission>(text, _json);
+        }
+
         public async Task<Mission?> AssignMissionAsync(int missionId, CancellationToken ct = default)
         {
             var url  = $"{_baseUrl}/overlay/api/v1/missions/{missionId}/assign";

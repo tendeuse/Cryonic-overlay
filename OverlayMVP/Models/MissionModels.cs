@@ -1,11 +1,12 @@
 // filename: Models/MissionModels.cs
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace OverlayMVP.Models
 {
     // -----------------------------------------------------------------------
-    // Missions (from Discord bot API)
+    // Missions
     // -----------------------------------------------------------------------
 
     public sealed class Mission
@@ -14,7 +15,7 @@ namespace OverlayMVP.Models
         public string Title       { get; set; } = "";
         public string Description { get; set; } = "";
         public string Reward      { get; set; } = "";
-        public string Status      { get; set; } = "open";       // open | in_progress | completed | cancelled
+        public string Status      { get; set; } = "open";
         public string CreatedBy   { get; set; } = "";
         public string AssignedTo  { get; set; } = "";
         public string CreatedAt   { get; set; } = "";
@@ -38,19 +39,19 @@ namespace OverlayMVP.Models
     }
 
     // -----------------------------------------------------------------------
-    // EVE Character (from ESI via backend proxy)
+    // EVE Character
     // -----------------------------------------------------------------------
 
     public sealed class CharacterInfo
     {
-        public long   CharacterId   { get; set; }
-        public string CharacterName { get; set; } = "Unknown Pilot";
-        public string Corporation   { get; set; } = "";
-        public string Alliance      { get; set; } = "";
-        public string ShipName      { get; set; } = "";
-        public string ShipType      { get; set; } = "";
-        public string SolarSystem   { get; set; } = "";
-        public string Region        { get; set; } = "";
+        public long   CharacterId    { get; set; }
+        public string CharacterName  { get; set; } = "Unknown Pilot";
+        public string Corporation    { get; set; } = "";
+        public string Alliance       { get; set; } = "";
+        public string ShipName       { get; set; } = "";
+        public string ShipType       { get; set; } = "";
+        public string SolarSystem    { get; set; } = "";
+        public string Region         { get; set; } = "";
         public float  SecurityStatus { get; set; }
 
         public string SecurityColour => SecurityStatus switch
@@ -63,45 +64,59 @@ namespace OverlayMVP.Models
     }
 
     // -----------------------------------------------------------------------
-    // Intel / Gate Camp alerts (pushed from Discord bot or submitted by pilot)
+    // Intel
+    // FIX: Type comes from Python as string ("gate_camp", "pirate", etc.)
+    //      Using string avoids JSON enum deserialization failure.
     // -----------------------------------------------------------------------
 
-    public enum IntelType
-    {
-        Neutral,
-        Pirate,
-        GateCamp,
-        Roaming,
-        Clear
-    }
+    // Used only when SENDING intel from overlay → API
+    public enum IntelType { Neutral, Pirate, GateCamp, Roaming, Clear }
 
     public sealed class IntelReport
     {
-        public string    System      { get; set; } = "";
-        public IntelType Type        { get; set; } = IntelType.Neutral;
-        public int       Count       { get; set; } = 1;
-        public string    Notes       { get; set; } = "";
-        public string    ReportedBy  { get; set; } = "";
-        public DateTime  ReportedAt  { get; set; } = DateTime.UtcNow;
+        public string System     { get; set; } = "";
 
-        public string TypeEmoji => Type switch
+        // Python returns "gate_camp" / "pirate" / "roaming" / "clear" / "neutral"
+        [JsonPropertyName("type")]
+        public string TypeRaw    { get; set; } = "neutral";
+
+        public int    Count      { get; set; } = 1;
+        public string Notes      { get; set; } = "";
+
+        [JsonPropertyName("reported_by")]
+        public string ReportedBy { get; set; } = "";
+
+        // Python stores Unix timestamp as float
+        [JsonPropertyName("reported_at")]
+        public double ReportedAtUnix { get; set; }
+
+        [JsonIgnore]
+        public DateTime ReportedAt =>
+            ReportedAtUnix > 0
+                ? DateTimeOffset.FromUnixTimeMilliseconds((long)(ReportedAtUnix * 1000)).UtcDateTime
+                : DateTime.UtcNow;
+
+        [JsonIgnore]
+        public string TypeEmoji => TypeRaw switch
         {
-            IntelType.GateCamp => "⛔",
-            IntelType.Pirate   => "💀",
-            IntelType.Roaming  => "⚠️",
-            IntelType.Clear    => "✅",
-            _                  => "👁️"
+            "gate_camp" => "⛔",
+            "pirate"    => "💀",
+            "roaming"   => "⚠️",
+            "clear"     => "✅",
+            _           => "👁️"
         };
 
-        public string TypeLabel => Type switch
+        [JsonIgnore]
+        public string TypeLabel => TypeRaw switch
         {
-            IntelType.GateCamp => "GATE CAMP",
-            IntelType.Pirate   => "PIRATES",
-            IntelType.Roaming  => "ROAMING",
-            IntelType.Clear    => "CLEAR",
-            _                  => "NEUTRAL"
+            "gate_camp" => "GATE CAMP",
+            "pirate"    => "PIRATES",
+            "roaming"   => "ROAMING",
+            "clear"     => "CLEAR",
+            _           => "NEUTRAL"
         };
 
+        [JsonIgnore]
         public string AgeLabel
         {
             get
@@ -115,7 +130,7 @@ namespace OverlayMVP.Models
     }
 
     // -----------------------------------------------------------------------
-    // API wrapper responses
+    // Snapshot response
     // -----------------------------------------------------------------------
 
     public sealed class OverlayDataResponse
@@ -124,4 +139,42 @@ namespace OverlayMVP.Models
         public List<Mission>     Missions  { get; set; } = new();
         public List<IntelReport> Intel     { get; set; } = new();
     }
+
+    // -----------------------------------------------------------------------
+    // EVE Window (local — Win32 detection, not from API)
+    // -----------------------------------------------------------------------
+
+    public sealed class EveWindow
+    {
+        public IntPtr Handle        { get; set; }
+        public string CharacterName { get; set; } = "";
+        public string Title         { get; set; } = "";
+        public bool   IsActive      { get; set; }
+
+        public string DisplayLabel    => string.IsNullOrEmpty(CharacterName) ? "EVE Client" : CharacterName;
+        public string ActiveIndicator => IsActive ? "▶ " : "    ";
+    }
+    // -----------------------------------------------------------------------
+    // Faction Standings (ESI)
+    // -----------------------------------------------------------------------
+    public sealed class FactionStanding
+    {
+        [JsonPropertyName("faction_id")]
+        public int    FactionId   { get; set; }
+
+        [JsonPropertyName("faction_name")]
+        public string FactionName { get; set; } = "";
+
+        [JsonPropertyName("standing")]
+        public float  Standing    { get; set; }
+
+        [JsonPropertyName("modified")]
+        public bool   Modified    { get; set; }
+    }
+
+    public sealed class StandingsResponse
+    {
+        public List<FactionStanding> Standings { get; set; } = new();
+    }
+
 }

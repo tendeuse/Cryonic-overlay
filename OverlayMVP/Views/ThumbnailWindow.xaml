@@ -1,0 +1,120 @@
+<!-- filename: Views/ThumbnailWindow.xaml -->
+<!-- Floating, resizable, always-on-top window that shows a single DWM thumbnail.
+     Drag from title bar to reposition. Resize from any edge/corner.
+     Click ✕ to close (re-attaches thumbnail to the main overlay). -->
+<Window x:Class="OverlayMVP.Views.ThumbnailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thumbnail"
+        Width="280" Height="185"
+        MinWidth="140" MinHeight="100"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ResizeMode="CanResize"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="TitleBg"    Color="#EE080D10"/>
+        <SolidColorBrush x:Key="BorderClr"  Color="#FF1E3A50"/>
+        <SolidColorBrush x:Key="AccentBlue" Color="#FF4FC3F7"/>
+        <SolidColorBrush x:Key="AccentGold" Color="#FFFFD54F"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#FFE8EDF2"/>
+
+        <!-- Resize grip thumb style -->
+        <Style x:Key="ResizeThumb" TargetType="Thumb">
+            <Setter Property="Background"       Value="Transparent"/>
+            <Setter Property="Cursor"           Value="SizeNWSE"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border Background="{TemplateBinding Background}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="{StaticResource BorderClr}"
+            BorderThickness="1"
+            CornerRadius="4"
+            Background="#EE080D10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="22"/>   <!-- title bar -->
+                <RowDefinition Height="*"/>    <!-- thumbnail area -->
+            </Grid.RowDefinitions>
+
+            <!-- ── Title bar ───────────────────────────────────────── -->
+            <Border Grid.Row="0"
+                    Background="{StaticResource TitleBg}"
+                    CornerRadius="4,4,0,0"
+                    MouseLeftButtonDown="TitleBar_MouseDown"
+                    Cursor="SizeAll">
+                <Grid Margin="6,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               x:Name="TitleLabel"
+                               Text="EVE Instance"
+                               FontFamily="Consolas"
+                               FontSize="9"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource AccentGold}"
+                               VerticalAlignment="Center"/>
+
+                    <!-- Re-attach button -->
+                    <TextBlock Grid.Column="1"
+                               Text="⤡"
+                               FontSize="10"
+                               Foreground="{StaticResource AccentBlue}"
+                               ToolTip="Re-attach to overlay"
+                               Cursor="Hand"
+                               Margin="0,0,6,0"
+                               VerticalAlignment="Center"
+                               MouseLeftButtonDown="ReAttach_Click"/>
+
+                    <!-- Close button -->
+                    <TextBlock Grid.Column="2"
+                               Text="✕"
+                               FontSize="9"
+                               Foreground="#FFEF5350"
+                               Cursor="Hand"
+                               VerticalAlignment="Center"
+                               MouseLeftButtonDown="Close_Click"/>
+                </Grid>
+            </Border>
+
+            <!-- ── DWM thumbnail host ───────────────────────────────── -->
+            <!-- This entire area is the DWM destination rect -->
+            <Border Grid.Row="1"
+                    x:Name="ThumbnailHost"
+                    Background="#FF0A0F14"
+                    CornerRadius="0,0,4,4"/>
+
+            <!-- ── Resize grip (bottom-right corner) ───────────────── -->
+            <Thumb Grid.Row="1"
+                   Width="12" Height="12"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Cursor="SizeNWSE"
+                   DragDelta="ResizeGrip_DragDelta"
+                   Opacity="0.6">
+                <Thumb.Template>
+                    <ControlTemplate TargetType="Thumb">
+                        <TextBlock Text="◢"
+                                   FontSize="10"
+                                   Foreground="{StaticResource BorderClr}"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"/>
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </Grid>
+    </Border>
+</Window>

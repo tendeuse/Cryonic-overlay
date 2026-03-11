@@ -105,6 +105,12 @@ namespace OverlayMVP.Services
         // Faction panel
         public string PanelFaction      => T("🎯  FACTION FOCUS",           "🎯  FACTION CIBLE");
 
+        // Aliases expected by MainWindow.xaml bindings
+        public string PilotStatus       => PanelPilot;
+        public string IntelAlerts       => PanelIntel;
+        public string ActiveMissions    => PanelMissions;
+        public string FactionFocus      => PanelFaction;
+
         // First Run Wizard
         public string WizardTitle       => T("ARC Mission Overlay — First Run", "ARC Overlay Missions — Premier Lancement");
         public string WizardApiUrl      => T("API Base URL (Railway domain)",   "URL de l'API (domaine Railway)");
