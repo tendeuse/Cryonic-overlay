@@ -319,13 +319,7 @@
                                 Command="{Binding ReportRoamingCommand}"
                                 Style="{StaticResource IntelBtn}"
                                 Background="#33FFD54F"
-                                BorderBrush="{StaticResource AccentGold}"
-                                Margin="0,0,4,0"/>
-                        <Button Content="✓ CLEAR"
-                                Command="{Binding ReportClearCommand}"
-                                Style="{StaticResource IntelBtn}"
-                                Background="#3366BB6A"
-                                BorderBrush="{StaticResource AccentGreen}"/>
+                                BorderBrush="{StaticResource AccentGold}"/>
                     </WrapPanel>
 
                     <!-- Intel feed -->

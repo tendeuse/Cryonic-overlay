@@ -1,6 +1,7 @@
 // filename: Services/OverlayApiClient.cs
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,11 +13,37 @@ using OverlayMVP.Models;
 
 namespace OverlayMVP.Services
 {
+    /// <summary>Thrown when the backend returns a non-success status. Carries the HTTP status
+    /// code so callers can special-case things like 403 (account too new to post intel).</summary>
+    public sealed class OverlayApiException : Exception
+    {
+        public int StatusCode { get; }
+        public OverlayApiException(int statusCode, string message) : base(message) => StatusCode = statusCode;
+    }
+
+    public sealed class SponsorInfo
+    {
+        [JsonPropertyName("enabled")]  public bool   Enabled  { get; set; }
+        [JsonPropertyName("headline")] public string Headline { get; set; } = "";
+        [JsonPropertyName("subtext")]  public string Subtext  { get; set; } = "";
+        [JsonPropertyName("url")]      public string Url      { get; set; } = "";
+    }
+
+    public sealed class VersionInfo
+    {
+        [JsonPropertyName("version")]      public string Version     { get; set; } = "";
+        [JsonPropertyName("download_url")] public string DownloadUrl { get; set; } = "";
+        [JsonPropertyName("notes")]        public string Notes       { get; set; } = "";
+    }
+
+    /// <summary>
+    /// Talks to the live Cloudflare Worker intel API (see BackendSession.ApiBase). Every
+    /// authed call is stamped with the bearer token for whichever character is currently
+    /// active in the overlay — the token provider is supplied by the view-model so intel
+    /// is always attributed to whoever is flying.
+    /// </summary>
     public sealed class OverlayApiClient : IDisposable
     {
-        // ----------------------------------------------------------------
-        // JSON options — camelCase from Python/FastAPI backend
-        // ----------------------------------------------------------------
         private static readonly JsonSerializerOptions _json = new()
         {
             PropertyNameCaseInsensitive = true,
@@ -24,227 +51,202 @@ namespace OverlayMVP.Services
         };
 
         private readonly HttpClient _http;
-        private readonly string     _baseUrl;
-        private readonly string     _token;
+        private readonly string     _baseUrl = BackendSession.ApiBase;
+        private readonly Func<bool, Task<string?>> _getToken;
 
-        public OverlayApiClient(string baseUrl, string token)
+        /// <param name="getToken">Resolves a backend JWT for the currently active character.
+        /// Called with <c>forceRefresh: true</c> exactly once, to retry after a 401.</param>
+        public OverlayApiClient(Func<bool, Task<string?>> getToken)
         {
-            _baseUrl = baseUrl.TrimEnd('/');
-            _token   = token;
-
+            _getToken = getToken ?? throw new ArgumentNullException(nameof(getToken));
             _http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
-            _http.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", _token);
         }
 
         // ----------------------------------------------------------------
-        // Missions
+        // Intel
         // ----------------------------------------------------------------
 
-        public async Task<List<Mission>> GetMissionsAsync(
-            string? status = null,
-            CancellationToken ct = default)
+        public async Task<bool> PostIntelAsync(string system, string type, string notes, CancellationToken ct = default)
         {
-            var url = $"{_baseUrl}/overlay/api/v1/missions";
-            if (status is not null) url += $"?status={Uri.EscapeDataString(status)}";
+            var url  = $"{_baseUrl}/intel";
+            var body = JsonSerializer.Serialize(new { system, type, notes }, _json);
 
-            var resp = await _http.GetAsync(url, ct);
-            await EnsureSuccessAsync(resp);
-
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            var data = JsonSerializer.Deserialize<MissionListResponse>(text, _json);
-            return data?.Missions ?? new List<Mission>();
-        }
-
-        public async Task<List<FactionStanding>> GetStandingsAsync(
-            CancellationToken ct = default)
-        {
-            try
-            {
-                var url  = $"{_baseUrl}/overlay/api/v1/standings";
-                var resp = await _http.GetAsync(url, ct);
-                if (!resp.IsSuccessStatusCode) return new List<FactionStanding>();
-                var text = await resp.Content.ReadAsStringAsync(ct);
-                return JsonSerializer.Deserialize<List<FactionStanding>>(text, _json)
-                       ?? new List<FactionStanding>();
-            }
-            catch { return new List<FactionStanding>(); }
-        }
-
-        public async Task<Mission?> CreateMissionAsync(
-            string title,
-            string description = "",
-            CancellationToken ct = default)
-        {
-            var url     = $"{_baseUrl}/overlay/api/v1/missions";
-            var payload = new { title, description };
-            var json    = JsonSerializer.Serialize(payload, _json);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var resp    = await _http.PostAsync(url, content, ct);
-            await EnsureSuccessAsync(resp);
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            return JsonSerializer.Deserialize<Mission>(text, _json);
-        }
-
-        public async Task<Mission?> AssignMissionAsync(int missionId, CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/missions/{missionId}/assign";
-            var resp = await _http.PostAsync(url, null, ct);
-            await EnsureSuccessAsync(resp);
-
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            return JsonSerializer.Deserialize<Mission>(text, _json);
-        }
-
-        public async Task<Mission?> CompleteMissionAsync(int missionId, CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/missions/{missionId}/complete";
-            var resp = await _http.PostAsync(url, null, ct);
-            await EnsureSuccessAsync(resp);
-
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            return JsonSerializer.Deserialize<Mission>(text, _json);
-        }
-
-        // ----------------------------------------------------------------
-        // Character / ESI (proxied via backend — token never leaves server)
-        // ----------------------------------------------------------------
-
-        public async Task<CharacterInfo?> GetCharacterAsync(CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/character";
-            var resp = await _http.GetAsync(url, ct);
-            if (resp.StatusCode == System.Net.HttpStatusCode.NoContent) return null;
-            await EnsureSuccessAsync(resp);
-
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            return JsonSerializer.Deserialize<CharacterInfo>(text, _json);
-        }
-
-        // ----------------------------------------------------------------
-        // Intel reports
-        // ----------------------------------------------------------------
-
-        public async Task<List<IntelReport>> GetIntelAsync(CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/intel";
-            var resp = await _http.GetAsync(url, ct);
-            await EnsureSuccessAsync(resp);
-
-            var text = await resp.Content.ReadAsStringAsync(ct);
-            var list = JsonSerializer.Deserialize<List<IntelReport>>(text, _json);
-            return list ?? new List<IntelReport>();
-        }
-
-        public async Task PostIntelAsync(
-            string system,
-            IntelType type,
-            int count,
-            string notes,
-            CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/intel";
-            var body = JsonSerializer.Serialize(new
-            {
-                system,
-                type   = type.ToString().ToLowerInvariant(),
-                count,
-                notes
-            });
-
-            using var req = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = new StringContent(body, Encoding.UTF8, "application/json")
-            };
-            var resp = await _http.SendAsync(req, ct);
-            await EnsureSuccessAsync(resp);
-        }
-
-        // ----------------------------------------------------------------
-        // Full snapshot (missions + character + intel in one call)
-        // ----------------------------------------------------------------
-
-        // ── EVE SSO link status ──────────────────────────────────────────
-        public async Task<(bool linked, string? characterName)> GetEveStatusAsync(
-            CancellationToken ct = default)
-        {
-            try
-            {
-                var resp = await _http.GetAsync($"{_baseUrl}/overlay/api/v1/eve/status", ct);
-                if (!resp.IsSuccessStatusCode) return (false, null);
-                var text = await resp.Content.ReadAsStringAsync(ct);
-                using var doc = System.Text.Json.JsonDocument.Parse(text);
-                var root = doc.RootElement;
-                bool linked = root.TryGetProperty("linked", out var l) && l.GetBoolean();
-                string? name = root.TryGetProperty("character_name", out var n)
-                               ? n.GetString() : null;
-                return (linked, name);
-            }
-            catch { return (false, null); }
-        }
-
-        // ── Connectivity check ───────────────────────────────────────────
-        public async Task<(bool ok, string detail)> PingAsync(CancellationToken ct = default)
-        {
-            try
-            {
-                var resp = await _http.GetAsync($"{_baseUrl}/overlay/api/v1/health", ct);
-                var body = await resp.Content.ReadAsStringAsync(ct);
-                return ((int)resp.StatusCode < 500, $"{(int)resp.StatusCode}: {body}");
-            }
-            catch (Exception ex) { return (false, ex.Message); }
-        }
-
-        public async Task<OverlayDataResponse?> GetSnapshotAsync(CancellationToken ct = default)
-        {
-            var url  = $"{_baseUrl}/overlay/api/v1/snapshot";
-            var resp = await _http.GetAsync(url, ct);
-            if (resp.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                // Backend doesn't have snapshot endpoint yet — fall back to individual calls
-                var missions  = await GetMissionsAsync(ct: ct);
-                var character = await GetCharacterAsync(ct);
-                var intel     = await GetIntelAsync(ct);
-                return new OverlayDataResponse
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, url)
                 {
-                    Missions  = missions,
-                    Character = character,
-                    Intel     = intel
-                };
-            }
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
 
             await EnsureSuccessAsync(resp);
+            return true;
+        }
+
+        public async Task<List<IntelReport>> GetIntelAsync(string system, CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/intel?system={Uri.EscapeDataString(system)}";
+            var resp = await SendAuthedAsync(() => new HttpRequestMessage(HttpMethod.Get, url), ct);
+            await EnsureSuccessAsync(resp);
+
             var text = await resp.Content.ReadAsStringAsync(ct);
-            return JsonSerializer.Deserialize<OverlayDataResponse>(text, _json);
+            var data = JsonSerializer.Deserialize<IntelListResponse>(text, _json);
+            return data?.Intel.Select(ToIntelReport).ToList() ?? new List<IntelReport>();
         }
 
         // ----------------------------------------------------------------
-        // Helpers
+        // Orders (missions)
         // ----------------------------------------------------------------
+
+        public async Task<List<Mission>> GetOrdersAsync(string? system, CancellationToken ct = default)
+        {
+            var url = $"{_baseUrl}/missions";
+            if (!string.IsNullOrEmpty(system)) url += $"?system={Uri.EscapeDataString(system)}";
+
+            var resp = await SendAuthedAsync(() => new HttpRequestMessage(HttpMethod.Get, url), ct);
+            await EnsureSuccessAsync(resp);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            var data = JsonSerializer.Deserialize<OrderListResponse>(text, _json);
+            return data?.Missions.Select(ToMission).ToList() ?? new List<Mission>();
+        }
+
+        // ----------------------------------------------------------------
+        // Public (no auth)
+        // ----------------------------------------------------------------
+
+        public async Task<SponsorInfo?> GetSponsorAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                var resp = await _http.GetAsync($"{_baseUrl}/sponsor", ct);
+                if (!resp.IsSuccessStatusCode) return null;
+                var text = await resp.Content.ReadAsStringAsync(ct);
+                return JsonSerializer.Deserialize<SponsorInfo>(text, _json);
+            }
+            catch { return null; }
+        }
+
+        public async Task<VersionInfo?> GetVersionAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                var resp = await _http.GetAsync($"{_baseUrl}/version", ct);
+                if (!resp.IsSuccessStatusCode) return null;
+                var text = await resp.Content.ReadAsStringAsync(ct);
+                return JsonSerializer.Deserialize<VersionInfo>(text, _json);
+            }
+            catch { return null; }
+        }
+
+        // ----------------------------------------------------------------
+        // Auth helper — attaches the bearer token, retries once (with a
+        // forced-refresh token) on 401.
+        // ----------------------------------------------------------------
+
+        private async Task<HttpResponseMessage> SendAuthedAsync(
+            Func<HttpRequestMessage> buildRequest, CancellationToken ct)
+        {
+            var token = await _getToken(false);
+            var resp  = await SendWithTokenAsync(buildRequest(), token, ct);
+
+            if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                resp.Dispose();
+                var freshToken = await _getToken(true);
+                resp = await SendWithTokenAsync(buildRequest(), freshToken, ct);
+            }
+
+            return resp;
+        }
+
+        private async Task<HttpResponseMessage> SendWithTokenAsync(
+            HttpRequestMessage req, string? token, CancellationToken ct)
+        {
+            if (!string.IsNullOrEmpty(token))
+                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return await _http.SendAsync(req, ct);
+        }
 
         private static async Task EnsureSuccessAsync(HttpResponseMessage resp)
         {
-            if (!resp.IsSuccessStatusCode)
-            {
-                var body = await resp.Content.ReadAsStringAsync();
-                var code = (int)resp.StatusCode;
-                var hint = code switch {
-                    401 => " (token invalide ou expiré — re-pair requis)",
-                    503 => " (python-jose manquant sur le bot — voir requirements.txt)",
-                    0   => " (hôte introuvable — vérifier l'URL dans les paramètres)",
-                    _   => ""
-                };
-                throw new Exception($"HTTP {code}{hint}: {body}");
-            }
+            if (resp.IsSuccessStatusCode) return;
+
+            var body = await resp.Content.ReadAsStringAsync();
+            var code = (int)resp.StatusCode;
+            throw new OverlayApiException(code, string.IsNullOrEmpty(body) ? $"HTTP {code}" : $"HTTP {code}: {body}");
+        }
+
+        // ----------------------------------------------------------------
+        // Wire DTOs → display models
+        // ----------------------------------------------------------------
+
+        private static IntelReport ToIntelReport(IntelDto dto) => new()
+        {
+            System         = dto.System,
+            TypeRaw        = dto.Type,
+            Notes          = dto.Notes ?? "",
+            Count          = 1,
+            ReportedBy     = dto.ReporterCharacterId.ToString(),
+            ReportedAtUnix = ParseUnixSeconds(dto.CreatedAt),
+        };
+
+        private static Mission ToMission(OrderDto dto) => new()
+        {
+            Id          = dto.Id,
+            Title       = dto.Title,
+            Description = dto.Description ?? "",
+            CreatedBy   = dto.CreatedBy.ToString(),
+            CreatedAt   = dto.CreatedAt ?? "",
+        };
+
+        private static double ParseUnixSeconds(string? iso)
+        {
+            if (string.IsNullOrEmpty(iso)) return 0;
+            return DateTimeOffset.TryParse(
+                iso, System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal,
+                out var parsed)
+                ? parsed.ToUnixTimeSeconds()
+                : 0;
         }
 
         public void Dispose() => _http.Dispose();
-    }
 
-    // Reuse the same response wrapper as in MissionModels
-    internal sealed class MissionListResponse
-    {
-        [JsonPropertyName("missions")]
-        public List<Mission> Missions { get; set; } = new();
+        // ----------------------------------------------------------------
+        // Wire shapes (exact JSON returned by the Worker)
+        // ----------------------------------------------------------------
+
+        private sealed class IntelDto
+        {
+            [JsonPropertyName("id")]                   public int     Id { get; set; }
+            [JsonPropertyName("region_id")]             public int     RegionId { get; set; }
+            [JsonPropertyName("system")]                public string  System { get; set; } = "";
+            [JsonPropertyName("type")]                  public string  Type { get; set; } = "";
+            [JsonPropertyName("notes")]                 public string? Notes { get; set; }
+            [JsonPropertyName("reporter_character_id")] public int     ReporterCharacterId { get; set; }
+            [JsonPropertyName("created_at")]            public string? CreatedAt { get; set; }
+            [JsonPropertyName("expires_at")]            public string? ExpiresAt { get; set; }
+        }
+
+        private sealed class IntelListResponse
+        {
+            [JsonPropertyName("intel")] public List<IntelDto> Intel { get; set; } = new();
+        }
+
+        private sealed class OrderDto
+        {
+            [JsonPropertyName("id")]           public int     Id { get; set; }
+            [JsonPropertyName("title")]        public string  Title { get; set; } = "";
+            [JsonPropertyName("description")]  public string? Description { get; set; }
+            [JsonPropertyName("target_scope")] public string? TargetScope { get; set; }
+            [JsonPropertyName("target_id")]    public int?    TargetId { get; set; }
+            [JsonPropertyName("created_by")]   public int     CreatedBy { get; set; }
+            [JsonPropertyName("created_at")]   public string? CreatedAt { get; set; }
+            [JsonPropertyName("expires_at")]   public string? ExpiresAt { get; set; }
+        }
+
+        private sealed class OrderListResponse
+        {
+            [JsonPropertyName("missions")] public List<OrderDto> Missions { get; set; } = new();
+        }
     }
 }

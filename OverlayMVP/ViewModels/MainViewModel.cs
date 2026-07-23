@@ -25,6 +25,7 @@ namespace OverlayMVP.ViewModels
         private readonly OverlayApiClient   _api;
         private readonly OverlayConfig      _cfg;
         private readonly EsiClient          _esi;
+        private readonly BackendSession     _backend;
         private readonly IntelSearchService _intel = new();
         private readonly EveLogWatcher      _logWatcher = new();
         private CancellationTokenSource?    _pollCts;
@@ -272,8 +273,16 @@ namespace OverlayMVP.ViewModels
         {
             _db  = db;
             _cfg = cfg;
-            _api = new OverlayApiClient(cfg.ApiBaseUrl, cfg.OverlayToken);
             _esi = new EsiClient(db);
+            _backend = new BackendSession(_esi);
+            // Token provider always resolves against whichever character is active *at call
+            // time* (the lambda re-reads ActiveCharacter on every invocation), so intel is
+            // attributed to whoever is currently flying.
+            _api = new OverlayApiClient(async forceRefresh =>
+            {
+                if (ActiveCharacter is null) return null;
+                return await _backend.GetTokenAsync(ActiveCharacter, forceRefresh);
+            });
 
             FactionFocus   = cfg.FactionFocus ?? string.Empty;
             ConnectionStatus = Loc.StatusConnecting;
@@ -629,20 +638,38 @@ namespace OverlayMVP.ViewModels
         [RelayCommand] public async Task ReportGateCampAsync() => await PostIntelAsync(IntelType.GateCamp, "Gate camp reported");
         [RelayCommand] public async Task ReportPiratesAsync()  => await PostIntelAsync(IntelType.Pirate,   "Pirates reported");
         [RelayCommand] public async Task ReportRoamingAsync()  => await PostIntelAsync(IntelType.Roaming,  "Roaming gang reported");
-        [RelayCommand] public async Task ReportClearAsync()    => await PostIntelAsync(IntelType.Clear,    "System clear");
 
         private async Task PostIntelAsync(IntelType type, string notes)
         {
+            if (ActiveCharacter is null)
+            {
+                IntelStatus = "Link a character first";
+                return;
+            }
+
+            var system = string.IsNullOrEmpty(CurrentSystem) ? SolarSystem : CurrentSystem;
+            if (string.IsNullOrEmpty(system)) system = "Unknown";
+
+            var backendType = type switch
+            {
+                IntelType.GateCamp => "gate_camp",
+                IntelType.Pirate   => "hostiles",
+                IntelType.Roaming  => "roaming",
+                _                  => "gate_camp"
+            };
+
             try
             {
-                var system = string.IsNullOrEmpty(CurrentSystem) ? SolarSystem : CurrentSystem;
-                if (string.IsNullOrEmpty(system)) system = "Unknown";
-                await _api.PostIntelAsync(system, type, 1, notes);
+                await _api.PostIntelAsync(system, backendType, notes);
                 await RefreshAsync();
+            }
+            catch (OverlayApiException ex) when (ex.StatusCode == 403)
+            {
+                IntelStatus = "Account too new to post intel";
             }
             catch (Exception ex)
             {
-                ConnectionStatus = $"⚠️ {ex.Message[..Math.Min(ex.Message.Length, 30)]}";
+                IntelStatus = $"⚠️ {ex.Message[..Math.Min(ex.Message.Length, 60)]}";
             }
         }
 
@@ -705,21 +732,6 @@ namespace OverlayMVP.ViewModels
             int idx = ActiveCharacter is null ? 0
                 : (LinkedCharacters.IndexOf(ActiveCharacter) - 1 + LinkedCharacters.Count) % LinkedCharacters.Count;
             ActiveCharacter = LinkedCharacters[idx];
-        }
-
-        // ── Mission commands ──────────────────────────────────────────────
-        [RelayCommand]
-        public async Task AssignMissionAsync(int missionId)
-        {
-            try   { await _api.AssignMissionAsync(missionId);  await RefreshAsync(); }
-            catch (Exception ex) { ConnectionStatus = $"⚠️ {ex.Message[..Math.Min(ex.Message.Length, 30)]}"; }
-        }
-
-        [RelayCommand]
-        public async Task CompleteMissionAsync(int missionId)
-        {
-            try   { await _api.CompleteMissionAsync(missionId); await RefreshAsync(); }
-            catch (Exception ex) { ConnectionStatus = $"⚠️ {ex.Message[..Math.Min(ex.Message.Length, 30)]}"; }
         }
 
         // ── Mission Event (from Gamelog detection) ────────────────────────
@@ -948,37 +960,36 @@ namespace OverlayMVP.ViewModels
             ClickThroughLabel = isNowClickThrough ? "👁️ Click-Through ON" : "🖱️ Interactive";
         }
 
-        // ── Refresh (bot API polling) ─────────────────────────────────────
+        // ── Refresh (intel feed) ────────────────────────────────────────────
         private async Task RefreshAsync()
         {
             try
             {
-                var data = await _api.GetSnapshotAsync();
+                List<IntelReport>? intel = string.IsNullOrEmpty(CurrentSystem)
+                    ? null
+                    : await _api.GetIntelAsync(CurrentSystem);
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    IsConnected      = data is not null;
-                    ConnectionStatus = data is not null ? $"✅ Online  •  {DateTime.Now:HH:mm:ss}" : "⚠️ Offline";
-                    if (data != null)
+                    IsConnected      = true;
+                    ConnectionStatus = $"✅ Online  •  {DateTime.Now:HH:mm:ss}";
+
+                    if (intel is not null)
                     {
-                    HasAlerts        = data.Intel.Count > 0;
-                    IntelStatus      = data.Intel.Count == 0 ? Loc.IntelNone
-                        : $"⚠ {data.Intel.Count} active report(s)";
-                    Intel.Clear();
-                    foreach (var i in data.Intel) Intel.Add(i);
-                    Missions.Clear();
-                    foreach (var m in data.Missions) Missions.Add(m);
-                    MissionCount   = data.Missions.Count;
-                    MissionSummary = data.Missions.Count == 0 ? Loc.MissionsNone
-                        : $"{data.Missions.Count} mission{(data.Missions.Count > 1 ? "s" : "")} active";
+                        HasAlerts   = intel.Count > 0;
+                        IntelStatus = intel.Count == 0 ? Loc.IntelNone
+                            : $"⚠ {intel.Count} active report(s)";
+                        Intel.Clear();
+                        foreach (var i in intel) Intel.Add(i);
                     }
+                    // Missions/Orders are loaded separately (Task 3) — untouched here.
                 });
             }
             catch
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    IsConnected  = false;
-                    NeedsRepair  = string.IsNullOrEmpty(_cfg.OverlayToken);
+                    IsConnected      = false;
                     ConnectionStatus = "⚠️ Offline";
                 });
             }
@@ -990,6 +1001,7 @@ namespace OverlayMVP.ViewModels
             _pollCts?.Cancel();
             _pollCts?.Dispose();
             _api.Dispose();
+            _backend.Dispose();
             _esi.Dispose();
             _intel.Dispose();
             _logWatcher.Dispose();
