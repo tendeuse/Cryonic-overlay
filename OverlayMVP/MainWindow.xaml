@@ -490,6 +490,13 @@
                             Margin="0,2" Padding="10,5"
                             ToolTip="Faction Skill Plan"
                             Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
+                    <Button x:Name="BtnOrders"
+                            Content="📢  Orders"
+                            Style="{StaticResource IntelBtn}"
+                            Click="PanelBtn_Click" Tag="orders"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,2" Padding="10,5"
+                            ToolTip="Orders from your corp / coalition"/>
                 </StackPanel>
             </Border>
 

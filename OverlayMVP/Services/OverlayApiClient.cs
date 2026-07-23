@@ -196,6 +196,9 @@ namespace OverlayMVP.Services
             Description = dto.Description ?? "",
             CreatedBy   = dto.CreatedBy.ToString(),
             CreatedAt   = dto.CreatedAt ?? "",
+            TargetScope = dto.TargetScope ?? "",
+            TargetId    = dto.TargetId,
+            ExpiresAt   = dto.ExpiresAt ?? "",
         };
 
         private static double ParseUnixSeconds(string? iso)

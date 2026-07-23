@@ -263,6 +263,10 @@ namespace OverlayMVP.ViewModels
         public ObservableCollection<EveWindow>   EveWindows { get; } = new();
         public ObservableCollection<TutorialStep> PersonalPresets { get; } = new();
 
+        // ── Orders (CEO/coalition broadcasts — read-only) ─────────────────
+        public ObservableCollection<Mission> Orders { get; } = new();
+        [ObservableProperty] private string ordersStatus = "";
+
         // ── System-change notification callback (set by MainWindow) ──────
         // Allows MainWindow to forward log-watcher system changes to SystemWindow
         // without creating a hard dependency between ViewModel and the View.
@@ -340,9 +344,26 @@ namespace OverlayMVP.ViewModels
             while (!ct.IsCancellationRequested)
             {
                 await RefreshAsync();
+                await LoadOrdersAsync();
                 try { await Task.Delay(PollingIntervalMs, ct); }
                 catch (TaskCanceledException) { break; }
             }
+        }
+
+        // ── Orders (CEO/coalition broadcasts) ──────────────────────────────
+        public async Task LoadOrdersAsync()
+        {
+            try
+            {
+                var list = await _api.GetOrdersAsync(string.IsNullOrWhiteSpace(CurrentSystem) ? null : CurrentSystem);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Orders.Clear();
+                    foreach (var o in list) Orders.Add(o);
+                    OrdersStatus = list.Count == 0 ? "No active orders." : $"{list.Count} active";
+                });
+            }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
         }
 
         private async Task EveWindowLoopAsync(CancellationToken ct)
@@ -982,7 +1003,7 @@ namespace OverlayMVP.ViewModels
                         Intel.Clear();
                         foreach (var i in intel) Intel.Add(i);
                     }
-                    // Missions/Orders are loaded separately (Task 3) — untouched here.
+                    // Orders are loaded separately by LoadOrdersAsync (called from PollLoopAsync).
                 });
             }
             catch

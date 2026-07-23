@@ -322,6 +322,7 @@ namespace OverlayMVP
                 "standing" => new Views.StandingGuideWindow(),
                 "progress" => new Views.MissionProgressWindow(),
                 "skills"   => new Views.SkillPlanWindow(),
+                "orders"   => new Views.OrdersWindow(),
                 _          => throw new ArgumentException($"Unknown panel key: {key}")
             };
 
