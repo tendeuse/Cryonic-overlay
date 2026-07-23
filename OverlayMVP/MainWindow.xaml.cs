@@ -50,7 +50,6 @@ namespace OverlayMVP
             _hotkeys.SetHandler(HotkeyManager.ID_TOGGLE_VISIBILITY,   ToggleVisibility);
             _hotkeys.SetHandler(HotkeyManager.ID_TOGGLE_CLICKTHROUGH, ToggleClickThrough);
             _hotkeys.SetHandler(HotkeyManager.ID_REPORT_INTEL,  () => _vm.ReportRoamingCommand.Execute(null));
-            _hotkeys.SetHandler(HotkeyManager.ID_REPORT_CLEAR,  () => _vm.ReportClearCommand.Execute(null));
 
             _multibox.SetDestinationWindow(_hwnd);
             _multibox.RefreshInstances();
