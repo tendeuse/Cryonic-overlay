@@ -112,6 +112,10 @@ namespace OverlayMVP
         private void SupportBtn_Click(object sender, RoutedEventArgs e)
             => OpenUrl(_vm.SupportUrl);
 
+        // Update notice: opens the server-provided download URL for the newer version.
+        private void UpdateBtn_Click(object sender, RoutedEventArgs e)
+            => OpenUrl(_vm.UpdateUrl);
+
         private static void OpenUrl(string? url)
         {
             if (string.IsNullOrWhiteSpace(url)) return;

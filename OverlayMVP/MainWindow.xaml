@@ -136,15 +136,54 @@
                 </Grid>
             </Border>
 
-            <!-- ── Re-pair warning banner ────────────────────────────────── -->
-            <Border Grid.Row="1"
-                    Background="#CCEF5350"
-                    CornerRadius="0"
-                    Padding="8,4"
-                    Visibility="{Binding NeedsRepair, Converter={StaticResource BoolToVis}}">
-                <TextBlock TextWrapping="Wrap" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold" Foreground="White"
-                           Text="⚠️ Token invalide — Discord: /overlay_pair puis Paramètres → Re-pair"/>
-            </Border>
+            <!-- ── Re-pair warning + update notice ───────────────────────────
+                 Both stacked inside row 1 (rather than adding a new RowDefinition)
+                 to avoid renumbering every Grid.Row below, including the resize
+                 strips at the bottom of the grid. -->
+            <StackPanel Grid.Row="1">
+                <Border Background="#CCEF5350"
+                        CornerRadius="0"
+                        Padding="8,4"
+                        Visibility="{Binding NeedsRepair, Converter={StaticResource BoolToVis}}">
+                    <TextBlock TextWrapping="Wrap" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold" Foreground="White"
+                               Text="⚠️ Token invalide — Discord: /overlay_pair puis Paramètres → Re-pair"/>
+                </Border>
+
+                <!-- ── Update notice (server-driven; non-intrusive banner row —
+                     never a modal, never blocks overlay use; dismissible) ───── -->
+                <Border Background="#CC1E3148"
+                        CornerRadius="0"
+                        Padding="8,4"
+                        Visibility="{Binding ShowUpdateNotice, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
+                            <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"
+                                       Foreground="{StaticResource AccentBlue}" TextWrapping="Wrap">
+                                <Run Text="⬆ Update available — v"/><Run Text="{Binding UpdateVersion, Mode=OneWay}"/>
+                            </TextBlock>
+                            <TextBlock Text="{Binding UpdateNotes}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Content="Download"
+                                Click="UpdateBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Margin="0,0,4,0"/>
+                        <Button Grid.Column="2"
+                                Content="✕"
+                                Command="{Binding DismissUpdateCommand}"
+                                Style="{StaticResource SmallBtn}"
+                                ToolTip="Dismiss"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
 
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  MULTIBOX SWITCHER  (always visible)                    -->

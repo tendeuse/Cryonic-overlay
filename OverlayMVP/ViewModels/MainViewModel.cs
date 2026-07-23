@@ -31,9 +31,10 @@ namespace OverlayMVP.ViewModels
         private CancellationTokenSource?    _pollCts;
         private bool                        _autoSwitchingCharacter = false;
 
-        private const int PollingIntervalMs  = 10_000;
-        private const int EveWindowRefreshMs = 3_000;
-        private const int AP_PER_MISSION     = 50;
+        private const int PollingIntervalMs        = 10_000;
+        private const int EveWindowRefreshMs       = 3_000;
+        private const int AP_PER_MISSION           = 50;
+        private const int SponsorVersionIntervalMs = 3_600_000; // hourly
 
         // ── Localization ──────────────────────────────────────────────────
         public LocalizationManager Loc => LocalizationManager.Instance;
@@ -207,13 +208,19 @@ namespace OverlayMVP.ViewModels
         // never interferes with app use (§4.4c). The support/Patreon link is a
         // purely voluntary donation and is NOT tied to the banner or to any
         // feature — do not gate functionality or ad-removal on donating (§4.4b/§4.2).
-        // Swap these defaults for an ad-server feed / your Patreon URL, or wire
-        // them to config later. Leave SponsorUrl empty to show a house promo.
-        [ObservableProperty] private bool   showSponsorBanner = true;
-        [ObservableProperty] private string sponsorHeadline   = "Your ad here";
-        [ObservableProperty] private string sponsorSubtext    = "Sponsor this slot — contact ARC in Discord";
+        // Values are server-driven (see RefreshSponsorAsync) — no local defaults;
+        // the banner stays hidden until the server responds with Enabled=true.
+        [ObservableProperty] private bool   showSponsorBanner = false;
+        [ObservableProperty] private string sponsorHeadline   = "";
+        [ObservableProperty] private string sponsorSubtext    = "";
         [ObservableProperty] private string sponsorUrl        = "";
         [ObservableProperty] private string supportUrl        = "https://www.patreon.com/";
+
+        // ── Update notice (server-driven; dismissible, non-blocking) ──────
+        [ObservableProperty] private bool   showUpdateNotice = false;
+        [ObservableProperty] private string updateVersion    = "";
+        [ObservableProperty] private string updateNotes      = "";
+        [ObservableProperty] private string updateUrl        = "";
 
         partial void OnIsOmegaChanged(bool value)
         {
@@ -337,7 +344,48 @@ namespace OverlayMVP.ViewModels
             _ = PollLoopAsync(_pollCts.Token);
             _ = EveWindowLoopAsync(_pollCts.Token);
             _ = EsiStatusLoopAsync(_pollCts.Token);
+            _ = SponsorVersionLoopAsync(_pollCts.Token);
         }
+
+        // ── Sponsor banner + update notice (server-driven, hourly) ────────
+        private async Task SponsorVersionLoopAsync(CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                await RefreshSponsorAsync();
+                await CheckVersionAsync();
+                try { await Task.Delay(SponsorVersionIntervalMs, ct); }
+                catch (TaskCanceledException) { break; }
+            }
+        }
+
+        private async Task RefreshSponsorAsync()
+        {
+            var s = await _api.GetSponsorAsync();
+            if (s is null) return;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ShowSponsorBanner = s.Enabled;
+                SponsorHeadline   = s.Headline ?? "";
+                SponsorSubtext    = s.Subtext  ?? "";
+                SponsorUrl        = s.Url      ?? "";
+            });
+        }
+
+        private async Task CheckVersionAsync()
+        {
+            var v = await _api.GetVersionAsync();
+            if (v is null || string.IsNullOrWhiteSpace(v.Version)) return;
+            var local = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if (!Version.TryParse(v.Version, out var remote) || local is null || remote <= local) return;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                UpdateVersion = v.Version; UpdateNotes = v.Notes ?? ""; UpdateUrl = v.DownloadUrl ?? "";
+                ShowUpdateNotice = true;
+            });
+        }
+
+        [RelayCommand] public void DismissUpdate() => ShowUpdateNotice = false;
 
         private async Task PollLoopAsync(CancellationToken ct)
         {
