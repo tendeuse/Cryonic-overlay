@@ -1,10 +1,8 @@
 // filename: Views/FirstRunWindow.xaml.cs
 //
-// FIX 1: Button event is SaveAndLaunch_Click (matches FirstRunWindow.xaml)
-// FIX 2: PairingClient() takes no constructor args
-// FIX 3: Method is ExchangeCodeAsync(apiBaseUrl, code) not ExchangeAsync(code)
-// FIX 4: Opens MainWindow BEFORE closing so app stays alive
-//        (requires App.xaml.cs ShutdownMode = OnExplicitShutdown)
+// First-run flow: no bot pairing — just EVE SSO login (EsiClient.AuthorizeAsync).
+// Opens MainWindow BEFORE closing so the app stays alive
+// (requires App.xaml.cs ShutdownMode = OnExplicitShutdown).
 //
 using System.Windows;
 using OverlayMVP.Services;
@@ -25,42 +23,25 @@ namespace OverlayMVP.Views
             DataContext = _vm;
         }
 
-        private async void SaveAndLaunch_Click(object sender, RoutedEventArgs e)
+        private async void LoginWithEve_Click(object sender, RoutedEventArgs e)
         {
-            if (!_vm.Validate(out var err))
-            {
-                _vm.Status = $"❌ {err}";
-                return;
-            }
-
-            _vm.Status = "⏳ Connecting…";
+            _vm.Status = "⏳ Opening browser to log in with EVE…";
             IsEnabled  = false;
 
             try
             {
-                var client = new PairingClient();
-                var (token, expiresAt) = await client.ExchangeCodeAsync(
-                    _vm.ApiBaseUrl.Trim(),
-                    _vm.PairCode.Trim());
+                using var esi = new EsiClient(_db);
+                var charName = await esi.AuthorizeAsync();
 
-                if (string.IsNullOrWhiteSpace(token))
-                {
-                    _vm.Status = "❌ Pair exchange returned an empty token. Check your code.";
-                    IsEnabled  = true;
-                    return;
-                }
-
-                // Persist config
+                // Persist config (no bot pairing — just the local preferences)
                 var cfg = new OverlayConfig
                 {
-                    ApiBaseUrl   = _vm.ApiBaseUrl.Trim(),
-                    OverlayToken = token,
                     AlphaOmega   = _vm.AlphaOmega,
                     FactionFocus = _vm.FactionFocus,
                 };
                 cfg.Save(_db);
 
-                _vm.Status = "✅ Connected! Opening overlay…";
+                _vm.Status = $"✅ {charName} linked! Opening overlay…";
 
                 // FIX: open MainWindow BEFORE closing this window.
                 // With ShutdownMode = OnExplicitShutdown the app stays alive,

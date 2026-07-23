@@ -66,6 +66,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Title -->
@@ -115,18 +116,29 @@
                             Margin="0,0,4,0"
                             Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
 
-                    <!-- Settings / Re-pair -->
+                    <!-- Control panel (super-users only) -->
                     <Button Grid.Column="5"
+                            Content="🛠"
+                            Click="ControlPanelBtn_Click"
+                            Style="{StaticResource SmallBtn}"
+                            Background="#334FC3F7"
+                            BorderBrush="{StaticResource AccentBlue}"
+                            ToolTip="Open Control Panel"
+                            Margin="0,0,4,0"
+                            Visibility="{Binding IsSuperUser, Converter={StaticResource BoolToVis}}"/>
+
+                    <!-- Settings -->
+                    <Button Grid.Column="6"
                             Content="⚙"
                             Click="SettingsBtn_Click"
                             Style="{StaticResource SmallBtn}"
                             Background="#33FFFFFF"
                             BorderBrush="{StaticResource Border}"
-                            ToolTip="Paramètres / Re-pair"
+                            ToolTip="Paramètres"
                             Margin="0,0,6,0"/>
 
                     <!-- Close -->
-                    <Button Grid.Column="6"
+                    <Button Grid.Column="7"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
@@ -136,19 +148,11 @@
                 </Grid>
             </Border>
 
-            <!-- ── Re-pair warning + update notice ───────────────────────────
-                 Both stacked inside row 1 (rather than adding a new RowDefinition)
+            <!-- ── Update notice ────────────────────────────────────────────
+                 Stacked inside row 1 (rather than adding a new RowDefinition)
                  to avoid renumbering every Grid.Row below, including the resize
                  strips at the bottom of the grid. -->
             <StackPanel Grid.Row="1">
-                <Border Background="#CCEF5350"
-                        CornerRadius="0"
-                        Padding="8,4"
-                        Visibility="{Binding NeedsRepair, Converter={StaticResource BoolToVis}}">
-                    <TextBlock TextWrapping="Wrap" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold" Foreground="White"
-                               Text="⚠️ Token invalide — Discord: /overlay_pair puis Paramètres → Re-pair"/>
-                </Border>
-
                 <!-- ── Update notice (server-driven; non-intrusive banner row —
                      never a modal, never blocks overlay use; dismissible) ───── -->
                 <Border Background="#CC1E3148"

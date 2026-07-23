@@ -116,6 +116,10 @@ namespace OverlayMVP
         private void UpdateBtn_Click(object sender, RoutedEventArgs e)
             => OpenUrl(_vm.UpdateUrl);
 
+        // Control panel: super-users only (see MainViewModel.IsSuperUser).
+        private void ControlPanelBtn_Click(object sender, RoutedEventArgs e)
+            => OpenUrl("https://cryonic-panel.pages.dev/");
+
         private static void OpenUrl(string? url)
         {
             if (string.IsNullOrWhiteSpace(url)) return;

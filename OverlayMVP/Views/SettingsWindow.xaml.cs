@@ -10,7 +10,6 @@ namespace OverlayMVP.Views
     {
         private readonly AppDb         _db;
         private readonly OverlayConfig _cfg;
-        private readonly PairingClient _pairing = new();
 
         private const string FontSizeKey     = "ui_font_size";
         private const double FontSizeDefault = 11.0;
@@ -52,7 +51,6 @@ namespace OverlayMVP.Views
             _cfg = cfg;
 
             UrlBox.Text      = cfg.ApiBaseUrl;
-            PairCodeBox.Text = "";
             ClientIdBox.Text = EsiClient.LoadClientId(db);
 
             foreach (ComboBoxItem item in FactionBox.Items)
@@ -188,37 +186,6 @@ namespace OverlayMVP.Views
             SaveFontSize(_db, FontSizeSlider.Value);
             EsiClient.SaveClientId(_db, ClientIdBox.Text.Trim());
             SetStatus("✅  Saved. Restart to apply font size changes.");
-        }
-
-        private async void RepairAndSave_Click(object sender, RoutedEventArgs e)
-        {
-            var url  = UrlBox.Text.Trim().TrimEnd('/');
-            var code = PairCodeBox.Text.Trim().ToUpperInvariant();
-            if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            { SetStatus("⚠️  Invalid URL.", error: true); return; }
-            if (code.Length < 8)
-            { SetStatus("⚠️  Invalid code — 8 characters required.", error: true); return; }
-
-            SetStatus("⏳  Connecting to bot…");
-            IsEnabled = false;
-            try
-            {
-                var (token, expiresAt) = await _pairing.ExchangeCodeAsync(url, code);
-                _cfg.ApiBaseUrl   = url;
-                _cfg.OverlayToken = token;
-                _cfg.FactionFocus = (FactionBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
-                                    ?? _cfg.FactionFocus;
-                _cfg.AlphaOmega   = (AlphaBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
-                                    ?? _cfg.AlphaOmega;
-                SaveFeatureFlags();
-                _cfg.Save(_db);
-                SaveFontSize(_db, FontSizeSlider.Value);
-                EsiClient.SaveClientId(_db, ClientIdBox.Text.Trim());
-                SetStatus($"✅  Paired! Token valid until {expiresAt[..10]}. Restart overlay.");
-                PairCodeBox.Text = "";
-            }
-            catch (Exception ex) { SetStatus($"❌  {ex.Message}", error: true); }
-            finally { IsEnabled = true; }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e) => Close();

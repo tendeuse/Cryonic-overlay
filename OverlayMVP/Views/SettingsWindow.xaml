@@ -70,24 +70,14 @@
 
         <!-- Heading -->
         <TextBlock Grid.Row="0"
-                   Text="⚙  Settings / Re-pair"
+                   Text="⚙  Settings"
                    FontSize="18" FontWeight="Bold"
                    Foreground="#FF00B4D4"/>
 
         <!-- API URL -->
         <StackPanel Grid.Row="2">
-            <TextBlock Text="API Base URL (Railway)" Opacity="0.8" Margin="0,0,0,5"/>
+            <TextBlock Text="API Base URL (advanced)" Opacity="0.8" Margin="0,0,0,5"/>
             <TextBox x:Name="UrlBox"/>
-        </StackPanel>
-
-        <!-- Pair Code -->
-        <StackPanel Grid.Row="4">
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <TextBlock Text="Pair Code" Opacity="0.8"/>
-                <TextBlock Text="  (Discord: /overlay_pair)" Foreground="#FF00B4D4" FontSize="11"/>
-            </StackPanel>
-            <TextBox x:Name="PairCodeBox" CharacterCasing="Upper" MaxLength="8"
-                     FontSize="14" FontWeight="Bold"/>
         </StackPanel>
 
         <!-- Faction Focus + Account Type -->
@@ -246,7 +236,7 @@
         <!-- Status -->
         <TextBlock Grid.Row="18"
                    x:Name="StatusLabel"
-                   Text="Enter a pair code from Discord to re-link the overlay."
+                   Text=""
                    TextWrapping="Wrap"
                    FontSize="11"
                    Foreground="#FF9AD1FF"/>
@@ -256,11 +246,8 @@
             <Button Content="Cancel"
                     Click="Cancel_Click"
                     Margin="0,0,6,0"/>
-            <Button Content="Save (no re-pair)"
+            <Button Content="Save"
                     Click="SaveOnly_Click"
-                    Margin="0,0,6,0"/>
-            <Button Content="Re-pair and Save"
-                    Click="RepairAndSave_Click"
                     Background="#FF003D5C"
                     BorderBrush="#FF00B4D4"
                     Foreground="#FF00B4D4"/>

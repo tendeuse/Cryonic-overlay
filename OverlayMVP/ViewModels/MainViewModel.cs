@@ -42,7 +42,6 @@ namespace OverlayMVP.ViewModels
         // ── Connection / Status ───────────────────────────────────────────
         [ObservableProperty] private string connectionStatus  = "";
         [ObservableProperty] private bool   isConnected       = false;
-        [ObservableProperty] private bool   needsRepair       = false;
         [ObservableProperty] private bool   isClickThrough    = false;
         [ObservableProperty] private string clickThroughLabel = "🖱️ Interactive";
 
@@ -63,13 +62,27 @@ namespace OverlayMVP.ViewModels
         public ObservableCollection<EsiToken> LinkedCharacters { get; } = new();
         public bool HasMultipleCharacters => LinkedCharacters.Count > 1;
 
+        // ── Super-user / control panel ──────────────────────────────────────
+        [ObservableProperty] private bool isSuperUser = false;
+
+        /// <summary>Mints (or reuses) a backend session for the character and updates
+        /// IsSuperUser from the resulting role claim (global/coalition/ceo).</summary>
+        private async Task RefreshSuperUserAsync(EsiToken character)
+        {
+            try { await _backend.GetTokenAsync(character); }
+            catch { /* leave IsSuperUser as-is on failure */ }
+            Application.Current.Dispatcher.Invoke(() =>
+                IsSuperUser = _backend.IsSuperUser(character.CharacterId));
+        }
+
         partial void OnActiveCharacterChanged(EsiToken? value)
         {
-            if (value is null) return;
+            if (value is null) { IsSuperUser = false; return; }
             EveCharacterName = value.CharacterName;
             // Refresh both standings AND skills whenever the active character changes
             _ = RefreshSkillPlanAsync();
             EveLinkStatus    = $"ESI: {value.CharacterName}";
+            _ = RefreshSuperUserAsync(value);
             if (_autoSwitchingCharacter) return;
             _standings.Clear();
             StandingsLoaded  = false;
@@ -214,7 +227,7 @@ namespace OverlayMVP.ViewModels
         [ObservableProperty] private string sponsorHeadline   = "";
         [ObservableProperty] private string sponsorSubtext    = "";
         [ObservableProperty] private string sponsorUrl        = "";
-        [ObservableProperty] private string supportUrl        = "https://www.patreon.com/";
+        [ObservableProperty] private string supportUrl        = "https://github.com/sponsors/tendeuse";
 
         // ── Update notice (server-driven; dismissible, non-blocking) ──────
         [ObservableProperty] private bool   showUpdateNotice = false;

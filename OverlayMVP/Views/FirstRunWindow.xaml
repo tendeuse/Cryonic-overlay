@@ -23,12 +23,6 @@
                Margin="0,0,0,12"/>
 
     <StackPanel Grid.Row="1" Margin="0,6,0,6">
-      <TextBlock Text="API Base URL (Railway domain)" Opacity="0.85"/>
-      <TextBox Text="{Binding ApiBaseUrl}" Margin="0,6,0,12"/>
-
-      <TextBlock Text="Pair Code (from Discord: /overlay pair)" Opacity="0.85"/>
-      <TextBox Text="{Binding PairCode}" Margin="0,6,0,12"/>
-
       <TextBlock Text="Account Type" Opacity="0.85"/>
       <ComboBox SelectedValue="{Binding AlphaOmega}" SelectedValuePath="Tag" Margin="0,6,0,12">
         <ComboBoxItem Content="Alpha" Tag="ALPHA"/>
@@ -63,9 +57,9 @@
     </StackPanel>
 
     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-      <Button Content="Pair &amp; Launch"
-              Width="140"
-              Click="SaveAndLaunch_Click"/>
+      <Button Content="Log in with EVE"
+              Width="160"
+              Click="LoginWithEve_Click"/>
     </StackPanel>
   </Grid>
 </Window>
