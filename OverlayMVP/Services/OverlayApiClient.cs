@@ -164,6 +164,37 @@ namespace OverlayMVP.Services
         // Full snapshot (missions + character + intel in one call)
         // ----------------------------------------------------------------
 
+        // ── EVE SSO link status ──────────────────────────────────────────
+        public async Task<(bool linked, string? characterName)> GetEveStatusAsync(
+            CancellationToken ct = default)
+        {
+            try
+            {
+                var resp = await _http.GetAsync($"{_baseUrl}/overlay/api/v1/eve/status", ct);
+                if (!resp.IsSuccessStatusCode) return (false, null);
+                var text = await resp.Content.ReadAsStringAsync(ct);
+                using var doc = System.Text.Json.JsonDocument.Parse(text);
+                var root = doc.RootElement;
+                bool linked = root.TryGetProperty("linked", out var l) && l.GetBoolean();
+                string? name = root.TryGetProperty("character_name", out var n)
+                               ? n.GetString() : null;
+                return (linked, name);
+            }
+            catch { return (false, null); }
+        }
+
+        // ── Connectivity check ───────────────────────────────────────────
+        public async Task<(bool ok, string detail)> PingAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                var resp = await _http.GetAsync($"{_baseUrl}/overlay/api/v1/health", ct);
+                var body = await resp.Content.ReadAsStringAsync(ct);
+                return ((int)resp.StatusCode < 500, $"{(int)resp.StatusCode}: {body}");
+            }
+            catch (Exception ex) { return (false, ex.Message); }
+        }
+
         public async Task<OverlayDataResponse?> GetSnapshotAsync(CancellationToken ct = default)
         {
             var url  = $"{_baseUrl}/overlay/api/v1/snapshot";
@@ -196,7 +227,14 @@ namespace OverlayMVP.Services
             if (!resp.IsSuccessStatusCode)
             {
                 var body = await resp.Content.ReadAsStringAsync();
-                throw new Exception($"API error {(int)resp.StatusCode}: {body}");
+                var code = (int)resp.StatusCode;
+                var hint = code switch {
+                    401 => " (token invalide ou expiré — re-pair requis)",
+                    503 => " (python-jose manquant sur le bot — voir requirements.txt)",
+                    0   => " (hôte introuvable — vérifier l'URL dans les paramètres)",
+                    _   => ""
+                };
+                throw new Exception($"HTTP {code}{hint}: {body}");
             }
         }
 

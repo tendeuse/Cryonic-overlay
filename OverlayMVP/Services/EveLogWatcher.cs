@@ -20,6 +20,9 @@ namespace OverlayMVP.Services
     public sealed class EveLogWatcher : IDisposable
     {
         public event Action<string>? SystemChanged;
+        // Fired when a mission is accepted or completed in the game journal
+        // args: (characterName, missionName, eventType) where eventType = "accepted"|"completed"
+        public event Action<string, string, string>? MissionEvent;
 
         [DllImport("user32.dll")] private static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -31,15 +34,29 @@ namespace OverlayMVP.Services
             @"Channel changed to Local\s*:\s*(.+)$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        // EVE Gamelog mission lines (appear in Gamelogs folder)
+        private static readonly Regex MissionAcceptRx = new(
+            @"Mission accepted:\s*(.+?)(?:\s*<|$)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex MissionCompleteRx = new(
+            @"(?:Mission completed|Objective completed):\s*(.+?)(?:\s*<|$)",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         private static readonly string LogDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
             "EVE", "logs", "Chatlogs");
+
+        private static readonly string GameLogDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            "EVE", "logs", "Gamelogs");
 
         // EVE logs are UTF-16-LE
         private static readonly Encoding EveEncoding = new UnicodeEncoding(false, true);
 
         private readonly Dictionary<string, string> _charToFile  = new();
-        private readonly Dictionary<string, long>   _fileOffsets = new();
+        private readonly Dictionary<string, long>   _fileOffsets     = new();
+        private readonly Dictionary<string, long>   _gameLogOffsets  = new();
+        private string _lastGameLogFile = "";
         private readonly Dictionary<string, string> _fileSystems = new();
         private readonly System.Threading.Timer     _timer;
         private string _lastReportedSystem = "";
@@ -73,6 +90,64 @@ namespace OverlayMVP.Services
                     _lastReportedSystem = system;
                     SystemChanged?.Invoke(system);
                 }
+
+                // Also poll Gamelogs for mission events
+                PollGameLog(activeChar);
+            }
+            catch { }
+        }
+
+        // ── Poll Gamelogs for mission accepted/completed events ───────────
+        private void PollGameLog(string characterName)
+        {
+            if (!Directory.Exists(GameLogDir)) return;
+            try
+            {
+                // Find the most recent gamelog file (EVE creates one per session)
+                var latestFile = Directory.GetFiles(GameLogDir, "*.txt")
+                    .OrderByDescending(f => File.GetLastWriteTime(f))
+                    .FirstOrDefault();
+                if (latestFile is null) return;
+
+                // Reset offset if file changed
+                if (latestFile != _lastGameLogFile)
+                {
+                    _lastGameLogFile = latestFile;
+                    _gameLogOffsets[latestFile] = 0;
+                }
+
+                using var fs = new FileStream(latestFile, FileMode.Open,
+                    FileAccess.Read, FileShare.ReadWrite);
+
+                if (!_gameLogOffsets.TryGetValue(latestFile, out long offset))
+                    offset = Math.Max(0, fs.Length - 16384);
+                if (offset > fs.Length) offset = 0;
+                fs.Seek(offset, SeekOrigin.Begin);
+
+                // Gamelogs are UTF-8
+                using var reader = new StreamReader(fs, Encoding.UTF8,
+                    detectEncodingFromByteOrderMarks: true, 4096, leaveOpen: true);
+
+                string? line;
+                while ((line = reader.ReadLine()) is not null)
+                {
+                    var clean = line.TrimStart('﻿', ' ', '	');
+
+                    var accept = MissionAcceptRx.Match(clean);
+                    if (accept.Success)
+                    {
+                        var missionName = accept.Groups[1].Value.Trim();
+                        MissionEvent?.Invoke(characterName, missionName, "accepted");
+                    }
+
+                    var complete = MissionCompleteRx.Match(clean);
+                    if (complete.Success)
+                    {
+                        var missionName = complete.Groups[1].Value.Trim();
+                        MissionEvent?.Invoke(characterName, missionName, "completed");
+                    }
+                }
+                _gameLogOffsets[latestFile] = fs.Position;
             }
             catch { }
         }

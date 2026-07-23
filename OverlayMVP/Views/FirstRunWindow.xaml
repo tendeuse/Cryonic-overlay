@@ -4,7 +4,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="First Run Setup"
         Width="520" Height="420"
+        MinWidth="400" MinHeight="320"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
         Background="#FF0A1A2F"
         Foreground="White">
 
@@ -35,11 +37,26 @@
 
       <TextBlock Text="Faction Focus (can be changed later)" Opacity="0.85"/>
       <ComboBox SelectedValue="{Binding FactionFocus}" SelectedValuePath="Tag" Margin="0,6,0,12">
-        <ComboBoxItem Content="Caldari" Tag="CALDARI"/>
-        <ComboBoxItem Content="ORE" Tag="ORE"/>
-        <ComboBoxItem Content="CONCORD" Tag="CONCORD"/>
-        <ComboBoxItem Content="EDENCOM" Tag="EDENCOM"/>
-        <ComboBoxItem Content="Sisters of EVE" Tag="SOE"/>
+        <!-- Empire -->
+        <ComboBoxItem Content="Caldari State"                Tag="CALDARI"/>
+        <ComboBoxItem Content="Gallente Federation"          Tag="GALLENTE"/>
+        <ComboBoxItem Content="Amarr Empire"                 Tag="AMARR"/>
+        <ComboBoxItem Content="Minmatar Republic"            Tag="MINMATAR"/>
+        <!-- Neutral / special -->
+        <ComboBoxItem Content="Sisters of EVE"               Tag="SOE"/>
+        <ComboBoxItem Content="CONCORD Assembly"             Tag="CONCORD"/>
+        <ComboBoxItem Content="ORE"                          Tag="ORE"/>
+        <ComboBoxItem Content="EDENCOM"                      Tag="EDENCOM"/>
+        <ComboBoxItem Content="Triglavian Collective"        Tag="TRIGLAVIAN"/>
+        <!-- Pirate factions -->
+        <ComboBoxItem Content="Guristas Pirates"             Tag="GURISTAS"/>
+        <ComboBoxItem Content="Angel Cartel"                 Tag="ANGELS"/>
+        <ComboBoxItem Content="Blood Raiders"                Tag="BLOOD"/>
+        <ComboBoxItem Content="Serpentis Corporation"        Tag="SERPENTIS"/>
+        <ComboBoxItem Content="Sansha's Nation"              Tag="SANSHA"/>
+        <ComboBoxItem Content="Mordu's Legion Command"       Tag="MORDUS"/>
+        <!-- Other (unique ships open to all) -->
+        <ComboBoxItem Content="Society of Conscious Thought" Tag="SOCT"/>
       </ComboBox>
 
       <TextBlock Text="{Binding Status}" Foreground="#FF9AD1FF" Margin="0,8,0,0" TextWrapping="Wrap"/>

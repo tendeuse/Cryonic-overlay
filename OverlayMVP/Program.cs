@@ -31,6 +31,7 @@ namespace OverlayMVP
         private static void RunApp()
         {
             var app = new App();
+            app.InitializeComponent();   // load App.xaml BAML → populates Application.Resources
             app.Run();
         }
     }

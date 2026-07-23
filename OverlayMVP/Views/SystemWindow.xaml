@@ -1,0 +1,222 @@
+<!-- filename: Views/SystemWindow.xaml -->
+<Window x:Class="OverlayMVP.Views.SystemWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="System Info — Cryonic Overlay"
+        Width="360" Height="620"
+        MinWidth="280" MinHeight="300"
+        WindowStyle="None" AllowsTransparency="True"
+        Background="Transparent" Topmost="True"
+        ShowActivated="False" Focusable="False"
+        ResizeMode="CanResize">
+
+    <Window.Resources>
+        <Style x:Key="TabBtn" TargetType="Button">
+            <Setter Property="FontFamily"    Value="Consolas"/>
+            <Setter Property="FontSize"      Value="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
+            <Setter Property="Background"    Value="Transparent"/>
+            <Setter Property="Foreground"    Value="#FF8A99AA"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="BorderBrush"   Value="Transparent"/>
+            <Setter Property="Padding"       Value="10,6"/>
+            <Setter Property="Cursor"        Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#EE0D1117" BorderBrush="#FF1E3148"
+            BorderThickness="1" CornerRadius="6">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>  <!-- title bar -->
+                <RowDefinition Height="Auto"/>  <!-- tab bar -->
+                <RowDefinition Height="Auto"/>  <!-- inputs -->
+                <RowDefinition Height="*"/>     <!-- content -->
+            </Grid.RowDefinitions>
+
+            <!-- Title bar -->
+            <Border Grid.Row="0" Background="#CC111820" CornerRadius="6,6,0,0"
+                    Padding="10,6"
+                    MouseLeftButtonDown="TitleBar_MouseDown"
+                    MouseMove="TitleBar_MouseMove"
+                    MouseLeftButtonUp="TitleBar_MouseUp"
+                    Cursor="SizeAll">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="TitleLabel"
+                               Text="🌐  SYSTEM INFO"
+                               FontFamily="Consolas" FontWeight="Bold"
+                               FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
+                               Foreground="#FF4FC3F7" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="⟳" x:Name="RefreshBtn"
+                            Click="Refresh_Click"
+                            FontFamily="Consolas"
+                            FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                            Background="#22FFFFFF" Foreground="#FF8A99AA"
+                            BorderBrush="#FF1E3148" BorderThickness="1"
+                            Padding="6,2" Cursor="Hand" Margin="0,0,6,0"/>
+                    <Button Grid.Column="2" Content="✕" Click="Close_Click"
+                            FontFamily="Consolas"
+                            FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                            Background="#33EF5350" Foreground="#FFEF5350"
+                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Padding="6,2" Cursor="Hand"/>
+                </Grid>
+            </Border>
+
+            <!-- Tab bar -->
+            <Border Grid.Row="1" Background="#CC0D1117"
+                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="TabSystem"    Content="📍 System"   Style="{StaticResource TabBtn}" Click="Tab_Click" Tag="system"/>
+                    <Button x:Name="TabRoute"     Content="🗺 Route"    Style="{StaticResource TabBtn}" Click="Tab_Click" Tag="route"/>
+                    <Button x:Name="TabSov"       Content="🏴 Sovereignty" Style="{StaticResource TabBtn}" Click="Tab_Click" Tag="sov"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Input row (changes per tab) -->
+            <Border Grid.Row="2" x:Name="InputRow"
+                    Background="#CC0D1117"
+                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1" Padding="8,6">
+                <!-- System tab input -->
+                <Grid x:Name="SystemInput">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SystemSearchBox" Grid.Column="0"
+                             Background="#FF111820" Foreground="#FFCCD6F6"
+                             BorderBrush="#FF1E3148" BorderThickness="1"
+                             FontFamily="Consolas"
+                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
+                             Padding="6,4" CaretBrush="#FF4FC3F7"/>
+                    <Button Grid.Column="1" Content="Search"
+                            Click="SystemSearch_Click"
+                            FontFamily="Consolas"
+                            FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                            Background="#334FC3F7" Foreground="#FF4FC3F7"
+                            BorderBrush="#FF4FC3F7" BorderThickness="1"
+                            Padding="8,4" Cursor="Hand" Margin="6,0,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Route input (hidden by default) -->
+            <Border Grid.Row="2" x:Name="RouteInput"
+                    Background="#CC0D1117"
+                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1"
+                    Padding="8,6" Visibility="Collapsed">
+                <StackPanel>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="From: "
+                                   FontFamily="Consolas" Foreground="#FF8A99AA"
+                                   FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                                   VerticalAlignment="Center"/>
+                        <TextBox x:Name="RouteOriginBox" Grid.Column="1"
+                                 Background="#FF111820" Foreground="#FFCCD6F6"
+                                 BorderBrush="#FF1E3148" BorderThickness="1"
+                                 FontFamily="Consolas"
+                                 FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
+                                 Padding="6,3" CaretBrush="#FF4FC3F7"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="To:   "
+                                   FontFamily="Consolas" Foreground="#FF8A99AA"
+                                   FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                                   VerticalAlignment="Center"/>
+                        <TextBox x:Name="RouteDestBox" Grid.Column="1"
+                                 Background="#FF111820" Foreground="#FFCCD6F6"
+                                 BorderBrush="#FF1E3148" BorderThickness="1"
+                                 FontFamily="Consolas"
+                                 FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
+                                 Padding="6,3" CaretBrush="#FF4FC3F7"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <RadioButton x:Name="RouteShortest" Grid.Column="0"
+                                     Content="Shortest" IsChecked="True"
+                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
+                        <RadioButton x:Name="RouteSecure" Grid.Column="1"
+                                     Content="Secure"
+                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
+                        <RadioButton x:Name="RouteInsecure" Grid.Column="2"
+                                     Content="Insecure"
+                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
+                        <Button Grid.Column="3" Content="Go"
+                                Click="RouteSearch_Click"
+                                FontFamily="Consolas"
+                                FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                                Background="#33FFD54F" Foreground="#FFFFD54F"
+                                BorderBrush="#FFFFD54F" BorderThickness="1"
+                                Padding="10,3" Cursor="Hand"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Sov filter (hidden by default) -->
+            <Border Grid.Row="2" x:Name="SovInput"
+                    Background="#CC0D1117"
+                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1"
+                    Padding="8,6" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SovFilterBox" Grid.Column="0"
+                             Background="#FF111820" Foreground="#FFCCD6F6"
+                             BorderBrush="#FF1E3148" BorderThickness="1"
+                             FontFamily="Consolas"
+                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
+                             Padding="6,4" CaretBrush="#FF4FC3F7"
+                             TextChanged="SovFilter_TextChanged"/>
+                    <Button Grid.Column="1" Content="Load"
+                            Click="SovLoad_Click"
+                            FontFamily="Consolas"
+                            FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
+                            Background="#33EF5350" Foreground="#FFEF5350"
+                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Padding="8,4" Cursor="Hand" Margin="6,0,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Content area -->
+            <ScrollViewer Grid.Row="3"
+                          VerticalScrollBarVisibility="Hidden"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ContentPresenter x:Name="ContentArea" Margin="10"/>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

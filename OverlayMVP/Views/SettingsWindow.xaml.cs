@@ -1,0 +1,234 @@
+// filename: Views/SettingsWindow.xaml.cs
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using OverlayMVP.Services;
+
+namespace OverlayMVP.Views
+{
+    public partial class SettingsWindow : Window
+    {
+        private readonly AppDb         _db;
+        private readonly OverlayConfig _cfg;
+        private readonly PairingClient _pairing = new();
+
+        private const string FontSizeKey     = "ui_font_size";
+        private const double FontSizeDefault = 11.0;
+
+        public static double LoadFontSize(AppDb db)
+        {
+            try
+            {
+                using var con = db.Open();
+                using var cmd = con.CreateCommand();
+                cmd.CommandText = "SELECT v FROM meta WHERE k=$k";
+                cmd.Parameters.AddWithValue("$k", FontSizeKey);
+                var raw = cmd.ExecuteScalar() as string;
+                if (raw != null && double.TryParse(raw,
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out var d))
+                    return Math.Clamp(d, 8, 18);
+            }
+            catch { }
+            return FontSizeDefault;
+        }
+
+        private static void SaveFontSize(AppDb db, double size)
+        {
+            using var con = db.Open();
+            using var cmd = con.CreateCommand();
+            cmd.CommandText = "INSERT INTO meta(k,v) VALUES($k,$v) " +
+                              "ON CONFLICT(k) DO UPDATE SET v=excluded.v";
+            cmd.Parameters.AddWithValue("$k", FontSizeKey);
+            cmd.Parameters.AddWithValue("$v",
+                size.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            cmd.ExecuteNonQuery();
+        }
+
+        public SettingsWindow(AppDb db, OverlayConfig cfg)
+        {
+            InitializeComponent();
+            _db  = db;
+            _cfg = cfg;
+
+            UrlBox.Text      = cfg.ApiBaseUrl;
+            PairCodeBox.Text = "";
+            ClientIdBox.Text = EsiClient.LoadClientId(db);
+
+            foreach (ComboBoxItem item in FactionBox.Items)
+                if (item.Tag?.ToString() == cfg.FactionFocus)
+                    { FactionBox.SelectedItem = item; break; }
+            if (FactionBox.SelectedItem is null) FactionBox.SelectedIndex = 0;
+
+            foreach (ComboBoxItem item in AlphaBox.Items)
+                if (item.Tag?.ToString() == cfg.AlphaOmega)
+                    { AlphaBox.SelectedItem = item; break; }
+            if (AlphaBox.SelectedItem is null) AlphaBox.SelectedIndex = 0;
+
+            var currentSize = LoadFontSize(db);
+            FontSizeSlider.Value = currentSize;
+            FontSizeLabel.Text   = $"{currentSize:F0} pt";
+
+            ChkMultibox.IsChecked        = cfg.ShowMultibox;
+            ChkIntelAlerts.IsChecked     = cfg.ShowIntelAlerts;
+            ChkPilotStatus.IsChecked     = cfg.ShowPilotStatus;
+            ChkActiveMissions.IsChecked  = cfg.ShowActiveMissions;
+            ChkStandingGuide.IsChecked   = cfg.ShowStandingGuide;
+            ChkMissionProgress.IsChecked = cfg.ShowMissionProgress;
+            ChkSkillPlan.IsChecked       = cfg.ShowSkillPlan;
+            ChkPilotIntelBtn.IsChecked   = cfg.ShowPilotIntelBtn;
+            ChkSystemInfoBtn.IsChecked   = cfg.ShowSystemInfoBtn;
+
+            RefreshCharacterList();
+        }
+
+        // ── Multi-account character list ──────────────────────────────────
+        private void RefreshCharacterList()
+        {
+            var tokens = EsiClient.LoadTokens(_db);
+            CharacterList.ItemsSource = tokens;
+            if (tokens.Count == 0)
+            {
+                EveStatusLabel.Text      = "No characters linked.";
+                EveStatusLabel.Foreground= System.Windows.Media.Brushes.Gray;
+            }
+            else
+            {
+                EveStatusLabel.Text      = $"{tokens.Count} character(s) linked.";
+                EveStatusLabel.Foreground= System.Windows.Media.Brushes.LightGreen;
+            }
+        }
+
+        private async void LinkEve_Click(object sender, RoutedEventArgs e)
+        {
+            var clientId = ClientIdBox.Text.Trim();
+            if (string.IsNullOrEmpty(clientId))
+            {
+                SetStatus("⚠️  Enter your EVE App Client ID first.", error: true);
+                return;
+            }
+            EsiClient.SaveClientId(_db, clientId);
+            SetStatus("⏳  Opening browser — log in as the character you want to add…");
+            LinkEveBtn.IsEnabled = false;
+            try
+            {
+                using var esi = new EsiClient(_db);
+                string charName = await esi.AuthorizeAsync();
+                RefreshCharacterList();
+                SetStatus($"✅  {charName} linked successfully!");
+            }
+            catch (Exception ex)
+            {
+                SetStatus($"❌  {ex.Message}", error: true);
+            }
+            finally { LinkEveBtn.IsEnabled = true; }
+        }
+
+        private void SetActive_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is EsiToken token)
+                SetStatus($"✅  {token.CharacterName} set as active character. " +
+                          "Changes take effect on the next 30s refresh.");
+            // The overlay VM will pick this up via ActiveCharacter binding in settings
+        }
+
+        private void UnlinkChar_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not EsiToken token) return;
+            var result = MessageBox.Show(
+                $"Unlink {token.CharacterName}?",
+                "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result != MessageBoxResult.Yes) return;
+            EsiClient.DeleteToken(_db, token.CharacterId);
+            RefreshCharacterList();
+            SetStatus($"{token.CharacterName} unlinked.");
+        }
+
+        // ── Font size ─────────────────────────────────────────────────────
+        private void FontSizeSlider_Changed(object sender,
+            System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (FontSizeLabel is null) return;
+            FontSizeLabel.Text = $"{e.NewValue:F0} pt";
+        }
+
+        private void FontPreset_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && double.TryParse(btn.Tag?.ToString(), out var size))
+                FontSizeSlider.Value = size;
+        }
+
+        // ── Feature flags ─────────────────────────────────────────────────
+        private void SaveFeatureFlags()
+        {
+            _cfg.ShowMultibox        = ChkMultibox.IsChecked        == true;
+            _cfg.ShowIntelAlerts     = ChkIntelAlerts.IsChecked     == true;
+            _cfg.ShowPilotStatus     = ChkPilotStatus.IsChecked     == true;
+            _cfg.ShowActiveMissions  = ChkActiveMissions.IsChecked  == true;
+            _cfg.ShowStandingGuide   = ChkStandingGuide.IsChecked   == true;
+            _cfg.ShowMissionProgress = ChkMissionProgress.IsChecked == true;
+            _cfg.ShowSkillPlan       = ChkSkillPlan.IsChecked       == true;
+            _cfg.ShowPilotIntelBtn   = ChkPilotIntelBtn.IsChecked   == true;
+            _cfg.ShowSystemInfoBtn   = ChkSystemInfoBtn.IsChecked   == true;
+        }
+
+        // ── Save ──────────────────────────────────────────────────────────
+        private void SaveOnly_Click(object sender, RoutedEventArgs e)
+        {
+            var url = UrlBox.Text.Trim().TrimEnd('/');
+            if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            { SetStatus("⚠️  Invalid URL.", error: true); return; }
+            _cfg.ApiBaseUrl   = url;
+            _cfg.FactionFocus = (FactionBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
+                                ?? _cfg.FactionFocus;
+            _cfg.AlphaOmega   = (AlphaBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
+                                ?? _cfg.AlphaOmega;
+            SaveFeatureFlags();
+            _cfg.Save(_db);
+            SaveFontSize(_db, FontSizeSlider.Value);
+            EsiClient.SaveClientId(_db, ClientIdBox.Text.Trim());
+            SetStatus("✅  Saved. Restart to apply font size changes.");
+        }
+
+        private async void RepairAndSave_Click(object sender, RoutedEventArgs e)
+        {
+            var url  = UrlBox.Text.Trim().TrimEnd('/');
+            var code = PairCodeBox.Text.Trim().ToUpperInvariant();
+            if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            { SetStatus("⚠️  Invalid URL.", error: true); return; }
+            if (code.Length < 8)
+            { SetStatus("⚠️  Invalid code — 8 characters required.", error: true); return; }
+
+            SetStatus("⏳  Connecting to bot…");
+            IsEnabled = false;
+            try
+            {
+                var (token, expiresAt) = await _pairing.ExchangeCodeAsync(url, code);
+                _cfg.ApiBaseUrl   = url;
+                _cfg.OverlayToken = token;
+                _cfg.FactionFocus = (FactionBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
+                                    ?? _cfg.FactionFocus;
+                _cfg.AlphaOmega   = (AlphaBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
+                                    ?? _cfg.AlphaOmega;
+                SaveFeatureFlags();
+                _cfg.Save(_db);
+                SaveFontSize(_db, FontSizeSlider.Value);
+                EsiClient.SaveClientId(_db, ClientIdBox.Text.Trim());
+                SetStatus($"✅  Paired! Token valid until {expiresAt[..10]}. Restart overlay.");
+                PairCodeBox.Text = "";
+            }
+            catch (Exception ex) { SetStatus($"❌  {ex.Message}", error: true); }
+            finally { IsEnabled = true; }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void SetStatus(string msg, bool error = false)
+        {
+            StatusLabel.Text       = msg;
+            StatusLabel.Foreground = error
+                ? System.Windows.Media.Brushes.Salmon
+                : System.Windows.Media.Brushes.LightSkyBlue;
+        }
+    }
+}

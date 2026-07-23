@@ -1,0 +1,233 @@
+<!-- filename: Views/SkillPlanWindow.xaml -->
+<Window x:Class="OverlayMVP.Views.SkillPlanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Faction Skill Plan — Cryonic Overlay"
+        Width="420" Height="600"
+        MinWidth="300" MinHeight="350"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowActivated="False"
+        ResizeMode="CanResize">
+
+    <Border Background="#EE0D1117"
+            BorderBrush="#FF1E3148"
+            BorderThickness="1"
+            CornerRadius="6">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title bar -->
+            <Border Grid.Row="0"
+                    Background="#CC111820"
+                    CornerRadius="6,6,0,0"
+                    Padding="10,6"
+                    MouseLeftButtonDown="TitleBar_MouseDown"
+                    Cursor="SizeAll">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="🎓  FACTION SKILL PLAN"
+                               FontFamily="Consolas" FontWeight="Bold"
+                               FontSize="{DynamicResource GlobalFontSizeSm}"
+                               Foreground="#FF4FC3F7"
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="1"
+                            Content="✕"
+                            Click="CloseBtn_Click"
+                            Style="{StaticResource SmallBtn}"
+                            Background="#33EF5350"
+                            BorderBrush="#FFEF5350"
+                            Foreground="#FFEF5350"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="8">
+                <StackPanel>
+
+                    <!-- Header -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📋 FACTION SKILL PLAN"
+                                           Foreground="{StaticResource AccentBlue}"
+                                           FontFamily="Consolas"
+                                           FontWeight="Bold"
+                                           FontSize="{DynamicResource GlobalFontSizeSm}"
+                                           VerticalAlignment="Center"/>
+                                <Border Background="#221E3148" CornerRadius="3"
+                                        Margin="6,0,0,0" Padding="4,1"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding AccountTypeLabel}"
+                                               FontFamily="Consolas"
+                                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                                               Foreground="#FFFFD54F"/>
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="{Binding SkillPlanTitle}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       FontFamily="Consolas"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Visibility="{Binding SkillPlanTitle, Converter={StaticResource NullToVisibility}}"/>
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                Content="{Binding CopySkillPlanLabel}"
+                                Command="{Binding CopySkillPlanCommand}"
+                                Style="{StaticResource SmallBtn}"
+                                Margin="0,0,4,0"
+                                ToolTip="Copy skill plan to clipboard — paste into EVE skill queue import"/>
+                        <Button Grid.Column="2" Content="⟳"
+                                Command="{Binding RefreshSkillPlanCommand}"
+                                Style="{StaticResource SmallBtn}"
+                                ToolTip="Reload skills from ESI"/>
+                    </Grid>
+
+                    <!-- Faction selector -->
+                    <ComboBox ItemsSource="{Binding FactionKeys}"
+                              SelectedItem="{Binding FactionFocus, Mode=TwoWay}"
+                              Margin="0,0,0,6"/>
+
+                    <!-- Ships + notes -->
+                    <TextBlock Text="{Binding SkillPlanShips}"
+                               Foreground="#FF4FC3F7"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               Margin="0,0,0,2"/>
+                    <TextBlock Text="{Binding SkillPlanNotes}"
+                               Foreground="{StaticResource TextSecondary}"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,6"/>
+
+                    <!-- Progress summary -->
+                    <Border Background="#110D1117" CornerRadius="3" Padding="6,4" Margin="0,0,0,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="{Binding SkillPlanStatus}"
+                                       Foreground="{StaticResource AccentGold}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding SkillPlanDone, Mode=OneWay}"/>
+                                <Run Text="/"/>
+                                <Run Text="{Binding SkillPlanTotal, Mode=OneWay}"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+
+                    <!-- Skill list -->
+                    <ItemsControl ItemsSource="{Binding CurrentSkillPlan}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Row outline border -->
+                                <Border Margin="0,2,0,0"
+                                        Background="#0DFFFFFF"
+                                        BorderBrush="#33FFFFFF"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="5,4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="62"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Status emoji -->
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding StatusEmoji}"
+                                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                   VerticalAlignment="Center"/>
+                                        <!-- Skill name + category -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding SkillName}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Foreground="{StaticResource TextPrimary}"
+                                                       ToolTip="{Binding WhyText}"/>
+                                            <TextBlock Text="{Binding Category}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Foreground="{StaticResource TextSecondary}"/>
+                                        </StackPanel>
+                                        <!-- Level badge with outline -->
+                                        <Border Grid.Column="2"
+                                                Background="#1A4FC3F7"
+                                                BorderBrush="#664FC3F7"
+                                                BorderThickness="1"
+                                                CornerRadius="3"
+                                                Padding="6,2"
+                                                Margin="6,0,6,0"
+                                                VerticalAlignment="Center">
+                                            <Border.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel>
+                                                        <TextBlock>
+                                                            <Run Text="Skill ID: " Foreground="#FFB0BEC5"/>
+                                                            <Run Text="{Binding SkillId, Mode=OneWay}" Foreground="#FFFFFFFF" FontWeight="Bold"/>
+                                                        </TextBlock>
+                                                        <TextBlock>
+                                                            <Run Text="Active level: " Foreground="#FFB0BEC5"/>
+                                                            <Run Text="{Binding TrainedLevel, Mode=OneWay}" Foreground="#FF4FC3F7" FontWeight="Bold"/>
+                                                            <Run Text=" (matches in-game sheet)" Foreground="#FF607D8B" FontSize="9"/>
+                                                        </TextBlock>
+                                                        <TextBlock>
+                                                            <Run Text="Target:    " Foreground="#FFB0BEC5"/>
+                                                            <Run Text="{Binding EffectiveTarget, Mode=OneWay}" Foreground="#FFFFD54F" FontWeight="Bold"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding WhyText, Mode=OneWay}"
+                                                                   Foreground="#FFB0BEC5"
+                                                                   FontStyle="Italic"
+                                                                   MaxWidth="260"
+                                                                   TextWrapping="Wrap"/>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Border.ToolTip>
+                                            <TextBlock Text="{Binding LevelText}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       FontWeight="Bold"
+                                                       Foreground="#FF4FC3F7"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <!-- Mini progress bar -->
+                                        <ProgressBar Grid.Column="3"
+                                                     Height="5"
+                                                     VerticalAlignment="Center"
+                                                     Minimum="0"
+                                                     Maximum="{Binding EffectiveTarget}"
+                                                     Value="{Binding TrainedLevel, Mode=OneWay}"
+                                                     Background="#221E3148"
+                                                     Foreground="#FF4FC3F7"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+    </Border>
+</Window>

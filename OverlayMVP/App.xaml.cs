@@ -40,12 +40,23 @@ namespace OverlayMVP
                 return;
             }
 
+            // Apply saved font size globally before opening main window
+            var fontSize = Views.SettingsWindow.LoadFontSize(db);
+            System.Windows.Application.Current.Resources["GlobalFontSize"]    = fontSize;
+            System.Windows.Application.Current.Resources["GlobalFontSizeSm"] = Math.Max(6.0, fontSize - 2.0);
+            System.Windows.Application.Current.Resources["GlobalFontSizeXs"] = Math.Max(5.0, fontSize - 3.0);
+
             OpenMainWindow(db);
         }
 
         // Called by FirstRunWindow after a successful pair exchange.
         public void OpenMainWindow(AppDb db)
         {
+            // Apply saved font size (may have just been set in SettingsWindow)
+            var fontSize = Views.SettingsWindow.LoadFontSize(db);
+            System.Windows.Application.Current.Resources["GlobalFontSize"]    = fontSize;
+            System.Windows.Application.Current.Resources["GlobalFontSizeSm"] = Math.Max(6.0, fontSize - 2.0);
+            System.Windows.Application.Current.Resources["GlobalFontSizeXs"] = Math.Max(5.0, fontSize - 3.0);
             var main = new MainWindow(db);
             main.Show();
         }
@@ -53,17 +64,6 @@ namespace OverlayMVP
         // ── Exception surfaces ───────────────────────────────────────────
         private void OnDispatcherException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // FIX: Write to file so we can see the error even if MessageBox is missed
-            try
-            {
-                var logPath = System.IO.Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                    "overlay_crash.txt");
-                System.IO.File.WriteAllText(logPath,
-                    $"[{DateTime.Now}]\n{e.Exception}\n\nInner: {e.Exception.InnerException}");
-            }
-            catch { }
-
             MessageBox.Show(
                 $"Unhandled error:\n\n{e.Exception.Message}\n\n{e.Exception.StackTrace}",
                 "Overlay — Fatal Error",

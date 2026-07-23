@@ -39,7 +39,47 @@ namespace OverlayMVP.Views
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             _hwnd = new WindowInteropHelper(this).EnsureHandle();
+
+            // WS_EX_NOACTIVATE — clicking this window never steals focus from EVE.
+            // WS_EX_TOOLWINDOW  — hides from alt-tab so it doesn't clutter switching.
+            const int GWL_EXSTYLE      = -20;
+            const int WS_EX_NOACTIVATE = 0x08000000;
+            const int WS_EX_TOOLWINDOW = 0x00000080;
+            int style = NativeMethods.GetWindowLong(_hwnd, GWL_EXSTYLE);
+            NativeMethods.SetWindowLong(_hwnd, GWL_EXSTYLE,
+                style | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
+
+            System.Windows.Interop.HwndSource.FromHwnd(_hwnd)
+                ?.AddHook(WndProc);
             RegisterThumbnail();
+        }
+
+        // WndProc: resize hit-test + definitive focus-steal prevention
+        private const int WM_MOUSEACTIVATE = 0x0021;
+        private const int MA_NOACTIVATE    = 3;   // click but don't activate
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam,
+                               ref bool handled)
+        {
+            // Prevent ANY click on this window from stealing focus from EVE
+            if (msg == WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return (IntPtr)MA_NOACTIVATE;
+            }
+
+            if (msg == WM_NCHITTEST)
+            {
+                int screenX = unchecked((short)(lParam.ToInt32() & 0xFFFF));
+                int screenY = unchecked((short)((lParam.ToInt32() >> 16) & 0xFFFF));
+                var pos = PointFromScreen(new Point(screenX, screenY));
+                bool atR = pos.X >= ActualWidth  - ResizeBorder;
+                bool atB = pos.Y >= ActualHeight - ResizeBorder;
+                if (atR && atB) { handled = true; return (IntPtr)HTBOTTOMRIGHT; }
+                if (atR)        { handled = true; return (IntPtr)HTRIGHT; }
+                if (atB)        { handled = true; return (IntPtr)HTBOTTOM; }
+            }
+            return IntPtr.Zero;
         }
 
         private void RegisterThumbnail()
@@ -103,11 +143,45 @@ namespace OverlayMVP.Views
             }
         }
 
-        // ── Title bar drag ────────────────────────────────────────────────
+        // ── Title bar drag — pure WPF capture (never activates window) ─────
+        private Point _dragOffset;
+
         private void TitleBar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
-                DragMove();
+            if (e.ChangedButton != System.Windows.Input.MouseButton.Left) return;
+            e.Handled = true;
+            _dragOffset = e.GetPosition(this);
+            ((System.Windows.IInputElement)sender).CaptureMouse();
+        }
+
+        private void TitleBar_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton != System.Windows.Input.MouseButtonState.Pressed) return;
+            if (!((System.Windows.IInputElement)sender).IsMouseCaptured) return;
+            var screen = PointToScreen(e.GetPosition(this));
+            Left = screen.X - _dragOffset.X;
+            Top  = screen.Y - _dragOffset.Y;
+        }
+
+        private void TitleBar_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ((System.Windows.IInputElement)sender).ReleaseMouseCapture();
+        }
+
+        // Constants for resize
+        private const int WM_NCHITTEST  = 0x0084;
+        private const int HTRIGHT       = 11;
+        private const int HTBOTTOM      = 15;
+        private const int HTBOTTOMRIGHT = 17;
+        private const int ResizeBorder  = 8;
+
+        // ── Click thumbnail → switch EVE focus (without activating this window) ──
+        // WM_MOUSEACTIVATE returns MA_NOACTIVATE so we never steal focus.
+        // We call SwitchTo() explicitly so the correct EVE client gets focus.
+        private void ThumbnailHost_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            MultiboxManager.SwitchTo(Instance);
         }
 
         // ── Re-attach ─────────────────────────────────────────────────────

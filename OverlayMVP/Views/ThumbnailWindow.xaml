@@ -12,8 +12,10 @@
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
-        ResizeMode="CanResize"
-        ShowInTaskbar="False">
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Focusable="False">
 
     <Window.Resources>
         <SolidColorBrush x:Key="TitleBg"    Color="#EE080D10"/>
@@ -51,6 +53,8 @@
                     Background="{StaticResource TitleBg}"
                     CornerRadius="4,4,0,0"
                     MouseLeftButtonDown="TitleBar_MouseDown"
+                    MouseMove="TitleBar_MouseMove"
+                    MouseLeftButtonUp="TitleBar_MouseUp"
                     Cursor="SizeAll">
                 <Grid Margin="6,0">
                     <Grid.ColumnDefinitions>
@@ -91,11 +95,14 @@
             </Border>
 
             <!-- ── DWM thumbnail host ───────────────────────────────── -->
-            <!-- This entire area is the DWM destination rect -->
+            <!-- Click = switch focus to this EVE window without activating us -->
             <Border Grid.Row="1"
                     x:Name="ThumbnailHost"
                     Background="#FF0A0F14"
-                    CornerRadius="0,0,4,4"/>
+                    CornerRadius="0,0,4,4"
+                    Cursor="Hand"
+                    ToolTip="Click to switch to this EVE client"
+                    MouseLeftButtonDown="ThumbnailHost_Click"/>
 
             <!-- ── Resize grip (bottom-right corner) ───────────────── -->
             <Thumb Grid.Row="1"

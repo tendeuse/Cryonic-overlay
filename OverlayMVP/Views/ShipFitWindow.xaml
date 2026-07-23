@@ -1,0 +1,62 @@
+<!-- filename: Views/ShipFitWindow.xaml -->
+<Window x:Class="OverlayMVP.Views.ShipFitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ship Fit"
+        Width="400" Height="560"
+        MinWidth="300" MinHeight="350"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowActivated="True"
+        ResizeMode="CanResize">
+
+    <Border Background="#EE0D1117"
+            BorderBrush="#441E3148"
+            BorderThickness="1"
+            CornerRadius="6">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title bar -->
+            <Border Grid.Row="0" Background="#CC1A1F2E" CornerRadius="6,6,0,0"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Cursor="SizeAll">
+                <Grid Margin="10,7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock Text="🚀" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock x:Name="TitleText"
+                                   Text="Ship Fit"
+                                   Foreground="#FFE8EDF2"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="✕"
+                            Click="CloseButton_Click"
+                            Width="22" Height="22"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Foreground="#FF6A7A8A"
+                            FontSize="11"
+                            Cursor="Hand"/>
+                </Grid>
+            </Border>
+
+            <!-- Scrollable content -->
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="10,8">
+                <StackPanel x:Name="ContentPanel"/>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

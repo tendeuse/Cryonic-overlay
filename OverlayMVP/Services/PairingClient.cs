@@ -9,9 +9,28 @@ namespace OverlayMVP.Services
 {
     public sealed class PairingClient
     {
-        private readonly HttpClient _http = new HttpClient();
+        private readonly HttpClient _http    = new HttpClient();
+        private readonly string     _baseUrl;
 
-        public async Task<(string token, string expiresAt)> ExchangeCodeAsync(string apiBaseUrl, string code)
+        // Constructor with URL (used by FirstRunWindow)
+        public PairingClient(string apiBaseUrl)
+        {
+            _baseUrl = apiBaseUrl.TrimEnd('/');
+        }
+
+        // No-arg constructor (used by SettingsWindow which passes URL per-call)
+        public PairingClient() { _baseUrl = ""; }
+
+        // Called by FirstRunWindow: client = new PairingClient(url); client.ExchangeAsync(code)
+        public async Task<string> ExchangeAsync(string code)
+        {
+            var (token, _) = await ExchangeCodeAsync(_baseUrl, code);
+            return token;
+        }
+
+        // Called by SettingsWindow: client.ExchangeCodeAsync(url, code)
+        public async Task<(string token, string expiresAt)> ExchangeCodeAsync(
+            string apiBaseUrl, string code)
         {
             var url = $"{apiBaseUrl.TrimEnd('/')}/overlay/api/v1/pair/exchange";
 
@@ -25,11 +44,10 @@ namespace OverlayMVP.Services
             if (!resp.IsSuccessStatusCode)
                 throw new Exception($"Pair exchange failed ({(int)resp.StatusCode}): {text}");
 
-            using var doc = JsonDocument.Parse(text);
-            var root = doc.RootElement;
-
-            var token = root.GetProperty("token").GetString() ?? "";
-            var expiresAt = root.GetProperty("expires_at").GetString() ?? "";
+            using var doc  = JsonDocument.Parse(text);
+            var root       = doc.RootElement;
+            var token      = root.GetProperty("token").GetString()      ?? "";
+            var expiresAt  = root.GetProperty("expires_at").GetString() ?? "";
 
             if (string.IsNullOrWhiteSpace(token))
                 throw new Exception("Pair exchange returned empty token.");

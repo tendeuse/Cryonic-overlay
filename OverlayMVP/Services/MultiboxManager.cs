@@ -258,6 +258,9 @@ namespace OverlayMVP.Services
 
         [DllImport("dwmapi.dll")] public static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr phThumbnailId);
         [DllImport("dwmapi.dll")] public static extern int DwmUnregisterThumbnail(IntPtr hThumbnailId);
+
+        [DllImport("user32.dll")] public static extern int  GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")] public static extern int  SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         [DllImport("dwmapi.dll")] public static extern int DwmUpdateThumbnailProperties(IntPtr hThumbnailId, ref DWM_THUMBNAIL_PROPERTIES ptnProperties);
     }
 }

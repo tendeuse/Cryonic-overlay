@@ -113,6 +113,33 @@ WHERE id=1;
             {
                 // If migration fails, leave schema as-is; the wizard will rewrite config.
             }
+
+            // Migration: add feature-toggle columns if they don't exist yet
+            var featureCols = new[]
+            {
+                "show_multibox",
+                "show_intel_alerts",
+                "show_pilot_status",
+                "show_active_missions",
+                "show_standing_guide",
+                "show_mission_progress",
+                "show_skill_plan",
+                "show_pilot_intel_btn",
+                "show_system_info_btn",
+            };
+            foreach (var col in featureCols)
+            {
+                try
+                {
+                    using var altCmd = con.CreateCommand();
+                    altCmd.CommandText = $"ALTER TABLE overlay_config ADD COLUMN {col} INTEGER NOT NULL DEFAULT 1";
+                    altCmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                    // Column already exists — ignore.
+                }
+            }
         }
     }
 }

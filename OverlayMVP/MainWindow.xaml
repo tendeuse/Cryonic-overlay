@@ -6,9 +6,9 @@
         xmlns:vm="clr-namespace:OverlayMVP.ViewModels"
         Title="Cryonic Overlay"
         Width="460"
-        Height="700"
-        MinHeight="400"
-        MaxHeight="950"
+        Height="Auto"
+        MinWidth="320"
+        MinHeight="180"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -16,187 +16,18 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <!-- ── Palette ─────────────────────────────────────────────────── -->
-        <SolidColorBrush x:Key="BgPanel"      Color="#CC0D1117"/>
-        <SolidColorBrush x:Key="BgCard"       Color="#881A2030"/>
-        <SolidColorBrush x:Key="BgMultibox"   Color="#EE080D10"/>
-        <SolidColorBrush x:Key="AccentBlue"   Color="#FF4FC3F7"/>
-        <SolidColorBrush x:Key="AccentGold"   Color="#FFFFD54F"/>
-        <SolidColorBrush x:Key="AccentRed"    Color="#FFEF5350"/>
-        <SolidColorBrush x:Key="AccentGreen"  Color="#FF66BB6A"/>
-        <SolidColorBrush x:Key="TextPrimary"  Color="#FFE8EDF2"/>
-        <SolidColorBrush x:Key="TextSecondary" Color="#FF8A99AA"/>
-        <SolidColorBrush x:Key="Border"       Color="#FF1E3148"/>
-
-        <!-- ── Base text style ─────────────────────────────────────────── -->
-        <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize"   Value="11"/>
-        </Style>
-
-        <!-- ── Section header ─────────────────────────────────────────── -->
-        <Style x:Key="SectionHeader" TargetType="TextBlock">
-            <Setter Property="Foreground"   Value="{StaticResource AccentBlue}"/>
-            <Setter Property="FontFamily"   Value="Consolas"/>
-            <Setter Property="FontSize"     Value="10"/>
-            <Setter Property="FontWeight"   Value="Bold"/>
-            <Setter Property="Margin"       Value="0,0,0,4"/>
-        </Style>
-
-        <!-- ── Intel badge button ─────────────────────────────────────── -->
-        <Style x:Key="IntelBtn" TargetType="Button">
-            <Setter Property="FontFamily"        Value="Consolas"/>
-            <Setter Property="FontSize"          Value="10"/>
-            <Setter Property="FontWeight"        Value="Bold"/>
-            <Setter Property="Foreground"        Value="{StaticResource TextPrimary}"/>
-            <Setter Property="BorderThickness"   Value="1"/>
-            <Setter Property="Padding"           Value="8,4"/>
-            <Setter Property="Cursor"            Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.8"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Opacity" Value="0.6"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- ── Small action button ────────────────────────────────────── -->
-        <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
-            <Setter Property="FontSize"  Value="9"/>
-            <Setter Property="Padding"   Value="6,2"/>
-        </Style>
-
-        <!-- ── Dark ComboBox — full ControlTemplate so popup is dark too ── -->
-        <Style TargetType="ComboBoxItem">
-            <Setter Property="Background"  Value="#FF0D1117"/>
-            <Setter Property="Foreground"  Value="#FFE8EDF2"/>
-            <Setter Property="FontFamily"  Value="Consolas"/>
-            <Setter Property="FontSize"    Value="11"/>
-            <Setter Property="Padding"     Value="8,4"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBoxItem">
-                        <Border Background="{TemplateBinding Background}"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF1E3148"/>
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#FF1E3A5A"/>
-                                <Setter Property="Foreground" Value="#FF4FC3F7"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style TargetType="ComboBox">
-            <Setter Property="Foreground"  Value="#FFE8EDF2"/>
-            <Setter Property="FontFamily"  Value="Consolas"/>
-            <Setter Property="FontSize"    Value="11"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <!-- Toggle button (collapsed view) -->
-                            <ToggleButton x:Name="ToggleButton"
-                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          Focusable="False"
-                                          ClickMode="Press">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border Background="#FF0D1117"
-                                                BorderBrush="#FF1E3148"
-                                                BorderThickness="1"
-                                                CornerRadius="2">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="20"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0"
-                                                           Text="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}, Path=SelectionBoxItem}"
-                                                           Foreground="#FFE8EDF2"
-                                                           FontFamily="Consolas"
-                                                           FontSize="11"
-                                                           Margin="6,4"
-                                                           VerticalAlignment="Center"/>
-                                                <TextBlock Grid.Column="1"
-                                                           Text="▾"
-                                                           Foreground="#FF4FC3F7"
-                                                           FontSize="10"
-                                                           HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"/>
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
-
-                            <!-- Selected item display -->
-                            <ContentPresenter x:Name="ContentSite"
-                                              IsHitTestVisible="False"
-                                              Content="{TemplateBinding SelectionBoxItem}"
-                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                              TextElement.Foreground="#FFE8EDF2"
-                                              Margin="8,4,24,4"
-                                              VerticalAlignment="Center"/>
-
-                            <!-- Dropdown popup -->
-                            <Popup x:Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Slide">
-                                <Border x:Name="DropDownBorder"
-                                        Background="#FF0D1117"
-                                        BorderBrush="#FF1E3148"
-                                        BorderThickness="1"
-                                        MinWidth="{TemplateBinding ActualWidth}">
-                                    <ScrollViewer SnapsToDevicePixels="True"
-                                                  VerticalScrollBarVisibility="Auto">
-                                        <StackPanel IsItemsHost="True"
-                                                    KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- ── String hex colour → SolidColorBrush converter ─────────── -->
-        <local:StringToBrushConverter x:Key="StrBrush"/>
-        <!-- ── Null → Collapsed ──────────────────────────────────────────── -->
-        <local:NullToVisibilityConverter x:Key="NullToVisibility"/>
         <!-- ── Zero int → Collapsed ─────────────────────────────────────── -->
         <local:ZeroToCollapsedConverter x:Key="ZeroToCollapsed"/>
-        <!-- ── Step status emoji ─────────────────────────────────────────── -->
+        <local:KillRoleIconConverter       x:Key="KillRoleIcon"/>
+        <local:ThresholdStatusConverter    x:Key="ThresholdStatus"/>
+        <local:IntelStatusColourConverter  x:Key="IntelStatusColour"/>
+        <local:BoolToFontWeightConverter   x:Key="BoolToWeight"/>
+        <local:BoolToEsiColourConverter   x:Key="BoolToEsiColour"/>
+        <local:InvertBoolToVisConverter   x:Key="InvertBoolToVis"/>
+        <!-- ── Step status emoji (MultiValueConverter) ─────────────────── -->
         <local:StepStatusEmojiConverter x:Key="StepStatusEmojiConverter"/>
-        <!-- ── Progress bar width ────────────────────────────────────────── -->
-        <local:ProgressWidthConverter x:Key="ProgressWidthConverter"/>
+        <!-- ── Step progress 0–1 (MultiValueConverter) ───────────────────── -->
+        <local:StepProgressConverter x:Key="StepProgressConverter"/>
     </Window.Resources>
 
     <!-- ── Outer container: rounded dark panel ────────────────────────── -->
@@ -204,14 +35,18 @@
             BorderBrush="{StaticResource Border}"
             BorderThickness="1"
             CornerRadius="8"
-            Padding="0">
+            Padding="0"
+            TextElement.FontSize="{DynamicResource GlobalFontSize}">
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>   <!-- title bar -->
-                <RowDefinition Height="Auto"/>   <!-- multibox -->
-                <RowDefinition Height="*"/>      <!-- scrollable content -->
-                <RowDefinition Height="Auto"/>   <!-- footer -->
+                <RowDefinition Height="Auto"/>   <!-- row 0: title bar -->
+                <RowDefinition Height="Auto"/>   <!-- row 1: repair banner -->
+                <RowDefinition Height="Auto"/>   <!-- row 2: multibox -->
+                <RowDefinition Height="Auto"/>   <!-- row 3: intel (always visible) -->
+                <RowDefinition Height="Auto"/>   <!-- row 4: pilot status -->
+                <RowDefinition Height="Auto"/>   <!-- row 5: panel launcher -->
+                <RowDefinition Height="Auto"/>   <!-- row 6: footer -->
             </Grid.RowDefinitions>
 
             <!-- ════════════════════════════════════════════════════════ -->
@@ -228,20 +63,23 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Title -->
                     <TextBlock Grid.Column="0"
                                Text="◈ CRYONIC OVERLAY"
                                FontWeight="Bold"
-                               FontSize="11"
+                               FontSize="{DynamicResource GlobalFontSize}"
                                Foreground="{StaticResource AccentBlue}"
                                VerticalAlignment="Center"/>
 
                     <!-- Connection status -->
                     <TextBlock Grid.Column="1"
                                Text="{Binding ConnectionStatus}"
-                               FontSize="9"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
                                Foreground="{StaticResource TextSecondary}"
                                VerticalAlignment="Center"
                                Margin="0,0,8,0"/>
@@ -253,10 +91,42 @@
                             Style="{StaticResource SmallBtn}"
                             Background="#33FFFFFF"
                             BorderBrush="{StaticResource Border}"
+                            Margin="0,0,4,0"/>
+
+                    <!-- Intel search button -->
+                    <Button Grid.Column="3"
+                            Content="&#x1F50D;"
+                            Click="IntelBtn_Click"
+                            Style="{StaticResource SmallBtn}"
+                            Background="#33EF5350"
+                            BorderBrush="{StaticResource AccentRed}"
+                            ToolTip="Pilot Intel Search"
+                            Margin="0,0,4,0"
+                            Visibility="{Binding ShowPilotIntelBtn, Converter={StaticResource BoolToVis}}"/>
+
+                    <!-- System info button -->
+                    <Button Grid.Column="4"
+                            Content="&#x1F30D;"
+                            Click="SystemBtn_Click"
+                            Style="{StaticResource SmallBtn}"
+                            Background="#334FC3F7"
+                            BorderBrush="{StaticResource AccentBlue}"
+                            ToolTip="System Info (Dotlan)"
+                            Margin="0,0,4,0"
+                            Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
+
+                    <!-- Settings / Re-pair -->
+                    <Button Grid.Column="5"
+                            Content="⚙"
+                            Click="SettingsBtn_Click"
+                            Style="{StaticResource SmallBtn}"
+                            Background="#33FFFFFF"
+                            BorderBrush="{StaticResource Border}"
+                            ToolTip="Paramètres / Re-pair"
                             Margin="0,0,6,0"/>
 
                     <!-- Close -->
-                    <Button Grid.Column="3"
+                    <Button Grid.Column="6"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
@@ -266,13 +136,25 @@
                 </Grid>
             </Border>
 
+            <!-- ── Re-pair warning banner ────────────────────────────────── -->
+            <Border Grid.Row="1"
+                    Background="#CCEF5350"
+                    CornerRadius="0"
+                    Padding="8,4"
+                    Visibility="{Binding NeedsRepair, Converter={StaticResource BoolToVis}}">
+                <TextBlock TextWrapping="Wrap" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold" Foreground="White"
+                           Text="⚠️ Token invalide — Discord: /overlay_pair puis Paramètres → Re-pair"/>
+            </Border>
+
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  MULTIBOX SWITCHER  (always visible)                    -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="1" Background="{StaticResource BgMultibox}"
+            <Border Grid.Row="2"
+                    Background="{StaticResource BgMultibox}"
                     BorderBrush="#FF1A3A50"
                     BorderThickness="0,0,0,1"
-                    Padding="8,6">
+                    Padding="8,6"
+                    Visibility="{Binding ShowMultibox, Converter={StaticResource BoolToVis}}">
                 <StackPanel>
 
                     <TextBlock Text="◈ ACTIVE INSTANCES"
@@ -320,7 +202,7 @@
                                                     Padding="4,2">
                                                 <Grid>
                                                     <TextBlock Text="{Binding Label, Mode=OneWay}"
-                                                               FontSize="8"
+                                                               FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                Foreground="{StaticResource AccentGold}"
                                                                TextTrimming="CharacterEllipsis"
                                                                VerticalAlignment="Center"/>
@@ -373,656 +255,371 @@
             <!--  CONTENT PANELS                                          -->
             <!-- ════════════════════════════════════════════════════════ -->
             <!-- FIX: ScrollViewer replaces SizeToContent to prevent WPF layout SO -->
-            <ScrollViewer Grid.Row="2"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-            <StackPanel Margin="8">
+            <!-- ════════════════════════════════════════════════════════ -->
+            <!--  INTEL & ALERTS  (always visible, never scrolls)         -->
+            <!-- ════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="3"
+                    Background="{StaticResource BgCard}"
+                    BorderBrush="{StaticResource Border}"
+                    BorderThickness="0,1,0,1"
+                    Padding="8,6"
+                    Visibility="{Binding ShowIntelAlerts, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Loc.IntelAlerts}"
+                                   Style="{StaticResource SectionHeader}" Margin="0"/>
+                        <TextBlock Grid.Column="1" Text="{Binding IntelStatus}"
+                                   Foreground="{Binding HasAlerts, Converter={StaticResource IntelStatusColour}}"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   FontWeight="{Binding HasAlerts, Converter={StaticResource BoolToWeight}}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
 
-                <!-- ── Pilot Status ──────────────────────────────────── -->
-                <Border Background="{StaticResource BgCard}"
-                        BorderBrush="{StaticResource Border}"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="8"
-                        Margin="0,0,0,6">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Loc.PilotStatus}" Style="{StaticResource SectionHeader}"/>
-                        <TextBlock Text="{Binding ConnectionStatus}"
-                                   Foreground="#FF8A99AA"
-                                   FontSize="9"
-                                   Margin="0,0,0,6"/>
-
-                        <!-- Locally detected pilots from EVE window titles -->
-                        <ItemsControl ItemsSource="{Binding EveWindows}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="4,2"
-                                            Margin="0,1"
-                                            CornerRadius="2">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0"
-                                                       Text="{Binding ActiveIndicator, Mode=OneWay}"
-                                                       Foreground="#FFFFD54F"
-                                                       FontSize="11"
-                                                       VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="1"
-                                                       Text="{Binding DisplayLabel, Mode=OneWay}"
-                                                       Foreground="#FFE8EDF2"
-                                                       FontWeight="Bold"
-                                                       FontSize="11"
-                                                       VerticalAlignment="Center"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <!-- API character data (ship/system) when available -->
-                        <StackPanel Margin="0,4,0,0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,4,0">
-                                    <TextBlock Text="{Binding ShipType}"
-                                               Foreground="#FF4FC3F7"
-                                               FontSize="10"/>
-                                    <TextBlock Text="{Binding Corporation}"
-                                               Foreground="#FF8A99AA"
-                                               FontSize="9"/>
-                                </StackPanel>
-                                <StackPanel Grid.Column="1">
-                                    <TextBlock Text="{Binding SolarSystem}"
-                                               Foreground="#FFE8EDF2"
-                                               FontWeight="Bold"
-                                               FontSize="10"/>
-                                    <TextBlock Text="{Binding SecurityStatus}"
-                                               Foreground="{Binding SecurityColour, Converter={StaticResource StrBrush}}"
-                                               FontSize="9"/>
-                                </StackPanel>
-                            </Grid>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── Intel & Alerts ────────────────────────────────── -->
-                <Border Background="{StaticResource BgCard}"
-                        BorderBrush="{StaticResource Border}"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="8"
-                        Margin="0,0,0,6">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Loc.IntelAlerts}" Style="{StaticResource SectionHeader}"/>
-                        <TextBlock Text="{Binding IntelStatus}"
+                    <!-- System input -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="System: "
                                    Foreground="{StaticResource TextSecondary}"
-                                   FontSize="9"
-                                   Margin="0,0,0,4"/>
+                                   FontSize="{DynamicResource GlobalFontSizeSm}"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding CurrentSystem, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="#221E3148"
+                                 Foreground="{StaticResource TextPrimary}"
+                                 BorderBrush="{StaticResource Border}"
+                                 BorderThickness="1"
+                                 FontFamily="Consolas"
+                                 FontSize="{DynamicResource GlobalFontSizeSm}"
+                                 Padding="4,2"
+                                 CaretBrush="{StaticResource AccentBlue}"/>
+                    </Grid>
 
-                        <!-- System name input -->
-                        <Grid Margin="0,0,0,6">
+                    <!-- Report buttons -->
+                    <WrapPanel Margin="0,0,0,4">
+                        <Button Content="⚠ GATE CAMP"
+                                Command="{Binding ReportGateCampCommand}"
+                                Style="{StaticResource IntelBtn}"
+                                Background="#33EF5350"
+                                BorderBrush="{StaticResource AccentRed}"
+                                Margin="0,0,4,0"/>
+                        <Button Content="☠ PIRATES"
+                                Command="{Binding ReportPiratesCommand}"
+                                Style="{StaticResource IntelBtn}"
+                                Background="#33FF9800"
+                                BorderBrush="#FFFF9800"
+                                Margin="0,0,4,0"/>
+                        <Button Content="⟳ ROAMING"
+                                Command="{Binding ReportRoamingCommand}"
+                                Style="{StaticResource IntelBtn}"
+                                Background="#33FFD54F"
+                                BorderBrush="{StaticResource AccentGold}"
+                                Margin="0,0,4,0"/>
+                        <Button Content="✓ CLEAR"
+                                Command="{Binding ReportClearCommand}"
+                                Style="{StaticResource IntelBtn}"
+                                Background="#3366BB6A"
+                                BorderBrush="{StaticResource AccentGreen}"/>
+                    </WrapPanel>
+
+                    <!-- Intel feed -->
+                    <ItemsControl ItemsSource="{Binding Intel}" MaxHeight="70">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="0,1"
+                                           Foreground="{StaticResource TextPrimary}">
+                                    <Run Text="{Binding AgeLabel, Mode=OneWay}" Foreground="{StaticResource TextSecondary}"/>
+                                    <Run Text=" "/>
+                                    <Run Text="{Binding System, Mode=OneWay}"   Foreground="{StaticResource AccentBlue}"/>
+                                    <Run Text=" — " Foreground="{StaticResource TextSecondary}"/>
+                                    <Run Text="{Binding Notes, Mode=OneWay}"   Foreground="{StaticResource TextPrimary}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════════════════ -->
+            <!--  PILOT STATUS  (always visible, inline)                  -->
+            <!-- ════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="4"
+                    Background="{StaticResource BgCard}"
+                    BorderBrush="{StaticResource Border}"
+                    BorderThickness="0,1,0,1"
+                    Padding="8,6"
+                    Visibility="{Binding ShowPilotStatus, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+
+                    <!-- Header row: label + refresh button -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding Loc.PilotStatus}"
+                                   Style="{StaticResource SectionHeader}"
+                                   Margin="0"/>
+                        <Button Grid.Column="1"
+                                Content="⟳"
+                                Command="{Binding RefreshStandingsCommand}"
+                                Style="{StaticResource SmallBtn}"
+                                ToolTip="Refresh ESI standings"
+                                Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"/>
+                    </Grid>
+
+                    <!-- ESI character selector -->
+                    <Border Background="#11FFFFFF" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
+                            Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="System: "
-                                       Foreground="{StaticResource TextSecondary}"
-                                       FontSize="10"
+                            <TextBlock Grid.Column="0" Text="ESI: "
+                                       Foreground="{StaticResource AccentBlue}"
+                                       FontSize="{DynamicResource GlobalFontSizeSm}"
                                        VerticalAlignment="Center"/>
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding CurrentSystem, UpdateSourceTrigger=PropertyChanged}"
-                                     Background="#221E3148"
-                                     Foreground="{StaticResource TextPrimary}"
-                                     BorderBrush="{StaticResource Border}"
-                                     BorderThickness="1"
-                                     FontFamily="Consolas"
-                                     FontSize="10"
-                                     Padding="4,2"
-                                     CaretBrush="{StaticResource AccentBlue}"/>
+                            <ComboBox Grid.Column="1"
+                                      ItemsSource="{Binding LinkedCharacters}"
+                                      SelectedItem="{Binding ActiveCharacter, Mode=TwoWay}"
+                                      FontSize="{DynamicResource GlobalFontSizeSm}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CharacterName}"
+                                                   FontFamily="Consolas"
+                                                   FontSize="{DynamicResource GlobalFontSizeSm}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
+                    </Border>
 
-                        <!-- Report buttons -->
-                        <WrapPanel Margin="0,0,0,6">
-                            <Button Content="⚠ GATE CAMP"
-                                    Command="{Binding ReportGateCampCommand}"
-                                    Style="{StaticResource IntelBtn}"
-                                    Background="#33EF5350"
-                                    BorderBrush="{StaticResource AccentRed}"
-                                    Margin="0,0,4,4"/>
-                            <Button Content="☠ PIRATES"
-                                    Command="{Binding ReportPiratesCommand}"
-                                    Style="{StaticResource IntelBtn}"
-                                    Background="#33FF9800"
-                                    BorderBrush="#FFFF9800"
-                                    Margin="0,0,4,4"/>
-                            <Button Content="⟳ ROAMING"
-                                    Command="{Binding ReportRoamingCommand}"
-                                    Style="{StaticResource IntelBtn}"
-                                    Background="#33FFD54F"
-                                    BorderBrush="{StaticResource AccentGold}"
-                                    Margin="0,0,4,4"/>
-                            <Button Content="✓ CLEAR"
-                                    Command="{Binding ReportClearCommand}"
-                                    Style="{StaticResource IntelBtn}"
-                                    Background="#3366BB6A"
-                                    BorderBrush="{StaticResource AccentGreen}"
-                                    Margin="0,0,0,4"/>
-                        </WrapPanel>
+                    <!-- Connection status -->
+                    <TextBlock Text="{Binding ConnectionStatus}"
+                               Foreground="{StaticResource TextSecondary}"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               Margin="0,0,0,4"/>
 
-                        <!-- Intel feed -->
-                        <ItemsControl ItemsSource="{Binding Intel}"
-                                      MaxHeight="80">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Margin="0,1">
-                                        <Run Text="{Binding AgeLabel, Mode=OneWay}"   Foreground="{StaticResource TextSecondary}"/>
-                                        <Run Text=" "/>
-                                        <Run Text="{Binding System, Mode=OneWay}"     Foreground="{StaticResource AccentBlue}"/>
-                                        <Run Text=" — "/>
-                                        <Run Text="{Binding Notes, Mode=OneWay}"/>
-                                    </TextBlock>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── Active Missions ───────────────────────────────── -->
-                <Border Background="{StaticResource BgCard}"
-                        BorderBrush="{StaticResource Border}"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="8"
-                        Margin="0,0,0,6">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Loc.ActiveMissions}" Style="{StaticResource SectionHeader}"/>
-                        <ItemsControl ItemsSource="{Binding Missions}"
-                                      MaxHeight="120">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock>
-                                                <Run Text="{Binding StatusEmoji, Mode=OneWay}"/>
-                                                <Run Text=" "/>
-                                                <Run Text="{Binding Title, Mode=OneWay}" FontWeight="Bold"/>
-                                            </TextBlock>
-                                            <TextBlock Text="{Binding AssignedTo}"
-                                                       Foreground="{StaticResource TextSecondary}"
-                                                       FontSize="9"/>
-                                        </StackPanel>
-                                        <Button Grid.Column="1"
-                                                Content="{Binding Loc.Assign, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                Command="{Binding DataContext.AssignMissionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding MissionId}"
-                                                Style="{StaticResource SmallBtn}"
-                                                Background="#330099CC"
-                                                BorderBrush="{StaticResource AccentBlue}"
-                                                Margin="0,0,4,0"/>
-                                        <Button Grid.Column="2"
-                                                Content="{Binding Loc.Complete, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                Command="{Binding DataContext.CompleteMissionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding MissionId}"
-                                                Style="{StaticResource SmallBtn}"
-                                                Background="#3366BB6A"
-                                                BorderBrush="{StaticResource AccentGreen}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── Mission Catalogue ────────────────────────────── -->
-                <Border Background="{StaticResource BgCard}"
-                        BorderBrush="{StaticResource Border}"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="8"
-                        Margin="0,0,0,6">
-                    <StackPanel>
-
-                        <!-- Header -->
-                        <Grid Cursor="Hand" MouseLeftButtonDown="CatalogueHeader_Click">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="📋 FACTION STANDING GUIDE"
-                                       Style="{StaticResource SectionHeader}"
-                                       Foreground="{StaticResource AccentGold}" Margin="0"/>
-                            <TextBlock Grid.Column="1" x:Name="CatalogueChevron" Text="▾"
-                                       Foreground="{StaticResource AccentGold}" FontSize="10"
-                                       VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- Body (collapsed by default) -->
-                        <StackPanel x:Name="CatalogueBody" Visibility="Collapsed">
-
-                            <!-- ESI Standing status bar -->
-                            <Border Background="#110D1117" CornerRadius="3" Padding="6,4" Margin="0,6,0,0">
-                                <Grid>
+                    <!-- Locally detected EVE windows -->
+                    <ItemsControl ItemsSource="{Binding EveWindows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,1">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="16"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0"
-                                               Text="{Binding StandingsStatus}"
-                                               Foreground="{StaticResource TextSecondary}"
-                                               FontSize="9" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Content="⟳ ESI"
-                                            Command="{Binding RefreshStandingsCommand}"
-                                            Style="{StaticResource SmallBtn}"
-                                            Background="#221E3148"
-                                            BorderBrush="{StaticResource AccentBlue}"
-                                            ToolTip="Refresh standings from ESI API"/>
+                                               Text="{Binding ActiveIndicator, Mode=OneWay}"
+                                               Foreground="{StaticResource AccentGold}"
+                                               FontSize="{DynamicResource GlobalFontSize}"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding DisplayLabel, Mode=OneWay}"
+                                               Foreground="{StaticResource TextPrimary}"
+                                               FontWeight="Bold"
+                                               FontSize="{DynamicResource GlobalFontSize}"
+                                               VerticalAlignment="Center"/>
                                 </Grid>
-                            </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                            <!-- Faction selector -->
-                            <TextBlock Text="SELECT FACTION" Foreground="{StaticResource TextSecondary}"
-                                       FontSize="9" Margin="0,8,0,4"/>
-                            <ListBox ItemsSource="{Binding CatalogueFactions}"
-                                     SelectedItem="{Binding SelectedCatalogueFaction}"
-                                     Background="Transparent" BorderThickness="0"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="Padding" Value="4,3"/>
-                                        <Setter Property="Margin" Value="0,1"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ListBoxItem">
-                                                    <Border x:Name="Bd" Background="{TemplateBinding Background}"
-                                                            BorderThickness="0" CornerRadius="2"
-                                                            Padding="{TemplateBinding Padding}">
-                                                        <ContentPresenter/>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="Bd" Property="Background" Value="#221E3148"/>
-                                                        </Trigger>
-                                                        <Trigger Property="IsSelected" Value="True">
-                                                            <Setter TargetName="Bd" Property="Background" Value="#331E3A5A"/>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListBox.ItemContainerStyle>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock FontFamily="Consolas" FontSize="10" FontWeight="Bold">
-                                            <Run Text="{Binding Icon, Mode=OneWay}"/>
-                                            <Run Text=" "/>
-                                            <Run Text="{Binding FactionName, Mode=OneWay}"
-                                                 Foreground="{Binding Colour, Converter={StaticResource StrBrush}}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                    <!-- Ship / System info row -->
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                            <TextBlock Text="{Binding ShipType}"
+                                       Foreground="{StaticResource AccentBlue}"
+                                       FontSize="{DynamicResource GlobalFontSizeSm}"/>
+                            <TextBlock Text="{Binding Corporation}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{Binding SolarSystem}"
+                                       Foreground="{StaticResource TextPrimary}"
+                                       FontWeight="Bold"
+                                       FontSize="{DynamicResource GlobalFontSizeSm}"/>
+                            <TextBlock Text="{Binding SecurityStatus}"
+                                       Foreground="{Binding SecurityColour, Converter={StaticResource StrBrush}}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                        </StackPanel>
+                    </Grid>
 
-                            <!-- ── Tutorial panel (shown when faction is selected) ── -->
-                            <StackPanel Visibility="{Binding SelectedCatalogueFaction,
-                                            Converter={StaticResource NullToVisibility}}"
-                                        Margin="0,8,0,0">
-
-                                <!-- Faction intro -->
-                                <Border Background="#0A4FC3F710" BorderBrush="#224FC3F7"
-                                        BorderThickness="0,0,0,0" CornerRadius="3" Padding="6,5"
-                                        Margin="0,0,0,6">
-                                    <TextBlock Text="{Binding SelectedCatalogueFaction.IntroText, Mode=OneWay}"
-                                               Foreground="#FFB0BEC5" FontSize="9" TextWrapping="Wrap"
-                                               LineHeight="14"/>
-                                </Border>
-
-                                <!-- Manual standing input (fallback when ESI not linked) -->
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="80"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="Your standing:"
-                                               Foreground="{StaticResource TextSecondary}"
-                                               FontSize="9" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Column="1"
-                                             x:Name="ManualStandingBox"
-                                             Text="{Binding CurrentFactionStanding, Mode=OneWay,
-                                                    StringFormat={}{0:0.00}}"
-                                             Background="#0D1117"
-                                             Foreground="{Binding StandingColour,
-                                                 Converter={StaticResource StrBrush}}"
-                                             BorderBrush="#331E3148" BorderThickness="1"
-                                             Padding="4,2" FontSize="10" FontWeight="Bold"
-                                             Margin="4,0"/>
-                                    <Button Grid.Column="2" Content="Set"
-                                            Click="ManualStandingSet_Click"
-                                            Style="{StaticResource SmallBtn}"
-                                            Background="#221E3148"
-                                            BorderBrush="{StaticResource AccentGold}"/>
-                                </Grid>
-
-                                <!-- Standing label -->
-                                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,8">
-                                    <Run Text="Standing: " Foreground="{StaticResource TextSecondary}" FontSize="9"/>
-                                    <Run Text="{Binding StandingLabel, Mode=OneWay}"
-                                         Foreground="{Binding StandingColour, Converter={StaticResource StrBrush}}"
-                                         FontWeight="Bold" FontSize="10"/>
-                                    <Run Text=" (" Foreground="{StaticResource TextSecondary}" FontSize="9"/>
-                                    <Run Text="{Binding CurrentFactionStanding, Mode=OneWay,
-                                                StringFormat={}{0:+0.00;-0.00;0.00}}"
-                                         Foreground="{Binding StandingColour, Converter={StaticResource StrBrush}}"
-                                         FontSize="9"/>
-                                    <Run Text=")" Foreground="{StaticResource TextSecondary}" FontSize="9"/>
-                                </TextBlock>
-
-                                <!-- All tutorial steps -->
-                                <TextBlock Text="PROGRESSION STEPS" FontSize="8" FontWeight="Bold"
-                                           Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
-
-                                <ItemsControl ItemsSource="{Binding SelectedCatalogueFaction.Steps}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <!-- Each step is a card -->
-                                            <Border x:Name="StepCard"
-                                                    Background="#0A0D1117"
-                                                    BorderBrush="#221E3148"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4"
-                                                    Padding="7,6"
-                                                    Margin="0,0,0,4"
-                                                    Opacity="0.6">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Style.Triggers>
-                                                            <!-- Active step: brighter -->
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                                <StackPanel>
-
-                                                    <!-- Step header row: emoji + label + level badge + type -->
-                                                    <Grid Margin="0,0,0,4">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="16"/>
-                                                            <ColumnDefinition Width="*"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0"
-                                                                   Text="{Binding DataContext.CurrentFactionStanding,
-                                                                       RelativeSource={RelativeSource AncestorType=ItemsControl},
-                                                                       Converter={StaticResource StepStatusEmojiConverter},
-                                                                       ConverterParameter={Binding}}"
-                                                                   FontSize="10" VerticalAlignment="Center"/>
-                                                        <TextBlock Grid.Column="1"
-                                                                   Text="{Binding StepLabel, Mode=OneWay}"
-                                                                   Foreground="#FFE8EDF2"
-                                                                   FontWeight="Bold" FontSize="10"/>
-                                                        <Border Grid.Column="2"
-                                                                Background="{Binding LevelColour,
-                                                                    Converter={StaticResource StrBrush}}"
-                                                                CornerRadius="2" Padding="4,1" Margin="4,0,0,0">
-                                                            <TextBlock Text="{Binding LevelLabel, Mode=OneWay}"
-                                                                       Foreground="#FF0D1117"
-                                                                       FontSize="8" FontWeight="Bold"/>
-                                                        </Border>
-                                                        <Border Grid.Column="3"
-                                                                Background="#110D1117" BorderBrush="#221E3148"
-                                                                BorderThickness="1" CornerRadius="2"
-                                                                Padding="4,1" Margin="3,0,0,0">
-                                                            <TextBlock Text="{Binding TypeLabel, Mode=OneWay}"
-                                                                       Foreground="{StaticResource TextSecondary}"
-                                                                       FontSize="8"/>
-                                                        </Border>
-                                                    </Grid>
-
-                                                    <!-- Standing requirement row -->
-                                                    <Grid Margin="0,0,0,3">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0">
-                                                            <Run Text="Requires " Foreground="#FF8A99AA" FontSize="9"/>
-                                                            <Run Text="{Binding StandingRequired, Mode=OneWay,
-                                                                        StringFormat={}{0:+0.0;-0.0;0.0}}"
-                                                                 Foreground="{Binding LevelColour,
-                                                                     Converter={StaticResource StrBrush}}"
-                                                                 FontWeight="Bold" FontSize="9"/>
-                                                            <Run Text="  →  goal " Foreground="#FF8A99AA" FontSize="9"/>
-                                                            <Run Text="{Binding StandingGoal, Mode=OneWay,
-                                                                        StringFormat={}{0:+0.0;-0.0;0.0}}"
-                                                                 Foreground="#FFFFD54F" FontWeight="Bold" FontSize="9"/>
-                                                        </TextBlock>
-                                                        <TextBlock Grid.Column="1"
-                                                                   Text="{Binding GainLabel, Mode=OneWay}"
-                                                                   Foreground="#FF66BB6A" FontSize="8"/>
-                                                    </Grid>
-
-                                                    <!-- Progress bar -->
-                                                    <Grid Height="4" Margin="0,0,0,5">
-                                                        <Border Background="#221E3148" CornerRadius="2"/>
-                                                        <Border Background="{Binding LevelColour,
-                                                                    Converter={StaticResource StrBrush}}"
-                                                                CornerRadius="2"
-                                                                HorizontalAlignment="Left"
-                                                                Width="{Binding DataContext.CurrentFactionStanding,
-                                                                    RelativeSource={RelativeSource AncestorType=ItemsControl},
-                                                                    Converter={StaticResource ProgressWidthConverter},
-                                                                    ConverterParameter={Binding}}"/>
-                                                    </Grid>
-
-                                                    <!-- WHY text -->
-                                                    <TextBlock Text="{Binding WhyText, Mode=OneWay}"
-                                                               Foreground="#FFB0BEC5"
-                                                               FontSize="9" TextWrapping="Wrap"
-                                                               LineHeight="13" Margin="0,0,0,4"/>
-
-                                                    <!-- TIP text -->
-                                                    <Border Background="#0A66BB6A" CornerRadius="2"
-                                                            Padding="5,3" Margin="0,0,0,4"
-                                                            Visibility="{Binding TipText,
-                                                                Converter={StaticResource NullToVisibility}}">
-                                                        <TextBlock Text="{Binding TipText, Mode=OneWay}"
-                                                                   Foreground="#FF90CAF9"
-                                                                   FontSize="8" TextWrapping="Wrap"
-                                                                   LineHeight="12"/>
-                                                    </Border>
-
-                                                    <!-- Agent / Station -->
-                                                    <StackPanel Margin="0,0,0,3">
-                                                        <TextBlock>
-                                                            <Run Text="Agent: " Foreground="#FF8A99AA" FontSize="8"/>
-                                                            <Run Text="{Binding Agent, Mode=OneWay}"
-                                                                 Foreground="#FF4FC3F7" FontSize="8"/>
-                                                        </TextBlock>
-                                                        <TextBlock Text="{Binding Station, Mode=OneWay}"
-                                                                   Foreground="#FF6A7A8A" FontSize="8"
-                                                                   TextTrimming="CharacterEllipsis"
-                                                                   ToolTip="{Binding Station, Mode=OneWay}"/>
-                                                        <TextBlock>
-                                                            <Run Text="Region: " Foreground="#FF8A99AA" FontSize="8"/>
-                                                            <Run Text="{Binding Region, Mode=OneWay}"
-                                                                 Foreground="#FF8A99AA" FontSize="8"/>
-                                                        </TextBlock>
-                                                    </StackPanel>
-
-                                                    <!-- Enemy warnings -->
-                                                    <ItemsControl ItemsSource="{Binding EnemyWarnings}"
-                                                                  Visibility="{Binding EnemyWarnings.Count,
-                                                                      Converter={StaticResource ZeroToCollapsed}}">
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Border Background="#0AEF535010"
-                                                                        BorderBrush="{Binding Colour,
-                                                                            Converter={StaticResource StrBrush}}"
-                                                                        BorderThickness="0,0,0,1"
-                                                                        Padding="5,3" Margin="0,2,0,0">
-                                                                    <TextBlock>
-                                                                        <Run Text="⚠ " FontSize="8"
-                                                                             Foreground="{Binding Colour,
-                                                                                 Converter={StaticResource StrBrush}}"/>
-                                                                        <Run Text="{Binding FactionName, Mode=OneWay}"
-                                                                             FontWeight="Bold" FontSize="8"
-                                                                             Foreground="{Binding Colour,
-                                                                                 Converter={StaticResource StrBrush}}"/>
-                                                                        <Run Text=" " FontSize="8"/>
-                                                                        <Run Text="{Binding StandingLoss, Mode=OneWay,
-                                                                                    StringFormat={}{0:0.00}}"
-                                                                             Foreground="#FFEF5350" FontSize="8"
-                                                                             FontWeight="Bold"/>
-                                                                        <Run Text=" / run — " FontSize="8"
-                                                                             Foreground="#FF8A99AA"/>
-                                                                        <Run Text="{Binding Note, Mode=OneWay}"
-                                                                             Foreground="#FF8A99AA" FontSize="8"/>
-                                                                    </TextBlock>
-                                                                </Border>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-
-                                                    <!-- Action buttons -->
-                                                    <Grid Margin="0,5,0,0">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                            <ColumnDefinition Width="Auto"/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0"/>
-                                                        <Button Grid.Column="1" Content="★ Save"
-                                                                ToolTip="Save as personal preset"
-                                                                Command="{Binding DataContext.SavePersonalPresetCommand,
-                                                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                CommandParameter="{Binding}"
-                                                                Style="{StaticResource SmallBtn}"
-                                                                Background="#22FFFFD4"
-                                                                BorderBrush="{StaticResource AccentGold}"
-                                                                Foreground="{StaticResource AccentGold}"
-                                                                Margin="0,0,3,0"/>
-                                                        <Button Grid.Column="2" Content="▶ Mission"
-                                                                ToolTip="Create as active mission"
-                                                                Command="{Binding DataContext.CreateFromStepCommand,
-                                                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                CommandParameter="{Binding}"
-                                                                Style="{StaticResource SmallBtn}"
-                                                                Background="#2266BB6A"
-                                                                BorderBrush="{StaticResource AccentGreen}"
-                                                                Foreground="{StaticResource AccentGreen}"/>
-                                                    </Grid>
-
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <!-- Personal presets -->
-                                <StackPanel Margin="0,8,0,0"
-                                            Visibility="{Binding PersonalPresets.Count,
-                                                Converter={StaticResource ZeroToCollapsed}}">
-                                    <TextBlock Text="⭐ SAVED PRESETS" FontSize="8" FontWeight="Bold"
-                                               Foreground="{StaticResource AccentGold}" Margin="0,0,0,4"/>
-                                    <ItemsControl ItemsSource="{Binding PersonalPresets}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0,2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <StackPanel Grid.Column="0">
-                                                        <TextBlock Text="{Binding StepLabel, Mode=OneWay}"
-                                                                   Foreground="#FFE8EDF2"
-                                                                   FontWeight="Bold" FontSize="10"/>
-                                                        <TextBlock Text="{Binding Agent, Mode=OneWay}"
-                                                                   Foreground="{StaticResource TextSecondary}"
-                                                                   FontSize="8"/>
-                                                    </StackPanel>
-                                                    <Button Grid.Column="1" Content="▶"
-                                                            Command="{Binding DataContext.CreateFromStepCommand,
-                                                                RelativeSource={RelativeSource AncestorType=Window}}"
-                                                            CommandParameter="{Binding}"
-                                                            Style="{StaticResource SmallBtn}"
-                                                            Background="#2266BB6A"
-                                                            BorderBrush="{StaticResource AccentGreen}"
-                                                            Foreground="{StaticResource AccentGreen}"
-                                                            Margin="4,0,2,0"/>
-                                                    <Button Grid.Column="2" Content="✕"
-                                                            Command="{Binding DataContext.RemovePersonalPresetCommand,
-                                                                RelativeSource={RelativeSource AncestorType=Window}}"
-                                                            CommandParameter="{Binding}"
-                                                            Style="{StaticResource SmallBtn}"
-                                                            Background="#22EF5350"
-                                                            BorderBrush="{StaticResource AccentRed}"
-                                                            Foreground="{StaticResource AccentRed}"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-
-                            </StackPanel><!-- end tutorial panel -->
-                        </StackPanel><!-- end catalogue body -->
-                    </StackPanel>
-                </Border>
-
-                                <!-- ── Faction Focus ─────────────────────────────────── -->
-                <Border Background="{StaticResource BgCard}"
-                        BorderBrush="{StaticResource Border}"
-                        BorderThickness="1"
-                        CornerRadius="4"
-                        Padding="8">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Loc.FactionFocus}" Style="{StaticResource SectionHeader}"/>
-                        <ComboBox SelectedValue="{Binding FactionFocus}">
-                            <ComboBoxItem Content="CALDARI"/>
-                            <ComboBoxItem Content="GALLENTE"/>
-                            <ComboBoxItem Content="AMARR"/>
-                            <ComboBoxItem Content="MINMATAR"/>
-                        </ComboBox>
-                    </StackPanel>
-                </Border>
-
-            </StackPanel>
-            </ScrollViewer>
-
-            <!-- ════════════════════════════════════════════════════════ -->
-            <!--  FOOTER                                                  -->
-            <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="3" Background="#CC080C10"
-                    CornerRadius="0,0,8,8"
-                    Padding="8,4">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                               Text="Ctrl+Shift+O  Toggle  |  Ctrl+Shift+C  Click-through"
-                               FontSize="8"
-                               Foreground="{StaticResource TextSecondary}"/>
-                    <TextBlock Grid.Column="1"
-                               Text="{Binding ClickThroughLabel}"
-                               FontSize="8"
-                               Foreground="{StaticResource AccentGold}"/>
-                </Grid>
+                </StackPanel>
             </Border>
+
+            <!-- ══ Panel launcher buttons (one per row) ════════════════════════════ -->
+            <Border Grid.Row="5" Background="#CC0A0E14" Padding="8,6">
+                <StackPanel>
+                    <Button x:Name="BtnMissions"
+                            Content="🎯  Missions"
+                            Style="{StaticResource IntelBtn}"
+                            Click="PanelBtn_Click" Tag="missions"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,2" Padding="10,5"
+                            ToolTip="Active Missions &amp; LP estimates"
+                            Visibility="{Binding ShowActiveMissions, Converter={StaticResource BoolToVis}}"/>
+                    <Button x:Name="BtnStanding"
+                            Content="📋  Standing"
+                            Style="{StaticResource IntelBtn}"
+                            Click="PanelBtn_Click" Tag="standing"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,2" Padding="10,5"
+                            ToolTip="Faction Standing Guide"
+                            Visibility="{Binding ShowStandingGuide, Converter={StaticResource BoolToVis}}"/>
+                    <Button x:Name="BtnProgress"
+                            Content="📊  Progress"
+                            Style="{StaticResource IntelBtn}"
+                            Click="PanelBtn_Click" Tag="progress"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,2" Padding="10,5"
+                            ToolTip="Mission Progress tracker"
+                            Visibility="{Binding ShowMissionProgress, Converter={StaticResource BoolToVis}}"/>
+                    <Button x:Name="BtnSkills"
+                            Content="🎓  Skills"
+                            Style="{StaticResource IntelBtn}"
+                            Click="PanelBtn_Click" Tag="skills"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,2" Padding="10,5"
+                            ToolTip="Faction Skill Plan"
+                            Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ════════════════════════════════════════════════════════ -->
+            <!--  FOOTER + RESIZE GRIPS                                   -->
+            <!-- ════════════════════════════════════════════════════════ -->
+            <Border Grid.Row="6" Background="#CC080C10"
+                    CornerRadius="0,0,8,8"
+                    Padding="0">
+                <StackPanel>
+
+                    <!-- ── SPONSOR BANNER ─────────────────────────────────────
+                         EULA §4.4(c): a general ad shown to ALL users, non-intrusive.
+                         Clicking opens SponsorUrl in the default browser.
+                         NOT linked to donations — never remove/alter it for donors. -->
+                    <Border x:Name="SponsorBanner"
+                            Background="#CC0B1016"
+                            BorderBrush="{StaticResource Border}"
+                            BorderThickness="0,1,0,0"
+                            Padding="8,5"
+                            Cursor="Hand"
+                            MouseLeftButtonDown="SponsorBanner_Click"
+                            ToolTip="{Binding SponsorSubtext}"
+                            Visibility="{Binding ShowSponsorBanner, Converter={StaticResource BoolToVis}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- "AD" disclosure tag (honesty / store-policy safe) -->
+                            <Border Grid.Column="0"
+                                    Background="#22FFD54F"
+                                    CornerRadius="3"
+                                    Padding="4,1"
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="AD"
+                                           FontSize="{DynamicResource GlobalFontSizeXs}"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource AccentGold}"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding SponsorHeadline}"
+                                           Foreground="{StaticResource TextPrimary}"
+                                           FontWeight="Bold"
+                                           FontSize="{DynamicResource GlobalFontSizeSm}"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding SponsorSubtext}"
+                                           Foreground="{StaticResource TextSecondary}"
+                                           FontSize="{DynamicResource GlobalFontSizeXs}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="2"
+                                       Text="↗"
+                                       Foreground="{StaticResource AccentBlue}"
+                                       FontSize="{DynamicResource GlobalFontSize}"
+                                       VerticalAlignment="Center"
+                                       Margin="6,0,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- ── Hotkey line + Support + resize grip ──────────────── -->
+                    <Border Padding="8,4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Ctrl+Shift+O  Toggle  |  Ctrl+Shift+C  Click-through"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding ClickThroughLabel}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource AccentGold}"
+                                       VerticalAlignment="Center"/>
+
+                            <!-- Voluntary donation link — decoupled from ads/features (§4.4b) -->
+                            <Button Grid.Column="2"
+                                    Content="♥ Support"
+                                    Click="SupportBtn_Click"
+                                    Style="{StaticResource SmallBtn}"
+                                    Background="#33EF5350"
+                                    BorderBrush="{StaticResource AccentRed}"
+                                    Foreground="{StaticResource AccentRed}"
+                                    Margin="8,0,0,0"
+                                    ToolTip="Support development on Patreon — a voluntary donation. It does not unlock features or remove ads."/>
+
+                            <!-- Resize grip ◢ -->
+                            <TextBlock Grid.Column="3"
+                                       Text="◢"
+                                       FontSize="{DynamicResource GlobalFontSize}"
+                                       Foreground="#44FFFFFF"
+                                       Cursor="SizeNWSE"
+                                       VerticalAlignment="Bottom"
+                                       Margin="8,0,0,0"
+                                       MouseLeftButtonDown="ResizeGrip_MouseDown"
+                                       ToolTip="Drag to resize"/>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+            </Border>
+
+            <!-- Right-edge resize strip -->
+            <Border Grid.Row="0" Grid.RowSpan="7"
+                    Width="5"
+                    HorizontalAlignment="Right"
+                    Background="#01000000"
+                    Cursor="SizeWE"
+                    MouseLeftButtonDown="ResizeRight_MouseDown"/>
+
+            <!-- Bottom-edge resize strip -->
+            <Border Grid.Row="6"
+                    Height="5"
+                    VerticalAlignment="Bottom"
+                    Background="#01000000"
+                    Cursor="SizeNS"
+                    MouseLeftButtonDown="ResizeBottom_MouseDown"/>
 
         </Grid>
     </Border>
