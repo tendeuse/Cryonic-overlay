@@ -61,6 +61,13 @@ namespace OverlayMVP.Services
             await _gate.WaitAsync(ct);
             try
             {
+                // Re-check the cache now that we hold the gate: another caller
+                // may have minted a fresh token while we were waiting.
+                if (!forceRefresh
+                    && _byChar.TryGetValue(character.CharacterId, out var cachedInLock)
+                    && cachedInLock.ExpiresAt > DateTime.UtcNow.AddMinutes(1))
+                    return cachedInLock.Token;
+
                 // A fresh ESI access token (EsiClient refreshes it if needed).
                 string accessToken = await _esi.GetValidAccessTokenAsync(character, ct);
                 if (string.IsNullOrEmpty(accessToken)) return null;

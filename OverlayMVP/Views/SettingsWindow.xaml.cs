@@ -50,7 +50,6 @@ namespace OverlayMVP.Views
             _db  = db;
             _cfg = cfg;
 
-            UrlBox.Text      = cfg.ApiBaseUrl;
             ClientIdBox.Text = EsiClient.LoadClientId(db);
 
             foreach (ComboBoxItem item in FactionBox.Items)
@@ -173,10 +172,6 @@ namespace OverlayMVP.Views
         // ── Save ──────────────────────────────────────────────────────────
         private void SaveOnly_Click(object sender, RoutedEventArgs e)
         {
-            var url = UrlBox.Text.Trim().TrimEnd('/');
-            if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            { SetStatus("⚠️  Invalid URL.", error: true); return; }
-            _cfg.ApiBaseUrl   = url;
             _cfg.FactionFocus = (FactionBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
                                 ?? _cfg.FactionFocus;
             _cfg.AlphaOmega   = (AlphaBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()

@@ -74,12 +74,6 @@
                    FontSize="18" FontWeight="Bold"
                    Foreground="#FF00B4D4"/>
 
-        <!-- API URL -->
-        <StackPanel Grid.Row="2">
-            <TextBlock Text="API Base URL (advanced)" Opacity="0.8" Margin="0,0,0,5"/>
-            <TextBox x:Name="UrlBox"/>
-        </StackPanel>
-
         <!-- Faction Focus + Account Type -->
         <StackPanel Grid.Row="6">
             <TextBlock Text="Faction Focus" Opacity="0.8" Margin="0,0,0,5"/>

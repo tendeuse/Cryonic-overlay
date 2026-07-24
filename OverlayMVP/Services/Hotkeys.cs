@@ -34,7 +34,6 @@ namespace OverlayMVP.Services
         public const int ID_TOGGLE_VISIBILITY  = 9001;  // Ctrl+Shift+O
         public const int ID_TOGGLE_CLICKTHROUGH = 9002;  // Ctrl+Shift+C
         public const int ID_REPORT_INTEL        = 9003;  // Ctrl+Shift+I
-        public const int ID_REPORT_CLEAR        = 9004;  // Ctrl+Shift+X
 
         private readonly IntPtr _hwnd;
         private readonly HwndSource _source;
@@ -50,7 +49,6 @@ namespace OverlayMVP.Services
             Register(ID_TOGGLE_VISIBILITY,   MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.O));
             Register(ID_TOGGLE_CLICKTHROUGH, MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
             Register(ID_REPORT_INTEL,        MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.I));
-            Register(ID_REPORT_CLEAR,        MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.X));
         }
 
         public void SetHandler(int id, Action handler)

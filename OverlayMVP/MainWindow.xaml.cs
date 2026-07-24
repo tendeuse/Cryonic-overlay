@@ -107,7 +107,7 @@ namespace OverlayMVP
         private void SponsorBanner_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
             => OpenUrl(_vm.SponsorUrl);
 
-        // Support button: opens Patreon. A voluntary donation, decoupled from
+        // Support button: opens GitHub Sponsors. A voluntary donation, decoupled from
         // features and from the banner (never gate anything on this).
         private void SupportBtn_Click(object sender, RoutedEventArgs e)
             => OpenUrl(_vm.SupportUrl);

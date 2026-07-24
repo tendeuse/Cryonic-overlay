@@ -631,7 +631,7 @@
                                     BorderBrush="{StaticResource AccentRed}"
                                     Foreground="{StaticResource AccentRed}"
                                     Margin="8,0,0,0"
-                                    ToolTip="Support development on Patreon — a voluntary donation. It does not unlock features or remove ads."/>
+                                    ToolTip="Support development on GitHub Sponsors — a voluntary donation. It does not unlock features or remove ads."/>
 
                             <!-- Resize grip ◢ -->
                             <TextBlock Grid.Column="3"
