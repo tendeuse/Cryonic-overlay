@@ -77,6 +77,9 @@ namespace OverlayMVP
                     });
                 foreach (var kv in _detached)
                     kv.Value.UpdateThumbnail();
+
+                // Session tracker: count wall-clock time while any EVE client is running.
+                if (_multibox.Instances.Count > 0) _vm.Session.TickPlaytime(5);
             };
             _multiboxTimer.Start();
             _vm.StartPolling();

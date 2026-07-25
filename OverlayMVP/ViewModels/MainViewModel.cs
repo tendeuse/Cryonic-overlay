@@ -25,6 +25,7 @@ namespace OverlayMVP.ViewModels
         private readonly OverlayApiClient   _api;
         private readonly OverlayConfig      _cfg;
         private readonly EsiClient          _esi;
+        public  SessionTracker Session { get; }
         private readonly BackendSession     _backend;
         private readonly IntelSearchService _intel = new();
         private readonly EveLogWatcher      _logWatcher = new();
@@ -303,6 +304,8 @@ namespace OverlayMVP.ViewModels
             _db  = db;
             _cfg = cfg;
             _esi = new EsiClient(db);
+            Session = new SessionTracker(db, _esi);
+            Session.Start();
             _backend = new BackendSession(_esi);
             // Token provider always resolves against whichever character is active *at call
             // time* (the lambda re-reads ActiveCharacter on every invocation), so intel is
@@ -1103,6 +1106,7 @@ namespace OverlayMVP.ViewModels
             _esi.Dispose();
             _intel.Dispose();
             _logWatcher.Dispose();
+            Session.Dispose();
         }
     }
 }
