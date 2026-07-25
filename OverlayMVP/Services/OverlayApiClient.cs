@@ -198,7 +198,7 @@ namespace OverlayMVP.Services
             CreatedAt   = dto.CreatedAt ?? "",
             TargetScope = dto.TargetScope ?? "",
             TargetId    = dto.TargetId,
-            ExpiresAt   = dto.ExpiresAt ?? "",
+            ExpiresAt   = dto.ExpiresAt.HasValue ? DateTimeOffset.FromUnixTimeSeconds((long)dto.ExpiresAt.Value).ToString("u") : "",
         };
 
         private static double ParseUnixSeconds(string? iso)
@@ -225,9 +225,9 @@ namespace OverlayMVP.Services
             [JsonPropertyName("system")]                public string  System { get; set; } = "";
             [JsonPropertyName("type")]                  public string  Type { get; set; } = "";
             [JsonPropertyName("notes")]                 public string? Notes { get; set; }
-            [JsonPropertyName("reporter_character_id")] public int     ReporterCharacterId { get; set; }
+            [JsonPropertyName("reporter_character_id")] public long    ReporterCharacterId { get; set; }
             [JsonPropertyName("created_at")]            public string? CreatedAt { get; set; }
-            [JsonPropertyName("expires_at")]            public string? ExpiresAt { get; set; }
+            [JsonPropertyName("expires_at")]            public double? ExpiresAt { get; set; }
         }
 
         private sealed class IntelListResponse
@@ -241,10 +241,10 @@ namespace OverlayMVP.Services
             [JsonPropertyName("title")]        public string  Title { get; set; } = "";
             [JsonPropertyName("description")]  public string? Description { get; set; }
             [JsonPropertyName("target_scope")] public string? TargetScope { get; set; }
-            [JsonPropertyName("target_id")]    public int?    TargetId { get; set; }
-            [JsonPropertyName("created_by")]   public int     CreatedBy { get; set; }
+            [JsonPropertyName("target_id")]    public long?   TargetId { get; set; }
+            [JsonPropertyName("created_by")]   public long    CreatedBy { get; set; }
             [JsonPropertyName("created_at")]   public string? CreatedAt { get; set; }
-            [JsonPropertyName("expires_at")]   public string? ExpiresAt { get; set; }
+            [JsonPropertyName("expires_at")]   public double? ExpiresAt { get; set; }
         }
 
         private sealed class OrderListResponse

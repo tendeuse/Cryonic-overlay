@@ -50,8 +50,6 @@ namespace OverlayMVP.Views
             _db  = db;
             _cfg = cfg;
 
-            ClientIdBox.Text = EsiClient.LoadClientId(db);
-
             foreach (ComboBoxItem item in FactionBox.Items)
                 if (item.Tag?.ToString() == cfg.FactionFocus)
                     { FactionBox.SelectedItem = item; break; }
@@ -98,13 +96,6 @@ namespace OverlayMVP.Views
 
         private async void LinkEve_Click(object sender, RoutedEventArgs e)
         {
-            var clientId = ClientIdBox.Text.Trim();
-            if (string.IsNullOrEmpty(clientId))
-            {
-                SetStatus("⚠️  Enter your EVE App Client ID first.", error: true);
-                return;
-            }
-            EsiClient.SaveClientId(_db, clientId);
             SetStatus("⏳  Opening browser — log in as the character you want to add…");
             LinkEveBtn.IsEnabled = false;
             try
@@ -179,7 +170,6 @@ namespace OverlayMVP.Views
             SaveFeatureFlags();
             _cfg.Save(_db);
             SaveFontSize(_db, FontSizeSlider.Value);
-            EsiClient.SaveClientId(_db, ClientIdBox.Text.Trim());
             SetStatus("✅  Saved. Restart to apply font size changes.");
         }
 

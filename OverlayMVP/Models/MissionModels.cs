@@ -24,7 +24,7 @@ namespace OverlayMVP.Models
         // Order-specific fields (CEO/coalition broadcasts — Task 3 "Orders" panel).
         // Not populated for regular agent-mission records.
         public string  TargetScope { get; set; } = "";
-        public int?    TargetId    { get; set; }
+        public long?   TargetId    { get; set; }
         public string  ExpiresAt   { get; set; } = "";
 
         public string StatusEmoji => Status switch

@@ -611,11 +611,15 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="Ctrl+Shift+O  Toggle  |  Ctrl+Shift+C  Click-through"
-                                       FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"
-                                       VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="Ctrl+Shift+O  Toggle  |  Ctrl+Shift+C  Click-through"
+                                           FontSize="{DynamicResource GlobalFontSizeXs}"
+                                           Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="{Binding AppVersion}"
+                                           FontSize="{DynamicResource GlobalFontSizeXs}"
+                                           Foreground="{StaticResource TextSecondary}"
+                                           Opacity="0.6"/>
+                            </StackPanel>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding ClickThroughLabel}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"

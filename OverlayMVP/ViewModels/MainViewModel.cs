@@ -39,6 +39,9 @@ namespace OverlayMVP.ViewModels
         // ── Localization ──────────────────────────────────────────────────
         public LocalizationManager Loc => LocalizationManager.Instance;
 
+        // ── App version (shown in the footer) ───────────────────────────────
+        public string AppVersion => "Alpha · v" + (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "?");
+
         // ── Connection / Status ───────────────────────────────────────────
         [ObservableProperty] private string connectionStatus  = "";
         [ObservableProperty] private bool   isConnected       = false;
@@ -221,12 +224,14 @@ namespace OverlayMVP.ViewModels
         // never interferes with app use (§4.4c). The support/Patreon link is a
         // purely voluntary donation and is NOT tied to the banner or to any
         // feature — do not gate functionality or ad-removal on donating (§4.4b/§4.2).
-        // Values are server-driven (see RefreshSponsorAsync) — no local defaults;
-        // the banner stays hidden until the server responds with Enabled=true.
-        [ObservableProperty] private bool   showSponsorBanner = false;
-        [ObservableProperty] private string sponsorHeadline   = "";
-        [ObservableProperty] private string sponsorSubtext    = "";
-        [ObservableProperty] private string sponsorUrl        = "";
+        // Values are server-driven (see RefreshSponsorAsync), but the banner must
+        // NEVER be empty — it defaults to (and falls back to) a "house" ad for
+        // this project itself when the server sponsor is disabled/unset, both at
+        // startup (before the first fetch) and whenever the fetch comes back empty.
+        [ObservableProperty] private bool   showSponsorBanner = true;
+        [ObservableProperty] private string sponsorHeadline   = "Sponsor this slot";
+        [ObservableProperty] private string sponsorSubtext    = "Contact tendeuse on Discord";
+        [ObservableProperty] private string sponsorUrl        = "https://discord.gg/KndrZYnWP";
         [ObservableProperty] private string supportUrl        = "https://github.com/sponsors/tendeuse";
 
         // ── Update notice (server-driven; dismissible, non-blocking) ──────
@@ -375,13 +380,24 @@ namespace OverlayMVP.ViewModels
         private async Task RefreshSponsorAsync()
         {
             var s = await _api.GetSponsorAsync();
-            if (s is null) return;
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ShowSponsorBanner = s.Enabled;
-                SponsorHeadline   = s.Headline ?? "";
-                SponsorSubtext    = s.Subtext  ?? "";
-                SponsorUrl        = s.Url      ?? "";
+                if (s is not null && s.Enabled && !string.IsNullOrWhiteSpace(s.Headline))
+                {
+                    ShowSponsorBanner = true;
+                    SponsorHeadline   = s.Headline;
+                    SponsorSubtext    = s.Subtext ?? "";
+                    SponsorUrl        = s.Url     ?? "";
+                }
+                else
+                {
+                    // Server sponsor disabled/unset — fall back to the house ad so the
+                    // slot is never blank.
+                    ShowSponsorBanner = true;
+                    SponsorHeadline   = "Sponsor this slot";
+                    SponsorSubtext    = "Contact tendeuse on Discord";
+                    SponsorUrl        = "https://discord.gg/KndrZYnWP";
+                }
             });
         }
 

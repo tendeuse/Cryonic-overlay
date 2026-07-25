@@ -52,8 +52,6 @@
             <RowDefinition Height="14"/>
             <RowDefinition Height="Auto"/>  <!-- faction -->
             <RowDefinition Height="14"/>
-            <RowDefinition Height="Auto"/>  <!-- EVE client ID -->
-            <RowDefinition Height="14"/>
             <RowDefinition Height="Auto"/>  <!-- EVE link -->
             <RowDefinition Height="14"/>
             <RowDefinition Height="Auto"/>  <!-- font size -->
@@ -108,18 +106,8 @@
                        Foreground="#FF445566" FontSize="10" Margin="0,3,0,0"/>
         </StackPanel>
 
-        <!-- EVE Client ID -->
-        <StackPanel Grid.Row="8">
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <TextBlock Text="EVE App Client ID" Opacity="0.8"/>
-                <TextBlock Text="  (developers.eveonline.com — Callback: http://localhost:4914)"
-                           Foreground="#FF00B4D4" FontSize="10"/>
-            </StackPanel>
-            <TextBox x:Name="ClientIdBox" FontFamily="Consolas"/>
-        </StackPanel>
-
         <!-- EVE Characters (multi-account) -->
-        <StackPanel Grid.Row="10">
+        <StackPanel Grid.Row="8">
             <Grid Margin="0,0,0,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -179,7 +167,7 @@
         </StackPanel>
 
         <!-- Font Size -->
-        <StackPanel Grid.Row="12">
+        <StackPanel Grid.Row="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                 <TextBlock Text="Font Size" Opacity="0.8"/>
                 <TextBlock Text="  (restart required)" Foreground="#FF00B4D4" FontSize="11"/>
@@ -211,7 +199,7 @@
         </StackPanel>
 
         <!-- Features -->
-        <StackPanel Grid.Row="14">
+        <StackPanel Grid.Row="12">
             <TextBlock Text="FEATURES" Opacity="0.7" FontWeight="Bold" FontSize="10"
                        Foreground="#FF4FC3F7" Margin="0,0,0,6"/>
             <WrapPanel>
@@ -228,7 +216,7 @@
         </StackPanel>
 
         <!-- Status -->
-        <TextBlock Grid.Row="18"
+        <TextBlock Grid.Row="16"
                    x:Name="StatusLabel"
                    Text=""
                    TextWrapping="Wrap"
@@ -236,7 +224,7 @@
                    Foreground="#FF9AD1FF"/>
 
         <!-- Buttons -->
-        <WrapPanel Grid.Row="20" HorizontalAlignment="Right">
+        <WrapPanel Grid.Row="18" HorizontalAlignment="Right">
             <Button Content="Cancel"
                     Click="Cancel_Click"
                     Margin="0,0,6,0"/>

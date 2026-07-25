@@ -60,15 +60,11 @@ namespace OverlayMVP.Services
 
     public sealed class EsiClient : IDisposable
     {
-        // ↓↓↓ PASTE YOUR EVE APP CLIENT ID HERE ↓↓↓
-        // Native apps have no secret — this is safe to distribute.
-        private const string EmbeddedClientId = "";
-        // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
-
-        // Fallback used when no EmbeddedClientId is compiled in and no
-        // esi_client_id has been saved to Settings — keeps the overlay usable
-        // out of the box while still letting a user's own Settings value win.
-        private const string DefaultClientId = "24ee90fc5f4f4c7c8284e3dfadaf2920";
+        // The overlay is a single shared app now — every install uses this one
+        // EVE application registration. Native apps have no secret, so baking
+        // this in is safe. A user-supplied client id would just break login,
+        // so it is no longer configurable (see ClientId below).
+        private const string EmbeddedClientId = "24ee90fc5f4f4c7c8284e3dfadaf2920";
 
         // Fixed port — register EXACTLY "http://localhost:4914" in your EVE app
         // (no trailing slash)
@@ -89,41 +85,20 @@ namespace OverlayMVP.Services
         private static readonly JsonSerializerOptions _json = new()
             { PropertyNameCaseInsensitive = true };
 
-        private string ClientId
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(EmbeddedClientId)) return EmbeddedClientId;
-                var stored = LoadClientId(_db);
-                return !string.IsNullOrEmpty(stored) ? stored : DefaultClientId;
-            }
-        }
+        // Always the baked-in constant — the overlay is one shared app now, and a
+        // wrong user-supplied value would just break login for that user.
+        private string ClientId => EmbeddedClientId;
 
         // ── Public info: what URL to register ────────────────────────────
         public static string RequiredCallbackUrl => RedirectUri;
 
         // ── DB helpers ────────────────────────────────────────────────────
-        public static string LoadClientId(AppDb db)
-        {
-            try {
-                using var con = db.Open();
-                using var cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT v FROM meta WHERE k=$k";
-                cmd.Parameters.AddWithValue("$k", ClientIdKey);
-                return cmd.ExecuteScalar() as string ?? "";
-            } catch { return ""; }
-        }
+        // The client id is baked in (EmbeddedClientId) and no longer user-editable —
+        // this always returns the constant regardless of what (if anything) is stored.
+        public static string LoadClientId(AppDb db) => EmbeddedClientId;
 
-        public static void SaveClientId(AppDb db, string clientId)
-        {
-            using var con = db.Open();
-            using var cmd = con.CreateCommand();
-            cmd.CommandText = "INSERT INTO meta(k,v) VALUES($k,$v) " +
-                              "ON CONFLICT(k) DO UPDATE SET v=excluded.v";
-            cmd.Parameters.AddWithValue("$k", ClientIdKey);
-            cmd.Parameters.AddWithValue("$v", clientId.Trim());
-            cmd.ExecuteNonQuery();
-        }
+        // Kept so any stray caller still compiles; no-op since the client id is fixed.
+        public static void SaveClientId(AppDb db, string clientId) { }
 
         public static void EnsureTable(AppDb db)
         {
