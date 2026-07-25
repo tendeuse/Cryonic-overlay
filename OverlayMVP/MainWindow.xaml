@@ -519,7 +519,7 @@
                             ToolTip="Faction Standing Guide"
                             Visibility="{Binding ShowStandingGuide, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnProgress"
-                            Content="📊  Progress"
+                            Content="📊  Session"
                             Style="{StaticResource IntelBtn}"
                             Click="PanelBtn_Click" Tag="progress"
                             HorizontalAlignment="Stretch"

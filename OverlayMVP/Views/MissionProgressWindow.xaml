@@ -15,7 +15,6 @@
 
     <Window.Resources>
         <local:ZeroToCollapsedConverter x:Key="ZeroToCollapsed"/>
-        <local:ThresholdStatusConverter x:Key="ThresholdStatus"/>
     </Window.Resources>
 
     <Border Background="#EE0D1117"
@@ -41,7 +40,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               Text="📊  MISSION PROGRESS"
+                               Text="⚡ SESSION — TODAY"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                Foreground="#FF66BB6A"
@@ -61,200 +60,118 @@
                           VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled"
                           Padding="8">
-                <StackPanel>
+                <StackPanel Margin="10,8">
 
-                    <!-- Header: session stats -->
-                    <Grid Margin="0,0,0,6">
+                    <!-- Header line: playtime + reset countdown -->
+                    <TextBlock Margin="0,0,0,10"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               Foreground="{StaticResource TextSecondary}">
+                        <Run Text="played "/>
+                        <Run Text="{Binding Session.PlayedLabel, Mode=OneWay}"
+                             Foreground="{StaticResource AccentBlue}"/>
+                        <Run Text="  ·  "/>
+                        <Run Text="{Binding Session.ResetsInLabel, Mode=OneWay}"/>
+                    </TextBlock>
+
+                    <!-- Re-link prompt (only when a character lacks the new scopes) -->
+                    <Border Background="#33EF5350" CornerRadius="3" Padding="8,5" Margin="0,0,0,10"
+                            Visibility="{Binding Session.RelinkPrompt, Converter={StaticResource NullToVisibility}}">
+                        <TextBlock Text="{Binding Session.RelinkPrompt, Mode=OneWay}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   Foreground="{StaticResource TextPrimary}"/>
+                    </Border>
+
+                    <!-- ISK -->
+                    <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   Text="⚡ MISSION PROGRESS"
-                                   Foreground="{StaticResource AccentGold}"
-                                   FontFamily="Consolas" FontWeight="Bold"
-                                   FontSize="{DynamicResource GlobalFontSizeSm}"/>
-                        <!-- Session AP badge -->
-                        <Border Grid.Column="1"
-                                Background="#22FFD54F" BorderBrush="{StaticResource AccentGold}"
-                                BorderThickness="1" CornerRadius="3" Padding="6,2" Margin="0,0,6,0"
-                                Visibility="{Binding SessionMissionCount, Converter={StaticResource ZeroToCollapsed}}">
-                            <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}" FontFamily="Consolas">
-                                <Run Text="{Binding SessionAP, Mode=OneWay}" Foreground="{StaticResource AccentGold}" FontWeight="Bold"/>
-                                <Run Text=" AP" Foreground="{StaticResource TextSecondary}"/>
-                            </TextBlock>
-                        </Border>
-                        <!-- Mission count badge -->
-                        <Border Grid.Column="2"
-                                Background="#224FC3F7" BorderBrush="{StaticResource AccentBlue}"
-                                BorderThickness="1" CornerRadius="3" Padding="6,2"
-                                Visibility="{Binding SessionMissionCount, Converter={StaticResource ZeroToCollapsed}}">
-                            <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}" FontFamily="Consolas">
-                                <Run Text="{Binding SessionMissionCount, Mode=OneWay}" Foreground="{StaticResource AccentBlue}" FontWeight="Bold"/>
-                                <Run Text=" missions" Foreground="{StaticResource TextSecondary}"/>
-                            </TextBlock>
-                        </Border>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="ISK (net)" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding Session.IskTodayLabel, Mode=OneWay}"
+                                       FontWeight="Bold" Foreground="{StaticResource AccentGold}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
+                                   Text="{Binding Session.IskPerHourLabel, Mode=OneWay}"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   Foreground="{StaticResource TextSecondary}"/>
                     </Grid>
 
-                    <!-- Active mission banner -->
-                    <Border Background="#1AFFD54F" BorderBrush="#44FFD54F"
-                            BorderThickness="1" CornerRadius="3" Padding="6,4" Margin="0,0,0,6"
-                            Visibility="{Binding ActiveMissionName, Converter={StaticResource NullToVisibility}}">
-                        <TextBlock FontFamily="Consolas" FontSize="{DynamicResource GlobalFontSizeXs}">
-                            <Run Text="📋 " Foreground="{StaticResource AccentGold}"/>
-                            <Run Text="{Binding ActiveMissionName, Mode=OneWay}"
-                                 Foreground="{StaticResource TextPrimary}" FontWeight="Bold"/>
-                        </TextBlock>
-                    </Border>
-
-                    <!-- Next threshold progress bar -->
-                    <Border Background="#110D1117" CornerRadius="3" Padding="6,5" Margin="0,0,0,4"
-                            Visibility="{Binding SelectedCatalogueFaction, Converter={StaticResource NullToVisibility}}">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0"
-                                           Text="{Binding NextThresholdLabel}"
-                                           Foreground="{StaticResource AccentGold}"
-                                           FontFamily="Consolas" FontWeight="Bold"
-                                           FontSize="{DynamicResource GlobalFontSizeXs}"/>
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding MissionsToNextLabel}"
-                                           Foreground="{StaticResource TextSecondary}"
-                                           FontSize="{DynamicResource GlobalFontSizeXs}"/>
-                            </Grid>
-                            <ProgressBar Height="6" Minimum="0" Maximum="1"
-                                         Value="{Binding NextThresholdProgress, Mode=OneWay}"
-                                         Background="#221E3148"
-                                         BorderThickness="0">
-                                <ProgressBar.Foreground>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="#FFFFD54F" Offset="0"/>
-                                        <GradientStop Color="#FF2ECC71" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </ProgressBar.Foreground>
-                            </ProgressBar>
+                    <!-- LP -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Loyalty points" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding Session.LpTodayLabel, Mode=OneWay}"
+                                       FontWeight="Bold" Foreground="{StaticResource AccentBlue}"/>
                         </StackPanel>
-                    </Border>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
+                                   Text="{Binding Session.LpPerHourLabel, Mode=OneWay}"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   Foreground="{StaticResource TextSecondary}"/>
+                    </Grid>
 
-                    <!-- All thresholds checklist -->
-                    <ItemsControl ItemsSource="{Binding StandingProgress}"
-                                  Visibility="{Binding StandingProgress.Count, Converter={StaticResource ZeroToCollapsed}}">
+                    <!-- Kills -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Kills" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock Text="{Binding Session.KillsToday, Mode=OneWay}"
+                                       FontWeight="Bold" Foreground="{StaticResource AccentRed}"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
+                                   Text="{Binding Session.KillsPerHourLabel, Mode=OneWay}"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   Foreground="{StaticResource TextSecondary}"/>
+                    </Grid>
+
+                    <!-- Mining -->
+                    <TextBlock Text="MINED TODAY" Style="{StaticResource SectionHeader}" Margin="0,0,0,2"/>
+                    <TextBlock Text="ledger updates daily — recent mining may lag"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               Foreground="{StaticResource TextSecondary}"
+                               Opacity="0.7" Margin="0,0,0,6"/>
+                    <ItemsControl ItemsSource="{Binding Session.MinedToday}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,2">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="16"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0"
-                                               FontSize="{DynamicResource GlobalFontSizeXs}"
-                                               VerticalAlignment="Center">
-                                        <Run Text="{Binding IsUnlocked, Converter={StaticResource ThresholdStatus}, Mode=OneWay}"/>
-                                    </TextBlock>
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}">
-                                            <Run Text="{Binding Label, Mode=OneWay}"
-                                                 FontWeight="Bold"
-                                                 Foreground="{StaticResource TextPrimary}"/>
-                                            <Run Text=" — " Foreground="{StaticResource TextSecondary}"/>
-                                            <Run Text="{Binding Value, Mode=OneWay, StringFormat={}{0:F1}}"
-                                                 Foreground="{StaticResource AccentGold}"/>
-                                        </TextBlock>
-                                        <ProgressBar Height="3" Minimum="0" Maximum="1"
-                                                     Value="{Binding ProgressToThis, Mode=OneWay}"
-                                                     Background="#221E3148" BorderThickness="0"
-                                                     Foreground="#FF4FC3F7"
-                                                     Visibility="{Binding IsNext, Converter={StaticResource BoolToVis}}"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="2"
-                                               Text="{Binding MissionsLabel}"
+                                    <TextBlock Grid.Column="0" Text="{Binding OreName}"
+                                               Foreground="{StaticResource TextPrimary}"
+                                               FontSize="{DynamicResource GlobalFontSizeSm}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding UnitsLabel}"
+                                               Foreground="{StaticResource AccentGold}"
+                                               FontSize="{DynamicResource GlobalFontSizeSm}"
+                                               Margin="8,0,0,0"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding PerHourLabel}"
                                                Foreground="{StaticResource TextSecondary}"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                                               Margin="6,0,0,0" VerticalAlignment="Center"
-                                               Visibility="{Binding IsNext, Converter={StaticResource BoolToVis}}"/>
+                                               Margin="8,0,0,0"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
-                    <!-- LP/ISK estimates -->
-                    <Border Background="#110D1117" CornerRadius="3" Padding="6,5" Margin="0,6,0,4">
-                        <StackPanel>
-                            <TextBlock Text="LP REWARDS BY MISSION LEVEL"
-                                       Foreground="{StaticResource AccentBlue}"
-                                       FontFamily="Consolas" FontWeight="Bold"
-                                       FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Margin="0,0,0,4"/>
-                            <ItemsControl ItemsSource="{Binding LpEstimates}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Label}"
-                                                   Foreground="{StaticResource TextSecondary}"
-                                                   FontFamily="Consolas"
-                                                   FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                   Margin="0,1"/>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Recent missions log -->
-                    <StackPanel Visibility="{Binding MissionHistory.Count, Converter={StaticResource ZeroToCollapsed}}">
-                        <TextBlock Text="RECENT MISSIONS"
-                                   Foreground="{StaticResource AccentBlue}"
-                                   FontFamily="Consolas" FontWeight="Bold"
-                                   FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Margin="0,0,0,4"/>
-                        <ItemsControl ItemsSource="{Binding MissionHistory}" MaxHeight="120">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Margin="0,2">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{Binding MissionName}"
-                                                   Foreground="{StaticResource TextPrimary}"
-                                                   FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                   TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="1"
-                                                   FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                   Foreground="{StaticResource AccentGreen}"
-                                                   Margin="6,0,0,0">
-                                            <Run Text="+"/><Run Text="{Binding StandingGain, Mode=OneWay, StringFormat={}{0:F3}}"/>
-                                        </TextBlock>
-                                        <Border Grid.Column="2"
-                                                Background="#22FFD54F" CornerRadius="2"
-                                                Padding="4,1" Margin="4,0,0,0">
-                                            <TextBlock Text="+50 AP"
-                                                       Foreground="{StaticResource AccentGold}"
-                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                       FontFamily="Consolas"/>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-
-                    <!-- Mission status line -->
-                    <TextBlock Text="{Binding MissionStatus}"
-                               Foreground="{StaticResource AccentGold}"
-                               FontFamily="Consolas"
+                    <TextBlock Text="No mining recorded today."
+                               FontStyle="Italic"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                               TextWrapping="Wrap" Margin="0,4,0,0"
-                               Visibility="{Binding MissionStatus, Converter={StaticResource NullToVisibility}}"/>
-
+                               Foreground="{StaticResource TextSecondary}"
+                               Visibility="{Binding Session.MinedToday.Count, Converter={StaticResource ZeroToCollapsed}}"/>
                 </StackPanel>
             </ScrollViewer>
 
