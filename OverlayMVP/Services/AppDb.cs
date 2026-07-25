@@ -49,6 +49,21 @@ CREATE TABLE IF NOT EXISTS meta(
   k TEXT PRIMARY KEY,
   v TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS daily_stats(
+  day_key          TEXT    NOT NULL,
+  character_id     INTEGER NOT NULL,
+  wallet_baseline  REAL    NOT NULL DEFAULT 0,
+  lp_baseline      INTEGER NOT NULL DEFAULT 0,
+  wallet_last      REAL    NOT NULL DEFAULT 0,
+  lp_last          INTEGER NOT NULL DEFAULT 0,
+  has_baseline     INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (day_key, character_id)
+);
+CREATE TABLE IF NOT EXISTS daily_playtime(
+  day_key   TEXT    PRIMARY KEY,
+  seconds   INTEGER NOT NULL DEFAULT 0
+);
 ";
             cmd.ExecuteNonQuery();
 
