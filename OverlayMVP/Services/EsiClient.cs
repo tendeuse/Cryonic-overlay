@@ -74,7 +74,10 @@ namespace OverlayMVP.Services
         private const string Scopes   = "esi-characters.read_standings.v1 " +
                                         "esi-location.read_location.v1 " +
                                         "esi-location.read_ship_type.v1 " +
-                                        "esi-skills.read_skills.v1";
+                                        "esi-skills.read_skills.v1 " +
+                                        "esi-wallet.read_character_wallet.v1 " +
+                                        "esi-characters.read_loyalty.v1 " +
+                                        "esi-industry.read_character_mining.v1";
         private const string SsoBase  = "https://login.eveonline.com";
         private const string EsiBase  = "https://esi.evetech.net/latest";
 
@@ -658,6 +661,113 @@ ON CONFLICT(character_id) DO UPDATE SET
             catch { return new(); }
         }
 
+        // ── Session tracker data ──────────────────────────────────────────
+        // NOTE: unlike the older methods here, these THROW on 403 so the caller
+        // can tell "token lacks the new scope" (→ prompt re-link) apart from a
+        // transient failure. Other errors return a neutral value.
+
+        /// <summary>Wallet balance in ISK. Throws EsiScopeException on 403.</summary>
+        public async Task<double> GetWalletBalanceAsync(EsiToken token, CancellationToken ct = default)
+        {
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return 0;
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/wallet/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            var resp = await _http.SendAsync(req, ct);
+            if (resp.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                throw new EsiScopeException("esi-wallet.read_character_wallet.v1");
+            if (!resp.IsSuccessStatusCode) return 0;
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            return double.TryParse(text, System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : 0;
+        }
+
+        /// <summary>Total loyalty points across all corps. Throws EsiScopeException on 403.</summary>
+        public async Task<long> GetLoyaltyPointsAsync(EsiToken token, CancellationToken ct = default)
+        {
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return 0;
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/loyalty/points/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            var resp = await _http.SendAsync(req, ct);
+            if (resp.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                throw new EsiScopeException("esi-characters.read_loyalty.v1");
+            if (!resp.IsSuccessStatusCode) return 0;
+            long total = 0;
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+            foreach (var e in doc.RootElement.EnumerateArray())
+                if (e.TryGetProperty("loyalty_points", out var lp)) total += lp.GetInt64();
+            return total;
+        }
+
+        /// <summary>Today's mining ledger: type_id → units. Throws EsiScopeException on 403.</summary>
+        public async Task<Dictionary<int, long>> GetMiningTodayAsync(EsiToken token, CancellationToken ct = default)
+        {
+            var result = new Dictionary<int, long>();
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return result;
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/mining/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            var resp = await _http.SendAsync(req, ct);
+            if (resp.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                throw new EsiScopeException("esi-industry.read_character_mining.v1");
+            if (!resp.IsSuccessStatusCode) return result;
+
+            // The ledger is aggregated per calendar date ("YYYY-MM-DD"); take the rows whose
+            // date falls on/after the current EVE-day key (mining after 11:00 UTC yesterday
+            // still lands on yesterday's ledger date, so match the EVE-day key exactly and
+            // also accept today's calendar date).
+            string dayKey  = EveDay.KeyFor(DateTime.UtcNow);
+            string calDate = DateTime.UtcNow.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+            foreach (var e in doc.RootElement.EnumerateArray())
+            {
+                var date = e.TryGetProperty("date", out var d) ? d.GetString() ?? "" : "";
+                if (date != dayKey && date != calDate) continue;
+                int  typeId = e.GetProperty("type_id").GetInt32();
+                long qty    = e.GetProperty("quantity").GetInt64();
+                result[typeId] = result.TryGetValue(typeId, out var cur) ? cur + qty : qty;
+            }
+            return result;
+        }
+
+        private static readonly Dictionary<int, string> _typeNameCache = new();
+
+        /// <summary>Resolve type_ids to names via public ESI, cached in memory.</summary>
+        public async Task<Dictionary<int, string>> ResolveTypeNamesAsync(
+            IEnumerable<int> typeIds, CancellationToken ct = default)
+        {
+            var need = new List<int>();
+            var outMap = new Dictionary<int, string>();
+            foreach (var id in typeIds)
+            {
+                if (_typeNameCache.TryGetValue(id, out var cached)) outMap[id] = cached;
+                else if (!need.Contains(id)) need.Add(id);
+            }
+            if (need.Count == 0) return outMap;
+            try
+            {
+                var body = JsonSerializer.Serialize(need);
+                var req  = new HttpRequestMessage(HttpMethod.Post, $"{EsiBase}/universe/names/")
+                { Content = new StringContent(body, Encoding.UTF8, "application/json") };
+                var resp = await _http.SendAsync(req, ct);
+                if (!resp.IsSuccessStatusCode) return outMap;
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                foreach (var e in doc.RootElement.EnumerateArray())
+                {
+                    int id   = e.GetProperty("id").GetInt32();
+                    var name = e.GetProperty("name").GetString() ?? id.ToString();
+                    _typeNameCache[id] = name;
+                    outMap[id] = name;
+                }
+            }
+            catch { /* names are cosmetic — fall back to ids */ }
+            return outMap;
+        }
+
         public void Dispose() => _http.Dispose();
 
         private sealed class TokenResponse
@@ -671,5 +781,12 @@ ON CONFLICT(character_id) DO UPDATE SET
             [JsonPropertyName("CharacterID")]   public int    CharacterId   { get; set; }
             [JsonPropertyName("CharacterName")] public string CharacterName { get; set; } = "";
         }
+    }
+
+    /// <summary>Thrown when ESI rejects a call because the token lacks the required scope.</summary>
+    public sealed class EsiScopeException : Exception
+    {
+        public string Scope { get; }
+        public EsiScopeException(string scope) : base($"Token missing scope: {scope}") => Scope = scope;
     }
 }
