@@ -613,12 +613,6 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock Text="Ctrl+Shift+O  Toggle"
-                                           FontSize="{DynamicResource GlobalFontSizeXs}"
-                                           Foreground="{StaticResource TextSecondary}"/>
-                                <TextBlock Text="Ctrl+Shift+C  Click-through"
-                                           FontSize="{DynamicResource GlobalFontSizeXs}"
-                                           Foreground="{StaticResource TextSecondary}"/>
                                 <TextBlock Text="{Binding AppVersion}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            Foreground="{StaticResource TextSecondary}"
