@@ -326,7 +326,6 @@ namespace OverlayMVP
 
             Window win = key switch
             {
-                "missions" => new Views.ActiveMissionsWindow(),
                 "standing" => new Views.StandingGuideWindow(),
                 "progress" => new Views.MissionProgressWindow(),
                 "skills"   => new Views.SkillPlanWindow(),

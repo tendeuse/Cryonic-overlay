@@ -57,95 +57,104 @@
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
                     Cursor="SizeAll">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <!-- Line 1: brand + close -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Title -->
-                    <TextBlock Grid.Column="0"
-                               Text="◈ CRYONIC OVERLAY"
-                               FontWeight="Bold"
-                               FontSize="{DynamicResource GlobalFontSize}"
-                               Foreground="{StaticResource AccentBlue}"
-                               VerticalAlignment="Center"/>
+                        <!-- Title -->
+                        <TextBlock Grid.Column="0"
+                                   Text="◈ CRYONIC OVERLAY"
+                                   FontWeight="Bold"
+                                   FontSize="{DynamicResource GlobalFontSize}"
+                                   Foreground="{StaticResource AccentBlue}"
+                                   VerticalAlignment="Center"/>
 
-                    <!-- Connection status -->
-                    <TextBlock Grid.Column="1"
-                               Text="{Binding ConnectionStatus}"
-                               FontSize="{DynamicResource GlobalFontSizeXs}"
-                               Foreground="{StaticResource TextSecondary}"
-                               VerticalAlignment="Center"
-                               Margin="0,0,8,0"/>
+                        <!-- Close -->
+                        <Button Grid.Column="1"
+                                Content="✕"
+                                Click="CloseBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#33EF5350"
+                                BorderBrush="{StaticResource AccentRed}"
+                                Foreground="{StaticResource AccentRed}"/>
+                    </Grid>
 
-                    <!-- Language toggle -->
-                    <Button Grid.Column="2"
-                            Content="{Binding Loc.LanguageButtonLabel}"
-                            Command="{Binding ToggleLanguageCommand}"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#33FFFFFF"
-                            BorderBrush="{StaticResource Border}"
-                            Margin="0,0,4,0"/>
+                    <!-- Line 2: connection status + tool buttons -->
+                    <Grid Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Intel search button -->
-                    <Button Grid.Column="3"
-                            Content="&#x1F50D;"
-                            Click="IntelBtn_Click"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="{StaticResource AccentRed}"
-                            ToolTip="Pilot Intel Search"
-                            Margin="0,0,4,0"
-                            Visibility="{Binding ShowPilotIntelBtn, Converter={StaticResource BoolToVis}}"/>
+                        <!-- Connection status -->
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding ConnectionStatus}"
+                                   FontSize="{DynamicResource GlobalFontSizeXs}"
+                                   Foreground="{StaticResource TextSecondary}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"/>
 
-                    <!-- System info button -->
-                    <Button Grid.Column="4"
-                            Content="&#x1F30D;"
-                            Click="SystemBtn_Click"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#334FC3F7"
-                            BorderBrush="{StaticResource AccentBlue}"
-                            ToolTip="System Info (Dotlan)"
-                            Margin="0,0,4,0"
-                            Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
+                        <!-- Language toggle -->
+                        <Button Grid.Column="1"
+                                Content="{Binding Loc.LanguageButtonLabel}"
+                                Command="{Binding ToggleLanguageCommand}"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#33FFFFFF"
+                                BorderBrush="{StaticResource Border}"
+                                Margin="0,0,4,0"/>
 
-                    <!-- Control panel (super-users only) -->
-                    <Button Grid.Column="5"
-                            Content="🛠"
-                            Click="ControlPanelBtn_Click"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#334FC3F7"
-                            BorderBrush="{StaticResource AccentBlue}"
-                            ToolTip="Open Control Panel"
-                            Margin="0,0,4,0"
-                            Visibility="{Binding IsSuperUser, Converter={StaticResource BoolToVis}}"/>
+                        <!-- Intel search button -->
+                        <Button Grid.Column="2"
+                                Content="&#x1F50D;"
+                                Click="IntelBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#33EF5350"
+                                BorderBrush="{StaticResource AccentRed}"
+                                ToolTip="Pilot Intel Search"
+                                Margin="0,0,4,0"
+                                Visibility="{Binding ShowPilotIntelBtn, Converter={StaticResource BoolToVis}}"/>
 
-                    <!-- Settings -->
-                    <Button Grid.Column="6"
-                            Content="⚙"
-                            Click="SettingsBtn_Click"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#33FFFFFF"
-                            BorderBrush="{StaticResource Border}"
-                            ToolTip="Paramètres"
-                            Margin="0,0,6,0"/>
+                        <!-- System info button -->
+                        <Button Grid.Column="3"
+                                Content="&#x1F30D;"
+                                Click="SystemBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#334FC3F7"
+                                BorderBrush="{StaticResource AccentBlue}"
+                                ToolTip="System Info (Dotlan)"
+                                Margin="0,0,4,0"
+                                Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
 
-                    <!-- Close -->
-                    <Button Grid.Column="7"
-                            Content="✕"
-                            Click="CloseBtn_Click"
-                            Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="{StaticResource AccentRed}"
-                            Foreground="{StaticResource AccentRed}"/>
-                </Grid>
+                        <!-- Control panel (super-users only) -->
+                        <Button Grid.Column="4"
+                                Content="🛠"
+                                Click="ControlPanelBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#334FC3F7"
+                                BorderBrush="{StaticResource AccentBlue}"
+                                ToolTip="Open Control Panel"
+                                Margin="0,0,4,0"
+                                Visibility="{Binding IsSuperUser, Converter={StaticResource BoolToVis}}"/>
+
+                        <!-- Settings -->
+                        <Button Grid.Column="5"
+                                Content="⚙"
+                                Click="SettingsBtn_Click"
+                                Style="{StaticResource SmallBtn}"
+                                Background="#33FFFFFF"
+                                BorderBrush="{StaticResource Border}"
+                                ToolTip="Paramètres"
+                                Margin="0,0,6,0"/>
+                    </Grid>
+                </StackPanel>
             </Border>
 
             <!-- ── Update notice ────────────────────────────────────────────
@@ -501,14 +510,6 @@
             <!-- ══ Panel launcher buttons (one per row) ════════════════════════════ -->
             <Border Grid.Row="5" Background="#CC0A0E14" Padding="8,6">
                 <StackPanel>
-                    <Button x:Name="BtnMissions"
-                            Content="🎯  Missions"
-                            Style="{StaticResource IntelBtn}"
-                            Click="PanelBtn_Click" Tag="missions"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,2" Padding="10,5"
-                            ToolTip="Active Missions &amp; LP estimates"
-                            Visibility="{Binding ShowActiveMissions, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnStanding"
                             Content="📋  Standing"
                             Style="{StaticResource IntelBtn}"
@@ -612,7 +613,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock Text="Ctrl+Shift+O  Toggle  |  Ctrl+Shift+C  Click-through"
+                                <TextBlock Text="Ctrl+Shift+O  Toggle"
+                                           FontSize="{DynamicResource GlobalFontSizeXs}"
+                                           Foreground="{StaticResource TextSecondary}"/>
+                                <TextBlock Text="Ctrl+Shift+C  Click-through"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            Foreground="{StaticResource TextSecondary}"/>
                                 <TextBlock Text="{Binding AppVersion}"
