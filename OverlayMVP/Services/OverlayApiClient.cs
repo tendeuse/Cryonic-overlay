@@ -109,6 +109,30 @@ namespace OverlayMVP.Services
             return data?.Missions.Select(ToMission).ToList() ?? new List<Mission>();
         }
 
+        /// <summary>Broadcast an Order. Scope/target are authorised server-side against the caller's role.</summary>
+        public async Task<bool> PostOrderAsync(string title, string description,
+                                               string targetScope, long? targetId,
+                                               CancellationToken ct = default)
+        {
+            var url  = $"{_baseUrl}/missions";
+            var body = JsonSerializer.Serialize(new
+            {
+                title,
+                description,
+                target_scope = targetScope,
+                target_id    = targetId,
+            }, _json);
+
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, url)
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
+
+            await EnsureSuccessAsync(resp);
+            return true;
+        }
+
         // ----------------------------------------------------------------
         // Public (no auth)
         // ----------------------------------------------------------------

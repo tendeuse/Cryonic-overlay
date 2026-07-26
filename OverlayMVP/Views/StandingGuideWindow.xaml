@@ -724,15 +724,18 @@
                                                         Foreground="{StaticResource AccentBlue}"
                                                         Margin="0,0,3,0"/>
                                                 <TextBlock Grid.Column="1"/>
-                                                <Button Grid.Column="2" Content="★ Save"
-                                                        ToolTip="Save as personal preset"
-                                                        Command="{Binding DataContext.SavePersonalPresetCommand,
+                                                <Button Grid.Column="2" Content="📢 Order"
+                                                        ToolTip="Broadcast this step to your corporation as an Order"
+                                                        Command="{Binding DataContext.BroadcastStepAsOrderCommand,
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource SmallBtn}"
                                                         Background="#22FFFFD4"
                                                         BorderBrush="{StaticResource AccentGold}"
                                                         Foreground="{StaticResource AccentGold}"
+                                                        Visibility="{Binding DataContext.IsSuperUser,
+                                                            Converter={StaticResource BoolToVis},
+                                                            RelativeSource={RelativeSource AncestorType=Window}}"
                                                         Margin="0,0,3,0"/>
                                                 <Button Grid.Column="3" Content="▶ Mission"
                                                         ToolTip="Play the officer's mission briefing"
@@ -745,6 +748,13 @@
                                                         Foreground="{StaticResource AccentGreen}"/>
                                             </Grid>
 
+                                            <TextBlock Text="{Binding DataContext.OrderBroadcastStatus,
+                                                            RelativeSource={RelativeSource AncestorType=Window}}"
+                                                       TextWrapping="Wrap"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Foreground="{StaticResource AccentGold}"
+                                                       Margin="0,4,0,0"/>
+
                                         </StackPanel>
 
                                     </Expander>
@@ -752,51 +762,6 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <!-- Personal presets -->
-                        <StackPanel Margin="0,8,0,0"
-                                    Visibility="{Binding PersonalPresets.Count,
-                                        Converter={StaticResource ZeroToCollapsed}}">
-                            <TextBlock Text="⭐ SAVED PRESETS" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"
-                                       Foreground="{StaticResource AccentGold}" Margin="0,0,0,4"/>
-                            <ItemsControl ItemsSource="{Binding PersonalPresets}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="0,2">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="{Binding StepLabel, Mode=OneWay}"
-                                                           Foreground="#FFE8EDF2"
-                                                           FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSm}"/>
-                                                <TextBlock Text="{Binding Agent, Mode=OneWay}"
-                                                           Foreground="{StaticResource TextSecondary}"
-                                                           FontSize="{DynamicResource GlobalFontSizeXs}"/>
-                                            </StackPanel>
-                                            <Button Grid.Column="1" Content="▶"
-                                                    Command="{Binding DataContext.CreateFromStepCommand,
-                                                        RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource SmallBtn}"
-                                                    Background="#2266BB6A"
-                                                    BorderBrush="{StaticResource AccentGreen}"
-                                                    Foreground="{StaticResource AccentGreen}"
-                                                    Margin="4,0,2,0"/>
-                                            <Button Grid.Column="2" Content="✕"
-                                                    Command="{Binding DataContext.RemovePersonalPresetCommand,
-                                                        RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding}"
-                                                    Style="{StaticResource SmallBtn}"
-                                                    Background="#22EF5350"
-                                                    BorderBrush="{StaticResource AccentRed}"
-                                                    Foreground="{StaticResource AccentRed}"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
 
                     </StackPanel><!-- end tutorial panel -->
 

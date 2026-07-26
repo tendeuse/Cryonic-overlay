@@ -296,7 +296,6 @@ namespace OverlayMVP.ViewModels
         public ObservableCollection<Mission>     Missions   { get; } = new();
         public ObservableCollection<IntelReport> Intel      { get; } = new();
         public ObservableCollection<EveWindow>   EveWindows { get; } = new();
-        public ObservableCollection<TutorialStep> PersonalPresets { get; } = new();
 
         // ── Orders (CEO/coalition broadcasts — read-only) ─────────────────
         public ObservableCollection<Mission> Orders { get; } = new();
@@ -716,9 +715,34 @@ namespace OverlayMVP.ViewModels
             }
         }
 
-        [RelayCommand] public void SavePersonalPreset(TutorialStep step) { /* preset saving */ }
-        [RelayCommand] public void DeletePersonalPreset(TutorialStep step) { PersonalPresets.Remove(step); }
-        [RelayCommand] public void CreateFromStep(TutorialStep step) { /* create mission from step */ }
+        [ObservableProperty] private string orderBroadcastStatus = "";
+
+        /// <summary>
+        /// Broadcast a guide step to the pilot's corporation as an Order. Only meaningful for
+        /// super-users (CEO / coalition / global) — the backend authorises the target itself.
+        /// </summary>
+        [RelayCommand]
+        public async Task BroadcastStepAsOrderAsync(TutorialStep? step)
+        {
+            if (step is null) return;
+            try
+            {
+                var info = await _esi.GetCharacterAsync(default, ActiveCharacter?.CharacterId ?? 0);
+                int corpId = string.IsNullOrWhiteSpace(info?.Corporation)
+                    ? 0
+                    : await _esi.ResolveCorporationIdAsync(info.Corporation);
+                if (corpId == 0) { OrderBroadcastStatus = "⚠️ Could not determine your corporation."; return; }
+
+                string title = string.IsNullOrWhiteSpace(step.StepLabel) ? "Standing objective" : step.StepLabel;
+                string desc  = step.WhyText ?? "";
+                await _api.PostOrderAsync(title, desc, "corporation", corpId);
+                OrderBroadcastStatus = $"📢 Order broadcast to your corporation: {title}";
+            }
+            catch (Exception ex)
+            {
+                OrderBroadcastStatus = $"⚠️ {ex.Message}";
+            }
+        }
 
         /// <summary>Play the officer's lore briefing for a step (opaque popup, autoplay + sound).</summary>
         [RelayCommand]

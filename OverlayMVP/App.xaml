@@ -215,5 +215,32 @@
             <Setter Property="Padding"     Value="6,2"/>
         </Style>
 
+        <!-- ── ToolTip (dark theme) ───────────────────────────────────────
+             Without this, tooltips use WPF's pale default background while
+             inheriting the app's near-white foreground — unreadable. -->
+        <Style TargetType="ToolTip">
+            <Setter Property="Background"      Value="#FF0D1117"/>
+            <Setter Property="Foreground"      Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderBrush"     Value="{StaticResource AccentBlue}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding"         Value="8,5"/>
+            <Setter Property="FontSize"        Value="{DynamicResource GlobalFontSizeXs}"/>
+            <Setter Property="HasDropShadow"   Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>
