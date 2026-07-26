@@ -275,6 +275,15 @@ namespace OverlayMVP.ViewModels
         [ObservableProperty] private int    sessionMissionCount  = 0;
         [ObservableProperty] private int    sessionAP            = 0;
 
+        // Regular missions raise CORPORATION standing (not faction) — this is the
+        // number a "missions to go" countdown may legitimately be based on.
+        [ObservableProperty] private double bestCorpStanding;
+        [ObservableProperty] private string corpStandingLabel = "—";
+        [ObservableProperty] private string corpMissionsToNextLabel = "";
+        [ObservableProperty] private string factionStorylinesToNextLabel = "";
+        [ObservableProperty] private string standingCaveatLabel =
+            "Regular missions raise corporation standing only. Faction standing comes from storylines, epic arcs, COSMOS, career agents and datacenters.";
+
         // ── EVE Multibox ──────────────────────────────────────────────────
         [ObservableProperty] private bool   hasEveWindows  = false;
         [ObservableProperty] private string eveWindowCount = "No EVE clients detected";
@@ -539,6 +548,18 @@ namespace OverlayMVP.ViewModels
                     ApplySkillPlan();
                     RefreshStandingProgress();
                     AutoAdvanceBriefings();
+                });
+
+                // Regular missions raise CORPORATION standing, not faction standing —
+                // load it alongside so the threshold countdown can be driven by the
+                // number that missions actually move.
+                var corpStandings = await _esi.GetCorpStandingsAsync(default, charId);
+                double bestCorp = corpStandings.Count == 0 ? 0 : corpStandings.Max(c => c.Standing);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    BestCorpStanding  = bestCorp;
+                    CorpStandingLabel = corpStandings.Count == 0 ? "—" : bestCorp.ToString("F2");
+                    RefreshStandingProgress();
                 });
             }
             catch (Exception ex)
@@ -878,10 +899,13 @@ namespace OverlayMVP.ViewModels
         // ── Standing Progress ─────────────────────────────────────────────
         public void RefreshStandingProgress()
         {
-            double standing = CurrentFactionStanding;
-            // Threshold "missions-to-go" uses the Social-boosted gain estimate. (Connections
-            // affects effective standing for ACCESS — a separate refinement not modelled here.)
-            var thresholds = MissionProgressService.GetThresholds(standing, SocialSkill);
+            // Thresholds/progress are driven by CORPORATION standing, because that is
+            // what completing regular missions actually raises. Faction standing is
+            // tracked separately and only advances via storyline/epic-arc content.
+            double corp    = BestCorpStanding;
+            double faction = CurrentFactionStanding;
+
+            var thresholds = MissionProgressService.GetThresholds(corp, SocialSkill);
             StandingProgress.Clear();
             foreach (var t in thresholds) StandingProgress.Add(t);
 
@@ -892,12 +916,24 @@ namespace OverlayMVP.ViewModels
                 NextThresholdValue    = next.Value;
                 NextThresholdProgress = next.ProgressToThis;
                 MissionsToNextLabel   = next.MissionsLabel;
+
+                CorpMissionsToNextLabel = string.IsNullOrEmpty(next.MissionsLabel)
+                    ? ""
+                    : $"{next.MissionsLabel} → {next.Label} (corp standing)";
+
+                int storylines = MissionProgressService.StorylinesToTarget(faction, next.Value, SocialSkill);
+                FactionStorylinesToNextLabel = storylines == 0
+                    ? "Faction standing already at this threshold"
+                    : $"{storylines} storyline{(storylines == 1 ? "" : "s")} " +
+                      $"(≈{storylines * MissionProgressService.MissionsPerStoryline} missions) → faction {next.Value:F1}";
             }
             else
             {
-                NextThresholdLabel    = "✅ Max standing reached!";
-                NextThresholdProgress = 1.0;
-                MissionsToNextLabel   = "";
+                NextThresholdLabel           = "✅ Max standing reached!";
+                NextThresholdProgress        = 1.0;
+                MissionsToNextLabel          = "";
+                CorpMissionsToNextLabel      = "";
+                FactionStorylinesToNextLabel = "";
             }
         }
 
