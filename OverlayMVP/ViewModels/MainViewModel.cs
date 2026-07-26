@@ -476,11 +476,10 @@ namespace OverlayMVP.ViewModels
         public async Task CompleteOrderAsync(Mission? order)
         {
             if (order is null) return;
-            // NOTE: Microsoft.VisualBasic.Interaction.InputBox would give a proper note
-            // prompt, but that assembly isn't referenced in OverlayMVP.csproj and adding
-            // it would be a new dependency for a single prompt. Keeping the build clean
-            // with no new dependencies — a real note dialog can come later.
-            string note = "";
+            // Native WPF prompt (Views/NotePromptWindow) — no Microsoft.VisualBasic dependency.
+            // Returns null if the pilot cancels, in which case we do NOT mark it complete.
+            string? note = Views.NotePromptWindow.Prompt(order.Title);
+            if (note is null) return;
             try   { await _api.CompleteOrderAsync(order.Id, note ?? ""); OrdersStatus = $"Marked complete: {order.Title}"; }
             catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
             await LoadOrdersAsync();
