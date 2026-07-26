@@ -99,6 +99,53 @@
                                                    FontSize="{DynamicResource GlobalFontSizeSm}"
                                                    TextWrapping="Wrap"
                                                    Margin="0,4,0,0"/>
+
+                                        <!-- Reward + slots -->
+                                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                            <TextBlock Text="{Binding RewardLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource AccentGold}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Margin="0,0,10,0"
+                                                       Visibility="{Binding HasReward, Converter={StaticResource BoolToVis}}"/>
+                                            <TextBlock Text="{Binding SlotsLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextSecondary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                        </StackPanel>
+
+                                        <!-- State + actions -->
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                            <TextBlock Text="{Binding StateLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource AccentGreen}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,10,0"/>
+                                            <Button Content="Join"
+                                                    Style="{StaticResource SmallBtn}"
+                                                    Background="#334FC3F7"
+                                                    BorderBrush="{StaticResource AccentBlue}"
+                                                    Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.JoinOrderCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanJoin, Converter={StaticResource BoolToVis}}"/>
+                                            <Button Content="Mark complete"
+                                                    Style="{StaticResource SmallBtn}"
+                                                    Background="#3366BB6A"
+                                                    BorderBrush="{StaticResource AccentGreen}"
+                                                    Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.CompleteOrderCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanComplete, Converter={StaticResource BoolToVis}}"/>
+                                            <Button Content="Leave"
+                                                    Style="{StaticResource SmallBtn}"
+                                                    Background="#33EF5350"
+                                                    BorderBrush="{StaticResource AccentRed}"
+                                                    Command="{Binding DataContext.LeaveOrderCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanLeave, Converter={StaticResource BoolToVis}}"/>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Border>
                             </DataTemplate>
