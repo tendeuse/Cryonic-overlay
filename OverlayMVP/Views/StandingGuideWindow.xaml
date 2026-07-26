@@ -223,6 +223,58 @@
                         </Grid>
                     </Border>
 
+                    <!-- ── Access thresholds ─────────────────────────────── -->
+                    <Border Background="#22FFFFFF" CornerRadius="4" Padding="10,8" Margin="0,6,0,10">
+                        <StackPanel>
+                            <TextBlock Text="AGENT ACCESS PROGRESS"
+                                       Style="{StaticResource SectionHeader}" Margin="0,0,0,4"/>
+
+                            <TextBlock Margin="0,0,0,6"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}">
+                                <Run Text="Corp standing: "/>
+                                <Run Text="{Binding CorpStandingLabel, Mode=OneWay}"
+                                     Foreground="{StaticResource AccentBlue}" FontWeight="Bold"/>
+                            </TextBlock>
+
+                            <TextBlock Text="{Binding CorpMissionsToNextLabel, Mode=OneWay}"
+                                       FontSize="{DynamicResource GlobalFontSizeSm}"
+                                       Foreground="{StaticResource AccentGold}"
+                                       TextWrapping="Wrap" Margin="0,0,0,2"/>
+
+                            <TextBlock Text="{Binding FactionStorylinesToNextLabel, Mode=OneWay}"
+                                       FontSize="{DynamicResource GlobalFontSizeSm}"
+                                       Foreground="{StaticResource TextPrimary}"
+                                       TextWrapping="Wrap" Margin="0,0,0,6"/>
+
+                            <ItemsControl ItemsSource="{Binding StandingProgress}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding Label, Mode=OneWay}"
+                                                       FontSize="{DynamicResource GlobalFontSizeSm}"
+                                                       Foreground="{StaticResource TextPrimary}"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Value, StringFormat={}{0:F1}, Mode=OneWay}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Foreground="{StaticResource TextSecondary}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="{Binding StandingCaveatLabel, Mode=OneWay}"
+                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                       Foreground="{StaticResource TextSecondary}"
+                                       Opacity="0.75" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
                     <!-- Faction selector -->
                     <TextBlock Text="SELECT FACTION" Foreground="{StaticResource TextSecondary}"
                                FontSize="{DynamicResource GlobalFontSizeXs}" Margin="0,0,0,4"/>
