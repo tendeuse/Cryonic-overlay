@@ -58,6 +58,13 @@ namespace OverlayMVP.Services
         public double Standing    { get; set; }
     }
 
+    public sealed class EsiCorpStanding
+    {
+        public int    CorporationId   { get; set; }
+        public string CorporationName { get; set; } = "";
+        public double Standing        { get; set; }
+    }
+
     public sealed class EsiClient : IDisposable
     {
         // The overlay is a single shared app now — every install uses this one
@@ -654,6 +661,43 @@ ON CONFLICT(character_id) DO UPDATE SET
                         FactionId   = id,
                         FactionName = FactionNames[id],
                         Standing    = Math.Round(e.GetProperty("standing").GetDouble(), 2),
+                    });
+                }
+                return list;
+            }
+            catch { return new(); }
+        }
+
+        /// <summary>
+        /// NPC corporation standings (from_type == "npc_corp"). Regular missions raise
+        /// AGENT + CORPORATION standing — this is what a mission-grind countdown must use.
+        /// Names are resolved lazily by the caller (ESI returns ids only here).
+        /// </summary>
+        public async Task<List<EsiCorpStanding>> GetCorpStandingsAsync(
+            CancellationToken ct = default, int characterId = 0)
+        {
+            var token  = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
+            if (token is null) return new();
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return new();
+
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/standings/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            try
+            {
+                var resp = await _http.SendAsync(req, ct);
+                if (!resp.IsSuccessStatusCode) return new();
+                var list = new List<EsiCorpStanding>();
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                foreach (var e in doc.RootElement.EnumerateArray())
+                {
+                    if (!e.TryGetProperty("from_type", out var ft) ||
+                        ft.GetString() != "npc_corp") continue;
+                    list.Add(new EsiCorpStanding
+                    {
+                        CorporationId = e.GetProperty("from_id").GetInt32(),
+                        Standing      = Math.Round(e.GetProperty("standing").GetDouble(), 2),
                     });
                 }
                 return list;
