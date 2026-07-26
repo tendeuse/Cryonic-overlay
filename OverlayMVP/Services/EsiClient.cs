@@ -705,6 +705,33 @@ ON CONFLICT(character_id) DO UPDATE SET
             catch { return new(); }
         }
 
+        private static readonly Dictionary<string, int> _corpIdCache = new(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>Resolve an NPC corporation NAME to its id via public ESI. 0 if not found.</summary>
+        public async Task<int> ResolveCorporationIdAsync(string corpName, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(corpName)) return 0;
+            if (_corpIdCache.TryGetValue(corpName, out var cached)) return cached;
+            try
+            {
+                var body = JsonSerializer.Serialize(new[] { corpName });
+                var req  = new HttpRequestMessage(HttpMethod.Post, $"{EsiBase}/universe/ids/")
+                { Content = new StringContent(body, Encoding.UTF8, "application/json") };
+                var resp = await _http.SendAsync(req, ct);
+                if (!resp.IsSuccessStatusCode) return 0;
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                if (!doc.RootElement.TryGetProperty("corporations", out var corps)) return 0;
+                foreach (var c in corps.EnumerateArray())
+                {
+                    int id = c.GetProperty("id").GetInt32();
+                    _corpIdCache[corpName] = id;
+                    return id;
+                }
+            }
+            catch { }
+            return 0;
+        }
+
         // ── Session tracker data ──────────────────────────────────────────
         // NOTE: unlike the older methods here, these THROW on 403 so the caller
         // can tell "token lacks the new scope" (→ prompt re-link) apart from a

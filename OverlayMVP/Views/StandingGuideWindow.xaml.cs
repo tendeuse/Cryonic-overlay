@@ -30,5 +30,18 @@ namespace OverlayMVP.Views
                 vm.SetManualStandingCommand.Execute(tb.Text);
             }
         }
+
+        // The faction ListBox has its own (disabled) ScrollViewer which still marks wheel
+        // events handled — forward them to the parent so the whole panel keeps scrolling.
+        private void FactionList_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+            var parent = ((System.Windows.FrameworkElement)sender).Parent as System.Windows.UIElement;
+            parent?.RaiseEvent(new System.Windows.Input.MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = System.Windows.UIElement.MouseWheelEvent,
+                Source      = sender,
+            });
+        }
     }
 }

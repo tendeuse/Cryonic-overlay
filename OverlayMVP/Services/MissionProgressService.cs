@@ -96,6 +96,10 @@ namespace OverlayMVP.Services
         }
 
         // ── How many missions to reach a target standing ─────────────────
+        // Returns -1 if the target is not reachable within the iteration cap — this
+        // happens whenever the target is 10.0 (asymptotically unreachable, since gain
+        // = (10 − current) × increase never actually closes the gap). -1 means "no
+        // countdown," never a raw iteration count that leaked out of the loop.
         public static int MissionsToTarget(double current, double target, int socialLevel = 0)
         {
             if (current >= target) return 0;
@@ -106,7 +110,7 @@ namespace OverlayMVP.Services
                 s += StandingGainPerMission(s, socialLevel);
                 count++;
             }
-            return count;
+            return count >= 10000 ? -1 : count;
         }
 
         /// <summary>A storyline mission is offered every 16 completed missions of the same level.</summary>
@@ -123,7 +127,10 @@ namespace OverlayMVP.Services
             return baseGain * (1.0 + 0.05 * socialLevel);
         }
 
-        /// <summary>How many STORYLINE missions to reach a faction-standing target.</summary>
+        /// <summary>
+        /// How many STORYLINE missions to reach a faction-standing target. Returns -1 if
+        /// the target is not reachable within the iteration cap (see MissionsToTarget).
+        /// </summary>
         public static int StorylinesToTarget(double currentStanding, double target, int socialLevel = 0)
         {
             if (currentStanding >= target) return 0;
@@ -134,7 +141,7 @@ namespace OverlayMVP.Services
                 s += StorylineGain(s, socialLevel);
                 count++;
             }
-            return count;
+            return count >= 10000 ? -1 : count;
         }
 
         // ── Build threshold progression list ─────────────────────────────
@@ -163,8 +170,11 @@ namespace OverlayMVP.Services
                 else if (unlocked) progress = 1.0;
 
                 int needed = isNext ? MissionsToTarget(currentStanding, val, socialLevel) : 0;
-                string missLabel = needed == 0 ? "" :
-                    needed == 1 ? "1 mission" : $"{needed} missions";
+                // -1 ("not reachable" — e.g. the asymptotic 10.0 ceiling) and the 10.0
+                // display-only ceiling itself must never surface a countdown in the UI.
+                string missLabel = (needed <= 0 || val >= 10.0) ? "" :
+                    needed == 1 ? "1 mission" :
+                    needed > 999 ? "999+ missions" : $"{needed} missions";
 
                 result.Add(new StandingThresholdInfo
                 {

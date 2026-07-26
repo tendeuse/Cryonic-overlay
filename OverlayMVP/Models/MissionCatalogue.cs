@@ -124,7 +124,7 @@ namespace OverlayMVP.Models
 
         public string GainLabel =>
             IsCOSMOS ? "ONE-TIME COSMOS" :
-            $"~+{EstGainPerRun:0.00} / run";
+            $"~+{EstGainPerRun:0.00} corp / run";
     }
 
     public sealed class FactionCatalogue

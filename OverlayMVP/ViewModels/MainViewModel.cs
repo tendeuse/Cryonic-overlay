@@ -554,11 +554,47 @@ namespace OverlayMVP.ViewModels
                 // load it alongside so the threshold countdown can be driven by the
                 // number that missions actually move.
                 var corpStandings = await _esi.GetCorpStandingsAsync(default, charId);
-                double bestCorp = corpStandings.Count == 0 ? 0 : corpStandings.Max(c => c.Standing);
+
+                // "Corp standing" must reflect the corp the current catalogue step is
+                // actually telling the pilot to grind — not the highest standing with
+                // any random NPC corp, which is meaningless in this context.
+                double corpValue;
+                string corpLabel;
+                if (corpStandings.Count == 0)
+                {
+                    corpValue = 0;
+                    corpLabel = "—";
+                }
+                else
+                {
+                    string? cleanCorpName = CleanCorporationName(CurrentCatalogueStep?.Corporation);
+                    double? matched = null;
+                    if (!string.IsNullOrEmpty(cleanCorpName))
+                    {
+                        int corpId = await _esi.ResolveCorporationIdAsync(cleanCorpName);
+                        if (corpId > 0)
+                        {
+                            var hit = corpStandings.FirstOrDefault(c => c.CorporationId == corpId);
+                            if (hit is not null) matched = hit.Standing;
+                        }
+                    }
+
+                    if (matched.HasValue && cleanCorpName is not null)
+                    {
+                        corpValue = matched.Value;
+                        corpLabel = $"{cleanCorpName}: {corpValue:F2}";
+                    }
+                    else
+                    {
+                        corpValue = corpStandings.Max(c => c.Standing);
+                        corpLabel = $"best corp: {corpValue:F2}";
+                    }
+                }
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    BestCorpStanding  = bestCorp;
-                    CorpStandingLabel = corpStandings.Count == 0 ? "—" : bestCorp.ToString("F2");
+                    BestCorpStanding  = corpValue;
+                    CorpStandingLabel = corpLabel;
                     RefreshStandingProgress();
                 });
             }
@@ -566,6 +602,23 @@ namespace OverlayMVP.ViewModels
             {
                 StandingsStatus = $"⚠️ {ex.Message[..Math.Min(ex.Message.Length, 50)]}";
             }
+        }
+
+        /// <summary>
+        /// Catalogue step corp names can be messy, e.g.
+        /// "Expert Distribution (Penumbra epic arc) / Caldari Navy (L4 grind)" —
+        /// take the text before the first " / " and before the first " (", trimmed.
+        /// </summary>
+        private static string? CleanCorporationName(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+            string name = raw;
+            int slashIdx = name.IndexOf(" / ", StringComparison.Ordinal);
+            if (slashIdx >= 0) name = name[..slashIdx];
+            int parenIdx = name.IndexOf(" (", StringComparison.Ordinal);
+            if (parenIdx >= 0) name = name[..parenIdx];
+            name = name.Trim();
+            return string.IsNullOrEmpty(name) ? null : name;
         }
 
         // ── ESI character ticker (single fetch on active window switch) ───
@@ -897,6 +950,9 @@ namespace OverlayMVP.ViewModels
         }
 
         // ── Standing Progress ─────────────────────────────────────────────
+        /// <summary>Clamp big-but-finite grind counts so no raw cap-sized number reaches the UI.</summary>
+        private static string FormatCount(int n) => n > 999 ? "999+" : n.ToString();
+
         public void RefreshStandingProgress()
         {
             // Thresholds/progress are driven by CORPORATION standing, because that is
@@ -917,15 +973,33 @@ namespace OverlayMVP.ViewModels
                 NextThresholdProgress = next.ProgressToThis;
                 MissionsToNextLabel   = next.MissionsLabel;
 
-                CorpMissionsToNextLabel = string.IsNullOrEmpty(next.MissionsLabel)
+                // 10.0 is an asymptotically-unreachable display ceiling, never a grind
+                // target — and MissionsToTarget/StorylinesToTarget return -1 ("not
+                // reachable") whenever the iteration cap is hit, which must never leak
+                // a raw count into the UI. Both cases collapse to "no countdown".
+                bool nextIsCeiling = next.Value >= 10.0;
+
+                CorpMissionsToNextLabel = (nextIsCeiling || string.IsNullOrEmpty(next.MissionsLabel))
                     ? ""
                     : $"{next.MissionsLabel} → {next.Label} (corp standing)";
 
                 int storylines = MissionProgressService.StorylinesToTarget(faction, next.Value, SocialSkill);
-                FactionStorylinesToNextLabel = storylines == 0
-                    ? "Faction standing already at this threshold"
-                    : $"{storylines} storyline{(storylines == 1 ? "" : "s")} " +
-                      $"(≈{storylines * MissionProgressService.MissionsPerStoryline} missions) → faction {next.Value:F1}";
+                if (nextIsCeiling || storylines < 0)
+                {
+                    FactionStorylinesToNextLabel = "";
+                }
+                else if (storylines == 0)
+                {
+                    FactionStorylinesToNextLabel = "Faction standing already at this threshold";
+                }
+                else
+                {
+                    string sCount = FormatCount(storylines);
+                    string mCount = FormatCount(storylines * MissionProgressService.MissionsPerStoryline);
+                    FactionStorylinesToNextLabel =
+                        $"{sCount} storyline{(storylines == 1 ? "" : "s")} " +
+                        $"(≈{mCount} missions) → faction {next.Value:F1}";
+                }
             }
             else
             {
