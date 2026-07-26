@@ -534,13 +534,25 @@
                             Margin="0,2" Padding="10,5"
                             ToolTip="Faction Skill Plan"
                             Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
-                    <Button x:Name="BtnOrders"
-                            Content="📢  Orders"
-                            Style="{StaticResource IntelBtn}"
-                            Click="PanelBtn_Click" Tag="orders"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,2" Padding="10,5"
-                            ToolTip="Orders from your corp / coalition"/>
+                    <Grid Margin="0,2">
+                        <Button x:Name="BtnOrders"
+                                Content="📢  Orders"
+                                Style="{StaticResource IntelBtn}"
+                                Click="PanelBtn_Click" Tag="orders"
+                                HorizontalAlignment="Stretch"
+                                Padding="10,5"
+                                ToolTip="Orders from your corp / coalition"/>
+                        <TextBlock Text="⚠"
+                                   Foreground="{StaticResource AccentGold}"
+                                   FontWeight="Bold"
+                                   FontSize="{DynamicResource GlobalFontSize}"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,0"
+                                   IsHitTestVisible="False"
+                                   ToolTip="New order received"
+                                   Visibility="{Binding HasNewOrders, Converter={StaticResource BoolToVis}}"/>
+                    </Grid>
                 </StackPanel>
             </Border>
 

@@ -300,6 +300,44 @@ namespace OverlayMVP.ViewModels
         // ── Orders (CEO/coalition broadcasts — read-only) ─────────────────
         public ObservableCollection<Mission> Orders { get; } = new();
         [ObservableProperty] private string ordersStatus = "";
+        [ObservableProperty] private bool hasNewOrders;
+        private int _lastSeenOrderId = -1;
+
+        private int LoadLastSeenOrderId()
+        {
+            try
+            {
+                using var con = _db.Open();
+                using var cmd = con.CreateCommand();
+                cmd.CommandText = "SELECT v FROM meta WHERE k=$k";
+                cmd.Parameters.AddWithValue("$k", "last_seen_order_id");
+                return int.TryParse(cmd.ExecuteScalar() as string, out var v) ? v : -1;
+            }
+            catch { return -1; }
+        }
+
+        private void SaveLastSeenOrderId(int id)
+        {
+            try
+            {
+                using var con = _db.Open();
+                using var cmd = con.CreateCommand();
+                cmd.CommandText =
+                    "INSERT INTO meta(k,v) VALUES($k,$v) ON CONFLICT(k) DO UPDATE SET v=excluded.v";
+                cmd.Parameters.AddWithValue("$k", "last_seen_order_id");
+                cmd.Parameters.AddWithValue("$v", id.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch { /* a failed badge write must never break the overlay */ }
+        }
+
+        /// <summary>Called when the pilot opens the Orders panel — clears the ⚠ badge.</summary>
+        public void MarkOrdersSeen()
+        {
+            int max = Orders.Count == 0 ? _lastSeenOrderId : Orders.Max(o => o.Id);
+            if (max > _lastSeenOrderId) { _lastSeenOrderId = max; SaveLastSeenOrderId(max); }
+            HasNewOrders = false;
+        }
 
         // ── System-change notification callback (set by MainWindow) ──────
         // Allows MainWindow to forward log-watcher system changes to SystemWindow
@@ -348,6 +386,7 @@ namespace OverlayMVP.ViewModels
             connectionsSkill = LoadSkillLevel("skill_connections");
             diplomacySkill   = LoadSkillLevel("skill_diplomacy");
             socialSkill      = LoadSkillLevel("skill_social");
+            _lastSeenOrderId = LoadLastSeenOrderId();
 
             // Build faction catalogue
             foreach (var f in MissionCatalogueData.Factions) CatalogueFactions.Add(f);
@@ -449,6 +488,8 @@ namespace OverlayMVP.ViewModels
                     Orders.Clear();
                     foreach (var o in list) Orders.Add(o);
                     OrdersStatus = list.Count == 0 ? "No active orders." : $"{list.Count} active";
+                    if (Orders.Count > 0 && Orders.Max(o => o.Id) > _lastSeenOrderId)
+                        HasNewOrders = true;
                 });
             }
             catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }

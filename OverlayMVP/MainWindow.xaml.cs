@@ -341,6 +341,7 @@ namespace OverlayMVP
             win.Left = this.Left + this.ActualWidth + 8;
             win.Top  = this.Top;
             win.Show();
+            if (key == "orders") _vm.MarkOrdersSeen();
             _panels[key] = win;
 
             // Highlight active button
