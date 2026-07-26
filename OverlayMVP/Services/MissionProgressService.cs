@@ -23,14 +23,23 @@ namespace OverlayMVP.Services
             (10.0, "Maximum",      "Maximum faction standing"),
         };
 
-        // LP per mission by level (approximate averages)
+        // LP per mission by level — APPROXIMATE. Only the L4 range is sourced
+        // (EVE Uni / player reports: a normal highsec L4 pays ~450–1,050 LP; burner
+        // "Anomic" L4s are the outlier at ~20,000). The other levels are rough
+        // estimates and are labelled as such in the UI.
+        //
+        // Actual payout follows:
+        //   LP = Base LP × (1.6288 − system security) × (1 + Division Connections × 0.1)
+        // so a 0.5-sec agent pays ~80% more than a 1.0-sec agent, and the
+        // Security/Distribution/Mining Connections skills add up to +50% at level V.
+        // Neither factor is modelled here — treat these as a conservative floor.
         public static readonly Dictionary<int, (int minLP, int maxLP, double iskPerLP)> LpByLevel = new()
         {
-            [1] = (400,   800,   900),
-            [2] = (1200,  2500,  900),
-            [3] = (5000,  12000, 900),
-            [4] = (15000, 40000, 900),
-            [5] = (50000, 150000, 900),
+            [1] = (15,    40,    900),
+            [2] = (50,    120,   900),
+            [3] = (150,   350,   900),
+            [4] = (450,   1050,  900),   // sourced
+            [5] = (1400,  3200,  900),
         };
     }
 
@@ -95,6 +104,34 @@ namespace OverlayMVP.Services
             while (s < target && count < 10000)
             {
                 s += StandingGainPerMission(s, socialLevel);
+                count++;
+            }
+            return count;
+        }
+
+        /// <summary>A storyline mission is offered every 16 completed missions of the same level.</summary>
+        public const int MissionsPerStoryline = 16;
+
+        /// <summary>
+        /// FACTION standing gain from one storyline mission. Regular missions give NO
+        /// faction standing — only storylines/epic arcs/COSMOS/career/datacenters do.
+        /// Same shape as other gains: (10 − current) × increase, boosted by Social.
+        /// </summary>
+        public static double StorylineGain(double currentStanding, int socialLevel = 0)
+        {
+            double baseGain = 0.04 * (10.0 - currentStanding);
+            return baseGain * (1.0 + 0.05 * socialLevel);
+        }
+
+        /// <summary>How many STORYLINE missions to reach a faction-standing target.</summary>
+        public static int StorylinesToTarget(double currentStanding, double target, int socialLevel = 0)
+        {
+            if (currentStanding >= target) return 0;
+            double s = currentStanding;
+            int count = 0;
+            while (s < target && count < 10000)
+            {
+                s += StorylineGain(s, socialLevel);
                 count++;
             }
             return count;
@@ -171,11 +208,11 @@ namespace OverlayMVP.Services
         // ── ISK/h estimate based on level ─────────────────────────────────
         public static string IskPerHourEstimate(int level) => level switch
         {
-            1 => "~5–10M ISK/h",
-            2 => "~20–40M ISK/h",
-            3 => "~50–80M ISK/h",
-            4 => "~80–150M ISK/h",
-            5 => "~200–500M ISK/h",
+            1 => "~5–15M ISK/h (approx.)",
+            2 => "~15–30M ISK/h (approx.)",
+            3 => "~30–60M ISK/h (approx.)",
+            4 => "~60–100M ISK/h (approx.)",
+            5 => "~100–200M ISK/h (approx.)",
             _ => "Unknown"
         };
     }
