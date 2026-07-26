@@ -27,6 +27,37 @@ namespace OverlayMVP.Models
         public long?   TargetId    { get; set; }
         public string  ExpiresAt   { get; set; } = "";
 
+        // ── Participation (Missions v2 · Slice 1) ─────────────────────────
+        public double  RewardAmount    { get; set; }
+        public string  RewardType      { get; set; } = "";
+        public int?    MaxParticipants { get; set; }
+        public int     SlotsTaken      { get; set; }
+        /// <summary>null = not joined; otherwise joined | completed | verified.</summary>
+        public string? MyState         { get; set; }
+
+        public bool HasReward   => RewardAmount > 0;
+        public string RewardLabel => HasReward
+            ? $"{RewardAmount:N0} {RewardType}".Trim()
+            : "";
+        public string SlotsLabel => MaxParticipants.HasValue
+            ? $"{SlotsTaken}/{MaxParticipants} slots"
+            : $"{SlotsTaken} joined";
+        public bool IsFull => MaxParticipants.HasValue
+                              && SlotsTaken >= MaxParticipants.Value
+                              && MyState is null;
+
+        // Button visibility — exactly one primary action is available at a time.
+        public bool CanJoin     => MyState is null && !IsFull;
+        public bool CanLeave    => MyState == "joined";
+        public bool CanComplete => MyState == "joined";
+        public string StateLabel => MyState switch
+        {
+            "joined"    => "✔ Joined",
+            "completed" => "✅ Completed — awaiting verification",
+            "verified"  => "✅ Verified",
+            _           => IsFull ? "FULL" : "",
+        };
+
         public string StatusEmoji => Status switch
         {
             "open"        => "🔵",

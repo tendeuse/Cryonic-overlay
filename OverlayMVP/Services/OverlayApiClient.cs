@@ -133,6 +133,34 @@ namespace OverlayMVP.Services
             return true;
         }
 
+        public async Task<bool> JoinOrderAsync(int id, CancellationToken ct = default)
+        {
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{id}/join"), ct);
+            await EnsureSuccessAsync(resp);
+            return true;
+        }
+
+        public async Task<bool> LeaveOrderAsync(int id, CancellationToken ct = default)
+        {
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Delete, $"{_baseUrl}/missions/{id}/join"), ct);
+            await EnsureSuccessAsync(resp);
+            return true;
+        }
+
+        public async Task<bool> CompleteOrderAsync(int id, string note, CancellationToken ct = default)
+        {
+            var body = JsonSerializer.Serialize(new { note }, _json);
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{id}/complete")
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
+            await EnsureSuccessAsync(resp);
+            return true;
+        }
+
         // ----------------------------------------------------------------
         // Public (no auth)
         // ----------------------------------------------------------------
@@ -223,6 +251,11 @@ namespace OverlayMVP.Services
             TargetScope = dto.TargetScope ?? "",
             TargetId    = dto.TargetId,
             ExpiresAt   = dto.ExpiresAt.HasValue ? DateTimeOffset.FromUnixTimeSeconds((long)dto.ExpiresAt.Value).ToString("u") : "",
+            RewardAmount    = dto.RewardAmount,
+            RewardType      = dto.RewardType ?? "",
+            MaxParticipants = dto.MaxParticipants,
+            SlotsTaken      = dto.SlotsTaken,
+            MyState         = dto.MyState,
         };
 
         private static double ParseUnixSeconds(string? iso)
@@ -269,6 +302,12 @@ namespace OverlayMVP.Services
             [JsonPropertyName("created_by")]   public long    CreatedBy { get; set; }
             [JsonPropertyName("created_at")]   public string? CreatedAt { get; set; }
             [JsonPropertyName("expires_at")]   public double? ExpiresAt { get; set; }
+
+            [JsonPropertyName("reward_amount")]    public double  RewardAmount { get; set; }
+            [JsonPropertyName("reward_type")]      public string? RewardType { get; set; }
+            [JsonPropertyName("max_participants")] public int?    MaxParticipants { get; set; }
+            [JsonPropertyName("slots_taken")]      public int     SlotsTaken { get; set; }
+            [JsonPropertyName("my_state")]         public string? MyState { get; set; }
         }
 
         private sealed class OrderListResponse

@@ -454,6 +454,38 @@ namespace OverlayMVP.ViewModels
             catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
         }
 
+        [RelayCommand]
+        public async Task JoinOrderAsync(Mission? order)
+        {
+            if (order is null) return;
+            try   { await _api.JoinOrderAsync(order.Id); OrdersStatus = $"Joined: {order.Title}"; }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+            await LoadOrdersAsync();
+        }
+
+        [RelayCommand]
+        public async Task LeaveOrderAsync(Mission? order)
+        {
+            if (order is null) return;
+            try   { await _api.LeaveOrderAsync(order.Id); OrdersStatus = $"Left: {order.Title}"; }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+            await LoadOrdersAsync();
+        }
+
+        [RelayCommand]
+        public async Task CompleteOrderAsync(Mission? order)
+        {
+            if (order is null) return;
+            // NOTE: Microsoft.VisualBasic.Interaction.InputBox would give a proper note
+            // prompt, but that assembly isn't referenced in OverlayMVP.csproj and adding
+            // it would be a new dependency for a single prompt. Keeping the build clean
+            // with no new dependencies — a real note dialog can come later.
+            string note = "";
+            try   { await _api.CompleteOrderAsync(order.Id, note ?? ""); OrdersStatus = $"Marked complete: {order.Title}"; }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+            await LoadOrdersAsync();
+        }
+
         private async Task EveWindowLoopAsync(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)
