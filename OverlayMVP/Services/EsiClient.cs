@@ -84,7 +84,8 @@ namespace OverlayMVP.Services
                                         "esi-skills.read_skills.v1 " +
                                         "esi-wallet.read_character_wallet.v1 " +
                                         "esi-characters.read_loyalty.v1 " +
-                                        "esi-industry.read_character_mining.v1";
+                                        "esi-industry.read_character_mining.v1 " +
+                                        "esi-characters.read_corporation_roles.v1";
         private const string SsoBase  = "https://login.eveonline.com";
         private const string EsiBase  = "https://esi.evetech.net/latest";
 
