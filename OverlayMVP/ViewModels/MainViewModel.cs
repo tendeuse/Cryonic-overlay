@@ -483,6 +483,10 @@ namespace OverlayMVP.ViewModels
             try
             {
                 var list = await _api.GetOrdersAsync(string.IsNullOrWhiteSpace(CurrentSystem) ? null : CurrentSystem);
+                // Resolve bounty target ids to names BEFORE the items reach the bound
+                // collection — Mission has no change notification, so a later write
+                // would never reach the UI.
+                await ResolveBountyTargetNamesAsync(list);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Orders.Clear();
@@ -493,6 +497,43 @@ namespace OverlayMVP.ViewModels
                 });
             }
             catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+        }
+
+        /// <summary>
+        /// Fills <see cref="Mission.TargetNames"/> for kill bounties. /universe/names/
+        /// resolves characters, corporations and alliances in one batch, so a single
+        /// call covers every target on every bounty in the list.
+        /// </summary>
+        private async Task ResolveBountyTargetNamesAsync(IReadOnlyList<Mission> list)
+        {
+            static List<int> Ids(string? json)
+            {
+                if (string.IsNullOrWhiteSpace(json)) return new List<int>();
+                try { return System.Text.Json.JsonSerializer.Deserialize<List<int>>(json) ?? new(); }
+                catch { return new List<int>(); }
+            }
+
+            var perOrder = new Dictionary<int, List<int>>();
+            var all = new HashSet<int>();
+            foreach (var m in list)
+            {
+                if (!m.IsBounty || !m.HasTargets) continue;
+                var ids = new List<int>();
+                ids.AddRange(Ids(m.KillVictimCharIdsJson));
+                ids.AddRange(Ids(m.KillVictimCorpIdsJson));
+                ids.AddRange(Ids(m.KillVictimAllyIdsJson));
+                perOrder[m.Id] = ids;
+                foreach (var id in ids) all.Add(id);
+            }
+            if (all.Count == 0) return;
+
+            var names = await _esi.ResolveTypeNamesAsync(all);
+            foreach (var m in list)
+            {
+                if (!perOrder.TryGetValue(m.Id, out var ids)) continue;
+                m.TargetNames = string.Join(", ",
+                    ids.Select(id => names.TryGetValue(id, out var n) ? n : id.ToString()));
+            }
         }
 
         [RelayCommand]

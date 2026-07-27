@@ -49,7 +49,9 @@ namespace OverlayMVP.Models
         // Button visibility — exactly one primary action is available at a time.
         public bool CanJoin     => MyState is null && !IsFull;
         public bool CanLeave    => MyState == "joined";
-        public bool CanComplete => MyState == "joined";
+        // A kill bounty is settled by killmails, never by self-report — "Mark complete"
+        // is a free-form-order concept and must not appear on bounties.
+        public bool CanComplete => MyState == "joined" && !IsBounty;
         public string StateLabel => MyState switch
         {
             "joined"    => "✔ Joined",
@@ -87,6 +89,56 @@ namespace OverlayMVP.Models
         public string BountyAutoNote => IsBounty && TargetScope == "global"
             ? "Kills are credited automatically (~15 min)"
             : "";
+
+        // ── Bounty qualification criteria ─────────────────────────────────
+        // A pilot cannot tell whether a kill will pay without seeing these, so they
+        // are surfaced in the Orders panel rather than left server-side.
+        public double  KillMinIsk             { get; set; }
+        public bool    KillFinalBlowOnly      { get; set; }
+        public string? KillSystemIdsJson      { get; set; }
+        public string? KillVictimCharIdsJson  { get; set; }
+        public string? KillVictimCorpIdsJson  { get; set; }
+        public string? KillVictimAllyIdsJson  { get; set; }
+
+        /// <summary>Names of the bounty's targets, resolved from ESI by the view-model.</summary>
+        public string TargetNames { get; set; } = "";
+
+        private static int CountIds(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return 0;
+            try
+            {
+                var arr = System.Text.Json.JsonSerializer.Deserialize<long[]>(json);
+                return arr?.Length ?? 0;
+            }
+            catch { return 0; }
+        }
+
+        public bool HasTargets =>
+            CountIds(KillVictimCharIdsJson) + CountIds(KillVictimCorpIdsJson) + CountIds(KillVictimAllyIdsJson) > 0;
+
+        public string BountyTargetLabel => !IsBounty
+            ? ""
+            : HasTargets
+                ? (string.IsNullOrWhiteSpace(TargetNames) ? "Targets: (resolving…)" : "Targets: " + TargetNames)
+                : "Targets: anyone";
+
+        /// <summary>The thresholds a kill must clear, in plain language.</summary>
+        public string BountyRulesLabel
+        {
+            get
+            {
+                if (!IsBounty) return "";
+                var parts = new System.Collections.Generic.List<string>();
+                parts.Add(KillMinIsk > 0
+                    ? $"min value {KillMinIsk:N0} ISK"
+                    : "no minimum value");
+                if (KillFinalBlowOnly) parts.Add("final blow only");
+                int sys = CountIds(KillSystemIdsJson);
+                if (sys > 0) parts.Add(sys == 1 ? "1 system only" : $"{sys} systems only");
+                return string.Join(" · ", parts);
+            }
+        }
     }
 
     public sealed class MissionListResponse

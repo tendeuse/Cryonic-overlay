@@ -273,6 +273,12 @@ namespace OverlayMVP.Services
             TargetUnits = dto.TargetUnits,
             MyKills     = dto.MyKills,
             TotalKills  = dto.TotalKills,
+            KillMinIsk            = dto.KillMinIsk,
+            KillFinalBlowOnly     = dto.KillFinalBlowOnly != 0,
+            KillSystemIdsJson     = dto.KillSystemIds,
+            KillVictimCharIdsJson = dto.KillVictimCharIds,
+            KillVictimCorpIdsJson = dto.KillVictimCorpIds,
+            KillVictimAllyIdsJson = dto.KillVictimAllyIds,
         };
 
         private static double ParseUnixSeconds(string? iso)
@@ -330,6 +336,14 @@ namespace OverlayMVP.Services
             [JsonPropertyName("target_units")] public int?    TargetUnits { get; set; }
             [JsonPropertyName("my_kills")]     public int     MyKills { get; set; }
             [JsonPropertyName("total_kills")]  public int     TotalKills { get; set; }
+
+            // Bounty qualification criteria — the *_ids columns are JSON-array TEXT in D1.
+            [JsonPropertyName("kill_min_isk")]              public double  KillMinIsk { get; set; }
+            [JsonPropertyName("kill_final_blow_only")]      public int     KillFinalBlowOnly { get; set; }
+            [JsonPropertyName("kill_system_ids")]           public string? KillSystemIds { get; set; }
+            [JsonPropertyName("kill_victim_character_ids")] public string? KillVictimCharIds { get; set; }
+            [JsonPropertyName("kill_victim_corp_ids")]      public string? KillVictimCorpIds { get; set; }
+            [JsonPropertyName("kill_victim_alliance_ids")]  public string? KillVictimAllyIds { get; set; }
         }
 
         private sealed class OrderListResponse

@@ -121,6 +121,15 @@
                                             <TextBlock Text="{Binding BountyProgressLabel, Mode=OneWay}"
                                                        Foreground="{StaticResource TextPrimary}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                            <!-- What actually qualifies for a payout -->
+                                            <TextBlock Text="{Binding BountyTargetLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextPrimary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding BountyRulesLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextSecondary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       TextWrapping="Wrap"/>
                                             <TextBlock Text="{Binding BountyAutoNote, Mode=OneWay}"
                                                        Foreground="{StaticResource TextSecondary}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
