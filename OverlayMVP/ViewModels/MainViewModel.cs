@@ -526,6 +526,30 @@ namespace OverlayMVP.ViewModels
             await LoadOrdersAsync();
         }
 
+        [RelayCommand]
+        public async Task SubmitKillAsync(Mission? order)
+        {
+            if (order is null) return;
+            // Reuse the note prompt to collect the zKillboard URL or killmail id.
+            string? raw = Views.NotePromptWindow.Prompt($"{order.Title} — paste the zKillboard link or killmail ID");
+            if (string.IsNullOrWhiteSpace(raw)) return;
+
+            // Accept a full zKill URL (…/kill/123456789/) or a bare id.
+            var m = System.Text.RegularExpressions.Regex.Match(raw, @"(\d{6,})");
+            if (!m.Success) { OrdersStatus = "⚠️ Could not read a killmail ID from that."; return; }
+            long killmailId = long.Parse(m.Value);
+
+            try
+            {
+                // The server looks the killmail hash up from zKillboard itself, so the
+                // pilot only ever needs to paste the link — no second prompt.
+                await _api.SubmitKillAsync(order.Id, killmailId, "");
+                OrdersStatus = "✅ Kill submitted.";
+            }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+            await LoadOrdersAsync();
+        }
+
         private async Task EveWindowLoopAsync(CancellationToken ct)
         {
             while (!ct.IsCancellationRequested)

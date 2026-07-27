@@ -112,6 +112,31 @@
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                         </StackPanel>
 
+                                        <!-- Kill bounty -->
+                                        <StackPanel Visibility="{Binding IsBounty, Converter={StaticResource BoolToVis}}"
+                                                    Margin="0,4,0,0">
+                                            <TextBlock Text="{Binding BountyRewardLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource AccentGold}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                            <TextBlock Text="{Binding BountyProgressLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextPrimary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                            <TextBlock Text="{Binding BountyAutoNote, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextSecondary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Opacity="0.8" TextWrapping="Wrap"/>
+                                            <Button Content="Submit kill"
+                                                    Style="{StaticResource SmallBtn}"
+                                                    Background="#33FFD54F"
+                                                    BorderBrush="{StaticResource AccentGold}"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="0,4,0,0"
+                                                    Command="{Binding DataContext.SubmitKillCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanSubmitKill, Converter={StaticResource BoolToVis}}"/>
+                                        </StackPanel>
+
                                         <!-- State + actions -->
                                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                             <TextBlock Text="{Binding StateLabel, Mode=OneWay}"

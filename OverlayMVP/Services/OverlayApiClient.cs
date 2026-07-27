@@ -161,6 +161,19 @@ namespace OverlayMVP.Services
             return true;
         }
 
+        public async Task<bool> SubmitKillAsync(int missionId, long killmailId, string hash,
+                                                CancellationToken ct = default)
+        {
+            var body = JsonSerializer.Serialize(new { killmail_id = killmailId, hash }, _json);
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{missionId}/submit-kill")
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
+            await EnsureSuccessAsync(resp);
+            return true;
+        }
+
         // ----------------------------------------------------------------
         // Public (no auth)
         // ----------------------------------------------------------------
@@ -256,6 +269,10 @@ namespace OverlayMVP.Services
             MaxParticipants = dto.MaxParticipants,
             SlotsTaken      = dto.SlotsTaken,
             MyState         = dto.MyState,
+            MissionType = dto.MissionType ?? "freeform",
+            TargetUnits = dto.TargetUnits,
+            MyKills     = dto.MyKills,
+            TotalKills  = dto.TotalKills,
         };
 
         private static double ParseUnixSeconds(string? iso)
@@ -308,6 +325,11 @@ namespace OverlayMVP.Services
             [JsonPropertyName("max_participants")] public int?    MaxParticipants { get; set; }
             [JsonPropertyName("slots_taken")]      public int     SlotsTaken { get; set; }
             [JsonPropertyName("my_state")]         public string? MyState { get; set; }
+
+            [JsonPropertyName("mission_type")] public string? MissionType { get; set; }
+            [JsonPropertyName("target_units")] public int?    TargetUnits { get; set; }
+            [JsonPropertyName("my_kills")]     public int     MyKills { get; set; }
+            [JsonPropertyName("total_kills")]  public int     TotalKills { get; set; }
         }
 
         private sealed class OrderListResponse

@@ -68,6 +68,25 @@ namespace OverlayMVP.Models
         };
 
         public string StatusLabel => Status.Replace("_", " ").ToUpperInvariant();
+
+        // ── Kill bounty (Missions v2 · Slice 2) ───────────────────────────
+        public string MissionType { get; set; } = "freeform";
+        public int?   TargetUnits { get; set; }
+        public int    MyKills     { get; set; }
+        public int    TotalKills  { get; set; }
+
+        public bool IsBounty => MissionType == "kill_bounty";
+        /// <summary>Global bounties are credited automatically — manual submit is refused by the server.</summary>
+        public bool CanSubmitKill => IsBounty && MyState is not null && TargetScope != "global";
+        public string BountyProgressLabel => IsBounty
+            ? $"{MyKills} by you · {TotalKills}{(TargetUnits.HasValue ? "/" + TargetUnits : "")} total"
+            : "";
+        public string BountyRewardLabel => IsBounty && RewardAmount > 0
+            ? $"{RewardAmount:N0} {RewardType} per kill"
+            : "";
+        public string BountyAutoNote => IsBounty && TargetScope == "global"
+            ? "Kills are credited automatically (~15 min)"
+            : "";
     }
 
     public sealed class MissionListResponse
