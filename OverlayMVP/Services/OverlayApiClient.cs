@@ -205,15 +205,24 @@ namespace OverlayMVP.Services
             {
                 using var doc = JsonDocument.Parse(text);
                 var root = doc.RootElement;
+
+                // TryGetProperty succeeds for an explicit JSON null, and GetDouble() then
+                // throws InvalidOperationException — which the JsonException catch below
+                // would not stop. Check the value kind, not just the key's presence.
+                static double? Num(JsonElement root, string name)
+                    => root.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number
+                        ? v.GetDouble()
+                        : null;
+
                 if (resp.IsSuccessStatusCode)
                 {
-                    double? reached = root.TryGetProperty("standing", out var s) ? s.GetDouble() : null;
+                    double? reached = Num(root, "standing");
                     return new StandingClaimResult(true, reached, null, null, "Standing goal claimed.");
                 }
                 // A below-threshold refusal carries the pilot's current value so the UI
                 // can say how far off they are instead of just "rejected".
-                double? cur = root.TryGetProperty("current",  out var c) ? c.GetDouble() : null;
-                double? req = root.TryGetProperty("required", out var r) ? r.GetDouble() : null;
+                double? cur = Num(root, "current");
+                double? req = Num(root, "required");
                 var msg = root.TryGetProperty("error", out var e) ? e.GetString() ?? "Claim refused." : "Claim refused.";
                 return new StandingClaimResult(false, null, cur, req, msg);
             }
