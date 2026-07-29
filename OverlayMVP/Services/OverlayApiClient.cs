@@ -295,7 +295,26 @@ namespace OverlayMVP.Services
 
             var body = await resp.Content.ReadAsStringAsync();
             var code = (int)resp.StatusCode;
-            throw new OverlayApiException(code, string.IsNullOrEmpty(body) ? $"HTTP {code}" : $"HTTP {code}: {body}");
+
+            // Prefer the backend's own {"error":"..."} message when present — pilots should
+            // see "you already have 7.00 with Caldari State", not the raw JSON wrapper around
+            // it. Fall back to the current behaviour when the body isn't JSON or has no
+            // string "error" property.
+            string message = string.IsNullOrEmpty(body) ? $"HTTP {code}" : $"HTTP {code}: {body}";
+            try
+            {
+                using var doc = JsonDocument.Parse(body);
+                if (doc.RootElement.TryGetProperty("error", out var err) &&
+                    err.ValueKind == JsonValueKind.String)
+                {
+                    var errText = err.GetString();
+                    if (!string.IsNullOrEmpty(errText))
+                        message = errText;
+                }
+            }
+            catch (JsonException) { /* not JSON — keep the raw-body fallback */ }
+
+            throw new OverlayApiException(code, message);
         }
 
         // ----------------------------------------------------------------

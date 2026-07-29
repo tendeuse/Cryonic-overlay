@@ -456,8 +456,16 @@ ON CONFLICT(character_id) DO UPDATE SET
         /// access token ONLY — the refresh token is the long-lived credential and must
         /// never leave this machine.
         /// </summary>
-        public Task<string?> GetAccessTokenAsync(CancellationToken ct = default, int characterId = 0)
-            => GetValidToken(ct, characterId);
+        public async Task<string?> GetAccessTokenAsync(CancellationToken ct = default, int characterId = 0)
+        {
+            // This token leaves the machine (handed to the backend, which uses it for one
+            // or two further ESI calls of its own), so give it the same one-minute cushion
+            // GetValidAccessTokenAsync uses rather than refreshing right at the wire.
+            var t = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
+            if (t is null) return null;
+            if (t.ExpiresAt > DateTime.UtcNow.AddMinutes(1)) return t.AccessToken;
+            return await RefreshAsync(t, ct);
+        }
 
         /// <summary>Returns a valid access token for this character, refreshing if expired.</summary>
         public async Task<string> GetValidAccessTokenAsync(EsiToken token, CancellationToken ct = default)
@@ -736,13 +744,31 @@ ON CONFLICT(character_id) DO UPDATE SET
         /// ESI omits neutral standings entirely, so a target that is absent here is
         /// genuinely 0.0 — callers must not treat absence as an error.
         /// </summary>
-        public async Task<List<EsiStandingEntry>> GetAllStandingsAsync(
+        // Single-slot memo for GetAllStandingsAsync: character id + fetch time (UTC) + rows.
+        // ESI caches this endpoint for an hour server-side; polling it unconditionally every
+        // 10s (once per LoadOrdersAsync tick, whenever any standing goal is visible) would be
+        // ~8,600 authenticated calls/day/overlay against a single character. 5 minutes of
+        // staleness costs the pilot nothing — this readout is cosmetic and the backend
+        // re-reads standings itself at claim time.
+        private int    _standingsCacheCharId;
+        private DateTime _standingsCacheAt;
+        private List<EsiStandingEntry>? _standingsCacheRows;
+
+        public async Task<List<EsiStandingEntry>?> GetAllStandingsAsync(
             CancellationToken ct = default, int characterId = 0)
         {
             var token = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
-            if (token is null) return new();
+            if (token is null) return null;
+
+            if (_standingsCacheRows is not null
+                && _standingsCacheCharId == token.CharacterId
+                && DateTime.UtcNow - _standingsCacheAt < TimeSpan.FromMinutes(5))
+            {
+                return _standingsCacheRows;
+            }
+
             var access = await GetValidToken(ct, token.CharacterId);
-            if (access is null) return new();
+            if (access is null) return null;
 
             var req = new HttpRequestMessage(HttpMethod.Get,
                 $"{EsiBase}/characters/{token.CharacterId}/standings/");
@@ -750,7 +776,10 @@ ON CONFLICT(character_id) DO UPDATE SET
             try
             {
                 var resp = await _http.SendAsync(req, ct);
-                if (!resp.IsSuccessStatusCode) return new();
+                // Non-success is a FAILED fetch, not "no standings" — return null so callers
+                // can tell "nothing to show" apart from "couldn't ask ESI". Do not simplify
+                // this to `new()`: that would render a genuine outage as a confident +0.00.
+                if (!resp.IsSuccessStatusCode) return null;
                 var list = new List<EsiStandingEntry>();
                 using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
                 foreach (var e in doc.RootElement.EnumerateArray())
@@ -764,9 +793,14 @@ ON CONFLICT(character_id) DO UPDATE SET
                         Standing = e.GetProperty("standing").GetDouble(),
                     });
                 }
+                // Cache only successful fetches — never cache the null from a failure path,
+                // or an outage would render as a sticky, confidently-wrong 0.0 for 5 minutes.
+                _standingsCacheCharId = token.CharacterId;
+                _standingsCacheAt     = DateTime.UtcNow;
+                _standingsCacheRows   = list;
                 return list;
             }
-            catch { return new(); }
+            catch { return null; }
         }
 
         private static readonly Dictionary<string, int> _corpIdCache = new(StringComparer.OrdinalIgnoreCase);

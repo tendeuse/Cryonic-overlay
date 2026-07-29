@@ -549,7 +549,17 @@ namespace OverlayMVP.ViewModels
         {
             if (!list.Any(m => m.IsStandingGoal)) return;
 
-            var rows = await _esi.GetAllStandingsAsync();
+            var rows = await _esi.GetAllStandingsAsync(default, ActiveCharacter?.CharacterId ?? 0);
+            if (rows is null)
+            {
+                // A FAILED fetch (outage, expired link, etc.), not a genuinely empty
+                // standings set. Leave CurrentStanding null on every goal so the label
+                // renders "—" instead of confidently claiming +0.00 progress. Do not
+                // collapse this into the loop below with `?? 0d` — that is exactly the
+                // "absence means 0.0" rule, and it only holds for a row missing from a
+                // SUCCESSFUL response.
+                return;
+            }
             foreach (var m in list)
             {
                 if (!m.IsStandingGoal || m.StandingTargetId is null || m.StandingTargetType is null)
@@ -572,7 +582,7 @@ namespace OverlayMVP.ViewModels
                 string? token = null;
                 if (order.IsStandingGoal)
                 {
-                    token = await _esi.GetAccessTokenAsync();
+                    token = await _esi.GetAccessTokenAsync(default, ActiveCharacter?.CharacterId ?? 0);
                     if (token is null)
                     {
                         OrdersStatus = "⚠️ Link EVE in ⚙ Settings to join a standing goal";
@@ -592,7 +602,7 @@ namespace OverlayMVP.ViewModels
             if (order is null) return;
             try
             {
-                var token = await _esi.GetAccessTokenAsync();
+                var token = await _esi.GetAccessTokenAsync(default, ActiveCharacter?.CharacterId ?? 0);
                 if (token is null)
                 {
                     OrdersStatus = "⚠️ Link EVE in ⚙ Settings to claim";
