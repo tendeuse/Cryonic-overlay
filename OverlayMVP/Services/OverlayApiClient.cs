@@ -21,6 +21,13 @@ namespace OverlayMVP.Services
         public OverlayApiException(int statusCode, string message) : base(message) => StatusCode = statusCode;
     }
 
+    /// <summary>
+    /// Outcome of a standing claim. A refusal is not an exception — "you're at +3.42,
+    /// need +5.00" is a normal, expected answer that the UI shows as-is.
+    /// </summary>
+    public sealed record StandingClaimResult(
+        bool Ok, double? Standing, double? Current, double? Required, string Message);
+
     public sealed class SponsorInfo
     {
         [JsonPropertyName("enabled")]  public bool   Enabled  { get; set; }
@@ -133,10 +140,19 @@ namespace OverlayMVP.Services
             return true;
         }
 
-        public async Task<bool> JoinOrderAsync(int id, CancellationToken ct = default)
+        /// <summary>
+        /// Join an order. <paramref name="esiToken"/> is REQUIRED for standing goals —
+        /// the backend reads the pilot's standing itself rather than trusting a
+        /// self-reported value — and ignored for every other order type.
+        /// </summary>
+        public async Task<bool> JoinOrderAsync(int id, string? esiToken = null, CancellationToken ct = default)
         {
+            var body = JsonSerializer.Serialize(new { esi_token = esiToken }, _json);
             var resp = await SendAuthedAsync(
-                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{id}/join"), ct);
+                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{id}/join")
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
             await EnsureSuccessAsync(resp);
             return true;
         }
@@ -172,6 +188,39 @@ namespace OverlayMVP.Services
                 }, ct);
             await EnsureSuccessAsync(resp);
             return true;
+        }
+
+        public async Task<StandingClaimResult> ClaimStandingAsync(
+            int id, string esiToken, CancellationToken ct = default)
+        {
+            var body = JsonSerializer.Serialize(new { esi_token = esiToken }, _json);
+            var resp = await SendAuthedAsync(
+                () => new HttpRequestMessage(HttpMethod.Post, $"{_baseUrl}/missions/{id}/claim-standing")
+                {
+                    Content = new StringContent(body, Encoding.UTF8, "application/json")
+                }, ct);
+
+            var text = await resp.Content.ReadAsStringAsync(ct);
+            try
+            {
+                using var doc = JsonDocument.Parse(text);
+                var root = doc.RootElement;
+                if (resp.IsSuccessStatusCode)
+                {
+                    double? reached = root.TryGetProperty("standing", out var s) ? s.GetDouble() : null;
+                    return new StandingClaimResult(true, reached, null, null, "Standing goal claimed.");
+                }
+                // A below-threshold refusal carries the pilot's current value so the UI
+                // can say how far off they are instead of just "rejected".
+                double? cur = root.TryGetProperty("current",  out var c) ? c.GetDouble() : null;
+                double? req = root.TryGetProperty("required", out var r) ? r.GetDouble() : null;
+                var msg = root.TryGetProperty("error", out var e) ? e.GetString() ?? "Claim refused." : "Claim refused.";
+                return new StandingClaimResult(false, null, cur, req, msg);
+            }
+            catch (JsonException)
+            {
+                return new StandingClaimResult(false, null, null, null, $"HTTP {(int)resp.StatusCode}");
+            }
         }
 
         // ----------------------------------------------------------------
