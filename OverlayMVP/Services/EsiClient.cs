@@ -65,6 +65,14 @@ namespace OverlayMVP.Services
         public double Standing        { get; set; }
     }
 
+    /// <summary>One raw standings row — faction, npc_corp or agent, unfiltered.</summary>
+    public sealed class EsiStandingEntry
+    {
+        public string FromType { get; set; } = "";
+        public int    FromId   { get; set; }
+        public double Standing { get; set; }
+    }
+
     public sealed class EsiClient : IDisposable
     {
         // The overlay is a single shared app now — every install uses this one
@@ -440,6 +448,17 @@ ON CONFLICT(character_id) DO UPDATE SET
             return t.AccessToken;
         }
 
+        /// <summary>
+        /// A currently-valid ACCESS token for the linked character, refreshing if needed.
+        ///
+        /// Used to prove standing to the intel backend, which reads the pilot's standings
+        /// itself rather than trusting a self-reported number. Deliberately returns the
+        /// access token ONLY — the refresh token is the long-lived credential and must
+        /// never leave this machine.
+        /// </summary>
+        public Task<string?> GetAccessTokenAsync(CancellationToken ct = default, int characterId = 0)
+            => GetValidToken(ct, characterId);
+
         /// <summary>Returns a valid access token for this character, refreshing if expired.</summary>
         public async Task<string> GetValidAccessTokenAsync(EsiToken token, CancellationToken ct = default)
         {
@@ -699,6 +718,50 @@ ON CONFLICT(character_id) DO UPDATE SET
                     {
                         CorporationId = e.GetProperty("from_id").GetInt32(),
                         Standing      = Math.Round(e.GetProperty("standing").GetDouble(), 2),
+                    });
+                }
+                return list;
+            }
+            catch { return new(); }
+        }
+
+        /// <summary>
+        /// Every standings row, unfiltered — faction, npc_corp and agent alike.
+        ///
+        /// The existing helpers filter by type (and to known factions), so neither can
+        /// answer "what is my standing toward THIS target", which is what a standing
+        /// goal asks. Matching must use from_type AND from_id: ids are only unique
+        /// within a type.
+        ///
+        /// ESI omits neutral standings entirely, so a target that is absent here is
+        /// genuinely 0.0 — callers must not treat absence as an error.
+        /// </summary>
+        public async Task<List<EsiStandingEntry>> GetAllStandingsAsync(
+            CancellationToken ct = default, int characterId = 0)
+        {
+            var token = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
+            if (token is null) return new();
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return new();
+
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/standings/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            try
+            {
+                var resp = await _http.SendAsync(req, ct);
+                if (!resp.IsSuccessStatusCode) return new();
+                var list = new List<EsiStandingEntry>();
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                foreach (var e in doc.RootElement.EnumerateArray())
+                {
+                    if (!e.TryGetProperty("from_id", out var fid)) continue;
+                    if (!e.TryGetProperty("from_type", out var ft)) continue;
+                    list.Add(new EsiStandingEntry
+                    {
+                        FromType = ft.GetString() ?? "",
+                        FromId   = fid.GetInt32(),
+                        Standing = e.GetProperty("standing").GetDouble(),
                     });
                 }
                 return list;
