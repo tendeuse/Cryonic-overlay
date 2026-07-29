@@ -146,6 +146,32 @@
                                                     Visibility="{Binding CanSubmitKill, Converter={StaticResource BoolToVis}}"/>
                                         </StackPanel>
 
+                                        <!-- Standing goal -->
+                                        <StackPanel Visibility="{Binding IsStandingGoal, Converter={StaticResource BoolToVis}}"
+                                                    Margin="0,4,0,0">
+                                            <TextBlock Text="{Binding StandingGoalLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource AccentGold}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding StandingProgressLabel, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextPrimary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                            <TextBlock Text="{Binding StandingTokenNote, Mode=OneWay}"
+                                                       Foreground="{StaticResource TextSecondary}"
+                                                       FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                       Opacity="0.8" TextWrapping="Wrap"/>
+                                            <Button Content="Claim standing"
+                                                    Style="{StaticResource SmallBtn}"
+                                                    Background="#3327AE60"
+                                                    BorderBrush="{StaticResource AccentGold}"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="0,4,0,0"
+                                                    Command="{Binding DataContext.ClaimStandingCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    Visibility="{Binding CanClaimStanding, Converter={StaticResource BoolToVis}}"/>
+                                        </StackPanel>
+
                                         <!-- State + actions -->
                                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                             <TextBlock Text="{Binding StateLabel, Mode=OneWay}"
