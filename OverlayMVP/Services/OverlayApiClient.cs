@@ -279,6 +279,13 @@ namespace OverlayMVP.Services
             KillVictimCharIdsJson = dto.KillVictimCharIds,
             KillVictimCorpIdsJson = dto.KillVictimCorpIds,
             KillVictimAllyIdsJson = dto.KillVictimAllyIds,
+            StandingTargetType   = dto.StandingTargetType,
+            StandingTargetId     = dto.StandingTargetId,
+            StandingTargetName   = dto.StandingTargetName ?? "",
+            StandingThreshold    = dto.StandingThreshold,
+            StandingUseEffective = dto.StandingUseEffective != 0,
+            StandingMustEarn     = dto.StandingMustEarn != 0,
+            MyStandingAtJoin     = dto.MyStandingAtJoin,
         };
 
         private static double ParseUnixSeconds(string? iso)
@@ -344,6 +351,15 @@ namespace OverlayMVP.Services
             [JsonPropertyName("kill_victim_character_ids")] public string? KillVictimCharIds { get; set; }
             [JsonPropertyName("kill_victim_corp_ids")]      public string? KillVictimCorpIds { get; set; }
             [JsonPropertyName("kill_victim_alliance_ids")]  public string? KillVictimAllyIds { get; set; }
+
+            // Standing goal. *_use_effective / *_must_earn are INTEGER 0|1 in D1.
+            [JsonPropertyName("standing_target_type")]   public string? StandingTargetType { get; set; }
+            [JsonPropertyName("standing_target_id")]     public long?   StandingTargetId { get; set; }
+            [JsonPropertyName("standing_target_name")]   public string? StandingTargetName { get; set; }
+            [JsonPropertyName("standing_threshold")]     public double? StandingThreshold { get; set; }
+            [JsonPropertyName("standing_use_effective")] public int     StandingUseEffective { get; set; } = 1;
+            [JsonPropertyName("standing_must_earn")]     public int     StandingMustEarn { get; set; }
+            [JsonPropertyName("my_standing_at_join")]    public double? MyStandingAtJoin { get; set; }
         }
 
         private sealed class OrderListResponse
