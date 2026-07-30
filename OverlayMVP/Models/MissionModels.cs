@@ -49,9 +49,11 @@ namespace OverlayMVP.Models
         // Button visibility — exactly one primary action is available at a time.
         public bool CanJoin     => MyState is null && !IsFull;
         public bool CanLeave    => MyState == "joined";
-        // A kill bounty is settled by killmails, never by self-report — "Mark complete"
-        // is a free-form-order concept and must not appear on bounties.
-        public bool CanComplete => MyState == "joined" && !IsBounty;
+        // Only free-form orders are self-reported. Bounties are settled by killmails
+        // and standing goals by a server-side ESI read — the server refuses a manual
+        // complete on both. Stated as a whitelist so a fourth type is excluded by
+        // default rather than being forgotten here.
+        public bool CanComplete => MyState == "joined" && MissionType == "freeform";
         public string StateLabel => MyState switch
         {
             "joined"    => "✔ Joined",
@@ -139,6 +141,47 @@ namespace OverlayMVP.Models
                 return string.Join(" · ", parts);
             }
         }
+
+        // ── Standing goal (Missions v2 · Slice 3) ─────────────────────────
+        public string? StandingTargetType   { get; set; }
+        public long?   StandingTargetId     { get; set; }
+        public string  StandingTargetName   { get; set; } = "";
+        public double? StandingThreshold    { get; set; }
+        public bool    StandingUseEffective { get; set; } = true;
+        public bool    StandingMustEarn     { get; set; }
+        /// <summary>Standing when this pilot joined. null = no snapshot (0.0 is a real value).</summary>
+        public double? MyStandingAtJoin     { get; set; }
+        /// <summary>Set by the view-model from local ESI data. Display only — the server decides.</summary>
+        public double? CurrentStanding      { get; set; }
+
+        public bool IsStandingGoal => MissionType == "standing_goal";
+        public bool CanClaimStanding => IsStandingGoal && MyState == "joined";
+
+        public string StandingGoalLabel => IsStandingGoal && StandingThreshold.HasValue
+            ? $"Reach {StandingThreshold.Value:+0.00;-0.00} with {StandingTargetName}"
+            : "";
+
+        /// <summary>
+        /// Local progress hint. The overlay's own reading is NOT authoritative —
+        /// the server re-reads standings on claim and decides.
+        /// </summary>
+        public string StandingProgressLabel
+        {
+            get
+            {
+                if (!IsStandingGoal || !StandingThreshold.HasValue) return "";
+                var basis = StandingUseEffective ? "effective" : "base";
+                var now   = CurrentStanding.HasValue ? $"{CurrentStanding.Value:+0.00;-0.00}" : "—";
+                var start = MyStandingAtJoin.HasValue
+                    ? $" · joined at {MyStandingAtJoin.Value:+0.00;-0.00}"
+                    : "";
+                return $"{now} / {StandingThreshold.Value:+0.00;-0.00} ({basis}){start}";
+            }
+        }
+
+        public string StandingTokenNote => IsStandingGoal
+            ? "Joining and claiming send a one-time EVE token so the server can check your standing. It isn't stored."
+            : "";
     }
 
     public sealed class MissionListResponse

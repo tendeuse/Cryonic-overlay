@@ -65,6 +65,14 @@ namespace OverlayMVP.Services
         public double Standing        { get; set; }
     }
 
+    /// <summary>One raw standings row — faction, npc_corp or agent, unfiltered.</summary>
+    public sealed class EsiStandingEntry
+    {
+        public string FromType { get; set; } = "";
+        public int    FromId   { get; set; }
+        public double Standing { get; set; }
+    }
+
     public sealed class EsiClient : IDisposable
     {
         // The overlay is a single shared app now — every install uses this one
@@ -440,6 +448,25 @@ ON CONFLICT(character_id) DO UPDATE SET
             return t.AccessToken;
         }
 
+        /// <summary>
+        /// A currently-valid ACCESS token for the linked character, refreshing if needed.
+        ///
+        /// Used to prove standing to the intel backend, which reads the pilot's standings
+        /// itself rather than trusting a self-reported number. Deliberately returns the
+        /// access token ONLY — the refresh token is the long-lived credential and must
+        /// never leave this machine.
+        /// </summary>
+        public async Task<string?> GetAccessTokenAsync(CancellationToken ct = default, int characterId = 0)
+        {
+            // This token leaves the machine (handed to the backend, which uses it for one
+            // or two further ESI calls of its own), so give it the same one-minute cushion
+            // GetValidAccessTokenAsync uses rather than refreshing right at the wire.
+            var t = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
+            if (t is null) return null;
+            if (t.ExpiresAt > DateTime.UtcNow.AddMinutes(1)) return t.AccessToken;
+            return await RefreshAsync(t, ct);
+        }
+
         /// <summary>Returns a valid access token for this character, refreshing if expired.</summary>
         public async Task<string> GetValidAccessTokenAsync(EsiToken token, CancellationToken ct = default)
         {
@@ -704,6 +731,76 @@ ON CONFLICT(character_id) DO UPDATE SET
                 return list;
             }
             catch { return new(); }
+        }
+
+        /// <summary>
+        /// Every standings row, unfiltered — faction, npc_corp and agent alike.
+        ///
+        /// The existing helpers filter by type (and to known factions), so neither can
+        /// answer "what is my standing toward THIS target", which is what a standing
+        /// goal asks. Matching must use from_type AND from_id: ids are only unique
+        /// within a type.
+        ///
+        /// ESI omits neutral standings entirely, so a target that is absent here is
+        /// genuinely 0.0 — callers must not treat absence as an error.
+        /// </summary>
+        // Single-slot memo for GetAllStandingsAsync: character id + fetch time (UTC) + rows.
+        // ESI caches this endpoint for an hour server-side; polling it unconditionally every
+        // 10s (once per LoadOrdersAsync tick, whenever any standing goal is visible) would be
+        // ~8,600 authenticated calls/day/overlay against a single character. 5 minutes of
+        // staleness costs the pilot nothing — this readout is cosmetic and the backend
+        // re-reads standings itself at claim time.
+        private int    _standingsCacheCharId;
+        private DateTime _standingsCacheAt;
+        private List<EsiStandingEntry>? _standingsCacheRows;
+
+        public async Task<List<EsiStandingEntry>?> GetAllStandingsAsync(
+            CancellationToken ct = default, int characterId = 0)
+        {
+            var token = characterId > 0 ? LoadToken(_db, characterId) : LoadToken(_db);
+            if (token is null) return null;
+
+            if (_standingsCacheRows is not null
+                && _standingsCacheCharId == token.CharacterId
+                && DateTime.UtcNow - _standingsCacheAt < TimeSpan.FromMinutes(5))
+            {
+                return _standingsCacheRows;
+            }
+
+            var access = await GetValidToken(ct, token.CharacterId);
+            if (access is null) return null;
+
+            var req = new HttpRequestMessage(HttpMethod.Get,
+                $"{EsiBase}/characters/{token.CharacterId}/standings/");
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", access);
+            try
+            {
+                var resp = await _http.SendAsync(req, ct);
+                // Non-success is a FAILED fetch, not "no standings" — return null so callers
+                // can tell "nothing to show" apart from "couldn't ask ESI". Do not simplify
+                // this to `new()`: that would render a genuine outage as a confident +0.00.
+                if (!resp.IsSuccessStatusCode) return null;
+                var list = new List<EsiStandingEntry>();
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                foreach (var e in doc.RootElement.EnumerateArray())
+                {
+                    if (!e.TryGetProperty("from_id", out var fid)) continue;
+                    if (!e.TryGetProperty("from_type", out var ft)) continue;
+                    list.Add(new EsiStandingEntry
+                    {
+                        FromType = ft.GetString() ?? "",
+                        FromId   = fid.GetInt32(),
+                        Standing = e.GetProperty("standing").GetDouble(),
+                    });
+                }
+                // Cache only successful fetches — never cache the null from a failure path,
+                // or an outage would render as a sticky, confidently-wrong 0.0 for 5 minutes.
+                _standingsCacheCharId = token.CharacterId;
+                _standingsCacheAt     = DateTime.UtcNow;
+                _standingsCacheRows   = list;
+                return list;
+            }
+            catch { return null; }
         }
 
         private static readonly Dictionary<string, int> _corpIdCache = new(StringComparer.OrdinalIgnoreCase);

@@ -487,6 +487,7 @@ namespace OverlayMVP.ViewModels
                 // collection — Mission has no change notification, so a later write
                 // would never reach the UI.
                 await ResolveBountyTargetNamesAsync(list);
+                await ResolveStandingProgressAsync(list);
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     Orders.Clear();
@@ -536,11 +537,84 @@ namespace OverlayMVP.ViewModels
             }
         }
 
+        /// <summary>
+        /// Fills <see cref="Mission.CurrentStanding"/> for standing goals from the
+        /// pilot's own ESI data.
+        ///
+        /// DISPLAY ONLY. The backend re-reads standings on claim and decides — this is
+        /// a progress hint, so a stale or missing value costs the pilot nothing. One
+        /// fetch covers every standing goal in the list.
+        /// </summary>
+        private async Task ResolveStandingProgressAsync(IReadOnlyList<Mission> list)
+        {
+            if (!list.Any(m => m.IsStandingGoal)) return;
+
+            var rows = await _esi.GetAllStandingsAsync(default, ActiveCharacter?.CharacterId ?? 0);
+            if (rows is null)
+            {
+                // A FAILED fetch (outage, expired link, etc.), not a genuinely empty
+                // standings set. Leave CurrentStanding null on every goal so the label
+                // renders "—" instead of confidently claiming +0.00 progress. Do not
+                // collapse this into the loop below with `?? 0d` — that is exactly the
+                // "absence means 0.0" rule, and it only holds for a row missing from a
+                // SUCCESSFUL response.
+                return;
+            }
+            foreach (var m in list)
+            {
+                if (!m.IsStandingGoal || m.StandingTargetId is null || m.StandingTargetType is null)
+                    continue;
+                // Match on type AND id — ids are only unique within a type.
+                var hit = rows.FirstOrDefault(
+                    r => r.FromType == m.StandingTargetType && r.FromId == m.StandingTargetId.Value);
+                // ESI omits neutral standings, so no row means 0.0, not "unknown".
+                var raw = hit?.Standing ?? 0d;
+                m.CurrentStanding = m.StandingUseEffective ? GetEffectiveStanding((float)raw) : raw;
+            }
+        }
+
         [RelayCommand]
         public async Task JoinOrderAsync(Mission? order)
         {
             if (order is null) return;
-            try   { await _api.JoinOrderAsync(order.Id); OrdersStatus = $"Joined: {order.Title}"; }
+            try
+            {
+                string? token = null;
+                if (order.IsStandingGoal)
+                {
+                    token = await _esi.GetAccessTokenAsync(default, ActiveCharacter?.CharacterId ?? 0);
+                    if (token is null)
+                    {
+                        OrdersStatus = "⚠️ Link EVE in ⚙ Settings to join a standing goal";
+                        return;
+                    }
+                }
+                await _api.JoinOrderAsync(order.Id, token);
+                OrdersStatus = $"Joined: {order.Title}";
+            }
+            catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
+            await LoadOrdersAsync();
+        }
+
+        [RelayCommand]
+        public async Task ClaimStandingAsync(Mission? order)
+        {
+            if (order is null) return;
+            try
+            {
+                var token = await _esi.GetAccessTokenAsync(default, ActiveCharacter?.CharacterId ?? 0);
+                if (token is null)
+                {
+                    OrdersStatus = "⚠️ Link EVE in ⚙ Settings to claim";
+                    return;
+                }
+                var result = await _api.ClaimStandingAsync(order.Id, token);
+                OrdersStatus = result.Ok
+                    ? $"✅ {order.Title} — claimed at {result.Standing:+0.00;-0.00}"
+                    : result.Current.HasValue
+                        ? $"Not yet: {result.Current:+0.00;-0.00} / {result.Required:+0.00;-0.00}"
+                        : $"⚠️ {result.Message}";
+            }
             catch (Exception ex) { OrdersStatus = $"⚠️ {ex.Message}"; }
             await LoadOrdersAsync();
         }
