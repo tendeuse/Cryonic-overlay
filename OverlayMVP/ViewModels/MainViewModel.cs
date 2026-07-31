@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -213,7 +211,6 @@ namespace OverlayMVP.ViewModels
         [ObservableProperty] private bool showMultibox        = true;
         [ObservableProperty] private bool showIntelAlerts     = true;
         [ObservableProperty] private bool showPilotStatus     = true;
-        [ObservableProperty] private bool showActiveMissions  = true;
         [ObservableProperty] private bool showStandingGuide   = true;
         [ObservableProperty] private bool showMissionProgress = true;
         [ObservableProperty] private bool showSkillPlan       = true;
@@ -293,7 +290,6 @@ namespace OverlayMVP.ViewModels
         public event Action<IntPtr>? AnchorRequested;
 
         // ── Collections ───────────────────────────────────────────────────
-        public ObservableCollection<Mission>     Missions   { get; } = new();
         public ObservableCollection<IntelReport> Intel      { get; } = new();
         public ObservableCollection<EveWindow>   EveWindows { get; } = new();
 
@@ -375,7 +371,6 @@ namespace OverlayMVP.ViewModels
             showMultibox        = cfg.ShowMultibox;
             showIntelAlerts     = cfg.ShowIntelAlerts;
             showPilotStatus     = cfg.ShowPilotStatus;
-            showActiveMissions  = cfg.ShowActiveMissions;
             showStandingGuide   = cfg.ShowStandingGuide;
             showMissionProgress = cfg.ShowMissionProgress;
             showSkillPlan       = cfg.ShowSkillPlan;
@@ -1178,7 +1173,6 @@ namespace OverlayMVP.ViewModels
                     MissionHistory.Insert(0, record);
                     if (MissionHistory.Count > 50) MissionHistory.RemoveAt(50);
                     MissionStatus = $"✅ {missionName}  (+{gain:F3} standing)  +{AP_PER_MISSION} AP";
-                    _ = SendMissionApAsync(record);
                     RefreshStandingProgress();
                 }
             });
@@ -1250,30 +1244,6 @@ namespace OverlayMVP.ViewModels
         {
             LpEstimates.Clear();
             foreach (var e in MissionProgressService.GetLpEstimates()) LpEstimates.Add(e);
-        }
-
-        // ── Send AP to bot ────────────────────────────────────────────────
-        private async Task SendMissionApAsync(MissionRecord record)
-        {
-            try
-            {
-                var token = _cfg.OverlayToken;
-                if (string.IsNullOrEmpty(token)) return;
-                var payload = new { character_name = record.CharacterName, mission_name = record.MissionName,
-                    faction = record.FactionKey, level = record.MissionLevel,
-                    standing_gain = record.StandingGain, ap = AP_PER_MISSION };
-                var json = JsonSerializer.Serialize(payload);
-                var req  = new HttpRequestMessage(HttpMethod.Post,
-                    $"{_cfg.ApiBaseUrl}/overlay/api/v1/mission_complete")
-                {
-                    Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
-                };
-                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
-                var resp = await http.SendAsync(req);
-                record.SentToBot = resp.IsSuccessStatusCode;
-            }
-            catch { }
         }
 
         // ── Skill Plan ────────────────────────────────────────────────────
@@ -1391,7 +1361,6 @@ namespace OverlayMVP.ViewModels
             ShowMultibox        = _cfg.ShowMultibox;
             ShowIntelAlerts     = _cfg.ShowIntelAlerts;
             ShowPilotStatus     = _cfg.ShowPilotStatus;
-            ShowActiveMissions  = _cfg.ShowActiveMissions;
             ShowStandingGuide   = _cfg.ShowStandingGuide;
             ShowMissionProgress = _cfg.ShowMissionProgress;
             ShowSkillPlan       = _cfg.ShowSkillPlan;

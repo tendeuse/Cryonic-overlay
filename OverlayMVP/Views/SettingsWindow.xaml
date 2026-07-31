@@ -206,7 +206,6 @@
                 <CheckBox x:Name="ChkMultibox"        Content="Active Instances"       Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkIntelAlerts"     Content="Intel &amp; Alerts"     Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkPilotStatus"     Content="Pilot Status"           Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkActiveMissions"  Content="Active Missions"        Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkStandingGuide"   Content="Standing Guide"         Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkMissionProgress" Content="Mission Progress"       Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkSkillPlan"       Content="Skill Plan"             Margin="0,0,14,5"/>

@@ -65,7 +65,6 @@ namespace OverlayMVP.Services
         public DateTime CompletedAt   { get; init; } = DateTime.UtcNow;
         public double   StandingGain  { get; init; }
         public int      EstimatedLP   { get; init; }
-        public bool      SentToBot     { get; set; }
     }
 
     public sealed class LpEstimate

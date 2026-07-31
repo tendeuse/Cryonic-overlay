@@ -67,7 +67,6 @@ namespace OverlayMVP.Views
             ChkMultibox.IsChecked        = cfg.ShowMultibox;
             ChkIntelAlerts.IsChecked     = cfg.ShowIntelAlerts;
             ChkPilotStatus.IsChecked     = cfg.ShowPilotStatus;
-            ChkActiveMissions.IsChecked  = cfg.ShowActiveMissions;
             ChkStandingGuide.IsChecked   = cfg.ShowStandingGuide;
             ChkMissionProgress.IsChecked = cfg.ShowMissionProgress;
             ChkSkillPlan.IsChecked       = cfg.ShowSkillPlan;
@@ -152,7 +151,6 @@ namespace OverlayMVP.Views
             _cfg.ShowMultibox        = ChkMultibox.IsChecked        == true;
             _cfg.ShowIntelAlerts     = ChkIntelAlerts.IsChecked     == true;
             _cfg.ShowPilotStatus     = ChkPilotStatus.IsChecked     == true;
-            _cfg.ShowActiveMissions  = ChkActiveMissions.IsChecked  == true;
             _cfg.ShowStandingGuide   = ChkStandingGuide.IsChecked   == true;
             _cfg.ShowMissionProgress = ChkMissionProgress.IsChecked == true;
             _cfg.ShowSkillPlan       = ChkSkillPlan.IsChecked       == true;
