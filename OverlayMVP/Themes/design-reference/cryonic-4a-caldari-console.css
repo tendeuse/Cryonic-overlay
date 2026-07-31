@@ -1,0 +1,126 @@
+/* ============================================================
+   CRYONIC cockpit skin — "Caldari Console" (4a)
+   Gunmetal blue-grey steel, State-navy keys, icy cyan glass — the physical flight console.
+   One of three interchangeable skins. Each file is the SAME
+   component layer with a different :root token block, so the
+   markup / class names never change between skins.
+   Fonts: Barlow Condensed (headings/labels/buttons) + Barlow (body).
+   @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Barlow:wght@400;500&display=swap');
+   ============================================================ */
+
+:root {
+  --cx-bg:#12161b; --cx-surface:#1a2028; --cx-panel:#1e2630; --cx-well:#0d141c;
+  --cx-border:#2f3d4c; --cx-border-strong:#3d4c5f;
+  --cx-text:#d9e2ec; --cx-text-dim:#9fb0c0; --cx-text-faint:#647486; --cx-text-disabled:#556777;
+
+  --cx-accent:#3f7297; --cx-accent-hi:rgba(70,150,200,.4);
+  --cx-amber:#d9a03c; --cx-amber-text:#e8b04a;
+  --cx-red:#c9402e;   --cx-red-text:#e07a6a;
+  --cx-green:#2e9a8e; --cx-green-text:#7fd8d0;
+
+  --cx-hazard-a:#d9a03c; --cx-hazard-b:#12161b;
+
+  --cx-key-hi:#243040; --cx-key-lo:#181f2b; --cx-key-border:#101620; --cx-key-edge:#0a0e15; --cx-key-lip-hi:rgba(160,200,240,.12);
+  --cx-accent-key-hi:#3f7297; --cx-accent-key-lo:#2a4f6e; --cx-accent-key-border:#1a3348; --cx-accent-key-edge:#12212f; --cx-accent-key-glow:rgba(70,150,200,.45); --cx-accent-key-text:#fff; --cx-accent-key-underline:1px solid #1a3348;
+
+  --cx-amber-key-hi:#383023; --cx-amber-key-lo:#29231a; --cx-amber-key-border:#191510; --cx-amber-key-edge:#120f0a;
+  --cx-red-key-hi:#382526; --cx-red-key-lo:#291a1b; --cx-red-key-border:#191011; --cx-red-key-edge:#120a0b;
+  --cx-green-key-hi:#1e3438; --cx-green-key-lo:#152528; --cx-green-key-border:#0d1719; --cx-green-key-edge:#081012;
+
+  --cx-glass-bg:radial-gradient(140% 130% at 50% 0%,#0a1826 0%,#050b13 75%); --cx-glass-border:#10161d;
+  --cx-glass-inner-glow:rgba(70,170,230,.25); --cx-glass-text-hi:#6ed3f0; --cx-glass-text:#74a4c4; --cx-glass-glow:rgba(90,205,245,.55);
+
+  --cx-f-caldari:#8fb8d8; --cx-f-gallente:#8fc79b; --cx-f-amarr:#e8c974; --cx-f-minmatar:#e07a6a;
+  --cx-f-soe:#c3ccd6; --cx-f-concord:#b39ddb; --cx-f-ore:#c9b48f; --cx-f-edencom:#7fd0e8; --cx-f-trig:#e09a52;
+
+  --cx-font-head:"Barlow Condensed","Arial Narrow",sans-serif;
+  --cx-font-body:"Barlow",system-ui,sans-serif;
+}
+
+/* ---- Components (same across all skins; tokens above set the color) ---- */
+body.cx-skin { background: var(--cx-bg); color: var(--cx-text); font-family: var(--cx-font-body); }
+
+.cx-plate {
+  background-color: var(--cx-surface);
+  background-image:
+    linear-gradient(45deg, rgba(255,255,255,.045) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.045) 75%),
+    linear-gradient(45deg, rgba(255,255,255,.045) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.045) 75%),
+    linear-gradient(45deg, rgba(0,0,0,.30) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.30) 75%),
+    linear-gradient(45deg, rgba(0,0,0,.30) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.30) 75%);
+  background-size: 18px 18px; background-position: 0 0, 9px 9px, 1px 2px, 10px 11px;
+  border: 1px solid var(--cx-border);
+}
+.cx-hazard { height: 8px; background: repeating-linear-gradient(-45deg, var(--cx-hazard-a) 0 10px, var(--cx-hazard-b) 10px 20px); }
+
+.cx-section { background: var(--cx-panel); border: 1px solid var(--cx-border); border-left: 3px solid var(--cx-accent); padding: 12px 14px; }
+.cx-section--warn { border-left-color: var(--cx-amber); }
+.cx-section-label { font: 500 11px/1 var(--cx-font-head); letter-spacing: .28em; text-transform: uppercase; color: var(--cx-text-dim); margin: 0 0 10px; }
+
+.cx-stat { background: var(--cx-panel); border: 1px solid var(--cx-border-strong); border-top: 3px solid var(--cx-amber); padding: 8px 10px; }
+.cx-stat-label { font: 500 10.5px/1.4 var(--cx-font-head); letter-spacing: .2em; color: var(--cx-amber); text-transform: uppercase; }
+.cx-stat-value { font-size: 12px; color: var(--cx-text); }
+
+.cx-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; cursor: pointer; user-select: none;
+  border: 1px solid var(--cx-key-border); border-radius: 0;
+  background: linear-gradient(var(--cx-key-hi), var(--cx-key-lo));
+  box-shadow: inset 0 1px 0 var(--cx-key-lip-hi), 0 3px 0 var(--cx-key-edge), 0 4px 5px rgba(0,0,0,.45);
+  color: var(--cx-text); font: 500 12px/1 var(--cx-font-head); letter-spacing: .16em; text-transform: uppercase;
+  transition: filter .1s, transform .05s, box-shadow .05s;
+}
+.cx-btn:hover { filter: brightness(1.15); }
+.cx-btn:active { transform: translateY(3px); box-shadow: inset 0 1px 0 var(--cx-key-lip-hi), 0 0 0 var(--cx-key-edge), inset 0 2px 5px rgba(0,0,0,.5); }
+.cx-btn:focus-visible { outline: 2px solid var(--cx-accent); outline-offset: 2px; }
+.cx-btn:disabled { opacity: .45; pointer-events: none; }
+
+/* The active / primary key. In 2b + 4a it is the steel-blue accent; in 5a it is brushed grey with a gold underline. */
+.cx-btn--accent {
+  background: linear-gradient(var(--cx-accent-key-hi), var(--cx-accent-key-lo));
+  border: 1px solid var(--cx-accent-key-border); border-bottom: var(--cx-accent-key-underline);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 3px 0 var(--cx-accent-key-edge), 0 4px 6px rgba(0,0,0,.5), 0 0 12px var(--cx-accent-key-glow);
+  color: var(--cx-accent-key-text);
+}
+.cx-btn--accent:active { transform: translateY(3px); box-shadow: inset 0 2px 6px rgba(0,0,0,.5); }
+
+.cx-btn--warn   { background: linear-gradient(var(--cx-amber-key-hi), var(--cx-amber-key-lo)); border-color: var(--cx-amber-key-border); color: var(--cx-amber-text); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 3px 0 var(--cx-amber-key-edge), 0 4px 5px rgba(0,0,0,.45); }
+.cx-btn--alarm  { background: linear-gradient(var(--cx-red-key-hi), var(--cx-red-key-lo)); border-color: var(--cx-red-key-border); color: var(--cx-red-text); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 3px 0 var(--cx-red-key-edge), 0 4px 5px rgba(0,0,0,.45); }
+.cx-btn--ok     { background: linear-gradient(var(--cx-green-key-hi), var(--cx-green-key-lo)); border-color: var(--cx-green-key-border); color: var(--cx-green-text); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 3px 0 var(--cx-green-key-edge), 0 4px 5px rgba(0,0,0,.45); }
+.cx-btn--danger { background: linear-gradient(#a1443b,#7d322b); border-color:#b0524a; color:#fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 3px 0 #35130f, 0 4px 5px rgba(0,0,0,.45); }
+
+.cx-btn--faction { justify-content: flex-start; width: 100%; letter-spacing: .14em; font-size: 12.5px; }
+.cx-btn-grid { display: grid; gap: 9px; }         /* keys need gap >= 8px so the 3px lip does not collide */
+.cx-btn-grid--2col { grid-template-columns: 1fr 1fr; }
+
+.cx-led { width: 7px; height: 7px; display: inline-block; background: var(--cx-text-faint); }
+.cx-led--amber { background: var(--cx-amber); } .cx-led--red { background: var(--cx-red-text); }
+.cx-led--green { background: var(--cx-green-text); box-shadow: 0 0 6px var(--cx-green-text); }
+.cx-led--blink { animation: cx-blink 2s infinite; }
+@keyframes cx-blink { 0%,60% { opacity: 1; } 70%,100% { opacity: .25; } }
+
+.cx-input, .cx-select, .cx-textarea {
+  width: 100%; background: var(--cx-well); border: 1px solid var(--cx-border-strong); border-radius: 0;
+  color: var(--cx-text); font: 400 13px/1.4 var(--cx-font-body); padding: 7px 10px;
+}
+.cx-input::placeholder, .cx-textarea::placeholder { color: var(--cx-text-disabled); font-style: italic; }
+.cx-input:focus-visible, .cx-select:focus-visible, .cx-textarea:focus-visible { outline: 2px solid var(--cx-accent); outline-offset: 1px; }
+.cx-field-label { display: block; font: 500 10.5px/1 var(--cx-font-head); letter-spacing: .24em; text-transform: uppercase; color: var(--cx-text-dim); margin: 0 0 5px; }
+
+.cx-check { appearance: none; width: 13px; height: 13px; border: 1px solid var(--cx-text-disabled); background: var(--cx-well); cursor: pointer; display: inline-grid; place-content: center; }
+.cx-check:checked { background: var(--cx-accent); border-color: var(--cx-accent-hi); }
+.cx-check:checked::before { content: "\2713"; font-size: 9px; color: #fff; }
+
+.cx-bar { display: flex; align-items: center; gap: 12px; background: var(--cx-surface); border-bottom: 1px solid var(--cx-border); padding: 10px 16px; }
+.cx-brand { font: 600 15px/1 var(--cx-font-head); letter-spacing: .24em; color: var(--cx-text); text-transform: uppercase; }
+.cx-brand small { color: var(--cx-text-faint); font-size: inherit; font-weight: 600; }
+
+.cx-footer { display: flex; align-items: center; gap: 10px; background: var(--cx-surface); border-top: 1px solid var(--cx-border); padding: 7px 16px; font: 500 10.5px/1 var(--cx-font-head); letter-spacing: .2em; color: var(--cx-text-faint); text-transform: uppercase; }
+.cx-empty { background: var(--cx-well); border: 1px dashed var(--cx-border-strong); padding: 18px; text-align: center; font-size: 12px; color: var(--cx-text-faint); }
+
+/* Glass CRT readout (Active Instances / Pilot status / Missions list) */
+.cx-glass { position: relative; overflow: hidden; background: var(--cx-glass-bg); border: 2px solid var(--cx-glass-border); box-shadow: inset 0 0 22px var(--cx-glass-inner-glow), inset 0 3px 10px rgba(0,0,0,.8); padding: 12px; }
+.cx-glass::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(140,200,240,.06) 0 1px, transparent 1px 3px); }
+.cx-glass::after  { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.07) 0 24%, transparent 24.5%); }
+.cx-glass-title { font: 500 12px/1 var(--cx-font-head); letter-spacing: .2em; text-transform: uppercase; color: var(--cx-glass-text-hi); text-shadow: 0 0 8px var(--cx-glass-glow); }
+.cx-glass-text  { font-size: 12px; color: var(--cx-glass-text); text-shadow: 0 0 5px var(--cx-glass-glow); }
+
+::selection { background: var(--cx-accent-hi); }
