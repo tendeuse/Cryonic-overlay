@@ -42,15 +42,44 @@ function xamlFiles() {
   return out.sort();
 }
 
-/** x:Key → #AARRGGBB from the token dictionary. */
+/** x:Key -> #AARRGGBB, from the old App.xaml palette AND the new token dictionary.
+ *
+ *  Both are read because the refactor moves brushes from one to the other: at
+ *  snapshot time only App.xaml has them, at verify time only Tokens.Default.xaml
+ *  does. Reading both means a site's colour is resolvable on BOTH sides of the
+ *  rename -- which is what lets the value-drift check cover the ~143 sites that
+ *  start out as {StaticResource ...}. Without this they are recorded opaquely
+ *  and skipped, leaving the largest single group of conversions unverified.
+ */
 function loadTokens() {
-  if (!fs.existsSync(TOKENS)) return {};
-  const src = fs.readFileSync(TOKENS, "utf8");
   const map = {};
-  for (const m of src.matchAll(/<SolidColorBrush\s+x:Key="([^"]+)"\s+Color="([^"]+)"/g)) {
-    map[m[1]] = m[2].toUpperCase();
+  for (const f of [path.join(ROOT, "App.xaml"), TOKENS]) {
+    if (!fs.existsSync(f)) continue;
+    const src = fs.readFileSync(f, "utf8");
+    for (const m of src.matchAll(/<SolidColorBrush\s+x:Key="([^"]+)"\s+Color="([^"]+)"/g)) {
+      map[m[1]] = m[2].toUpperCase();
+    }
   }
   return map;
+}
+
+/** x:Key set from Tokens.Default.xaml ONLY (not merged with App.xaml).
+ *
+ *  Used by Check 2, which flags a StaticResource that points at the NEW theme
+ *  dictionary -- a leftover that would not follow a theme change. Checking
+ *  against the merged map (loadTokens()) would also flag every pre-refactor
+ *  {StaticResource AccentGold}-style site, since those names now resolve via
+ *  App.xaml too -- but that is the expected, correct state before the
+ *  refactor runs, not a mistake. Scoping to Tokens.Default.xaml keeps Check 2
+ *  silent until the new dictionary exists and something actually still
+ *  points at it via StaticResource.
+ */
+function loadNewTokenKeys() {
+  if (!fs.existsSync(TOKENS)) return new Set();
+  const src = fs.readFileSync(TOKENS, "utf8");
+  const keys = new Set();
+  for (const m of src.matchAll(/<SolidColorBrush\s+x:Key="([^"]+)"/g)) keys.add(m[1]);
+  return keys;
 }
 
 /** Every colour in one file, in document order, resolved to a hex where possible. */
@@ -69,7 +98,14 @@ function coloursOf(file, tokens, resolve) {
       continue;
     }
     const stat = v.match(/^\{StaticResource\s+([^}]+)\}$/);
-    if (stat) { out.push(`STATIC:${stat[1].trim()}`); continue; }
+    if (stat) {
+      const key = stat[1].trim();
+      // Resolve to a colour when we know one, so this slot participates in the
+      // value-drift check. Style keys (SmallBtn) and converters legitimately
+      // have no colour and stay opaque.
+      out.push(key in tokens ? tokens[key] : `STATIC:${key}`);
+      continue;
+    }
     out.push(`OTHER:${v}`);   // bindings, converters — recorded so drift is visible
   }
   return out;
@@ -106,17 +142,21 @@ if (mode === "verify") {
     }
   }
 
-  // Check 2 — no StaticResource may point at a token.
+  // Check 2 — no StaticResource may point at the NEW token dictionary.
   //
-  // Checked against the token dictionary rather than a name pattern: tokens may
-  // be named freely (SteelBlue, PaleCyan), so a hardcoded list of prefixes would
-  // silently miss them. A StaticResource on a token is a colour that will not
-  // follow a theme change.
+  // Checked against Tokens.Default.xaml specifically (loadNewTokenKeys), not
+  // the merged map: tokens may be named freely (SteelBlue, PaleCyan), so a
+  // hardcoded list of prefixes would silently miss them, but checking the
+  // merged map would also flag every pre-refactor {StaticResource AccentGold}
+  // site, which is the correct state before the refactor runs. A
+  // StaticResource on a NEW token is a colour that will not follow a theme
+  // change.
+  const newTokenKeys = loadNewTokenKeys();
   for (const f of xamlFiles()) {
     const src = fs.readFileSync(f, "utf8");
     for (const m of src.matchAll(/\{StaticResource\s+([^}]+)\}/g)) {
       const key = m[1].trim();
-      if (key in tokens) { console.error(`STATIC TOKEN ${f}: ${key}`); bad++; }
+      if (newTokenKeys.has(key)) { console.error(`STATIC TOKEN ${f}: ${key}`); bad++; }
     }
   }
 
