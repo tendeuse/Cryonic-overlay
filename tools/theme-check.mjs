@@ -15,8 +15,20 @@ const ROOT   = "OverlayMVP";
 const TOKENS = path.join(ROOT, "Themes", "Tokens.Default.xaml");
 const BASE   = path.join("tools", "theme-baseline.json");
 
-// Attributes whose value is a colour. Order matters and is preserved.
-const ATTR = /(Background|Foreground|BorderBrush|Fill|Stroke|Color)\s*=\s*"([^"]+)"/g;
+// Colour-bearing attributes, in two syntaxes:
+//   Background="#FF0D1117"                              (direct attribute)
+//   <Setter Property="Background" Value="#FF0D1117"/>   (style setter)
+//   <Setter TargetName="X" Property="Background" ...>   (trigger setter -
+//                                                         TargetName precedes Property)
+// ONE regex with alternation, not two passes: the baseline compares by
+// position, so order must be preserved exactly as it appears in the file.
+// The Setter alternative allows arbitrary attributes (e.g. TargetName=)
+// before Property=, since trigger Setters put TargetName first.
+const ATTR = new RegExp(
+  '<Setter\\s+(?:[\\w:.]+="[^"]*"\\s+)*Property="(?:Background|Foreground|BorderBrush|Fill|Stroke|Color)"\\s+Value="([^"]+)"' +
+  '|(?:Background|Foreground|BorderBrush|Fill|Stroke|Color)\\s*=\\s*"([^"]+)"',
+  'g',
+);
 
 function xamlFiles() {
   const out = [];
@@ -46,7 +58,7 @@ function coloursOf(file, tokens, resolve) {
   const src = fs.readFileSync(file, "utf8");
   const out = [];
   for (const m of src.matchAll(ATTR)) {
-    const v = m[2].trim();
+    const v = (m[1] ?? m[2]).trim();
     if (v.startsWith("#")) { out.push(v.toUpperCase()); continue; }
     const dyn = v.match(/^\{DynamicResource\s+([^}]+)\}$/);
     if (dyn) {
