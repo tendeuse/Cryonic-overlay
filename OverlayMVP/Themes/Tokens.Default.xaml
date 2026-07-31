@@ -1,0 +1,31 @@
+<!-- filename: Themes/Tokens.Default.xaml -->
+<!--
+  The default theme's colours. This is the file a skin replaces.
+
+  Names come from Themes/design-reference/*.css so the CSS skins and this XAML
+  share one vocabulary (cx-text-dim -> TextDim). VALUES are today's overlay
+  colours, not the reference's — this theme must look exactly like the app
+  always has.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="Bg"      Color="#CC0D1117"/>   <!-- was BgPanel -->
+    <SolidColorBrush x:Key="Panel"   Color="#881A2030"/>   <!-- was BgCard -->
+    <SolidColorBrush x:Key="Well"    Color="#EE080D10"/>   <!-- was BgMultibox -->
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="Border"  Color="#FF1E3148"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="Text"    Color="#FFE8EDF2"/>   <!-- was TextPrimary -->
+    <SolidColorBrush x:Key="TextDim" Color="#FF8A99AA"/>   <!-- was TextSecondary -->
+
+    <!-- Accents -->
+    <SolidColorBrush x:Key="Accent"  Color="#FF4FC3F7"/>   <!-- was AccentBlue -->
+    <SolidColorBrush x:Key="Amber"   Color="#FFFFD54F"/>   <!-- was AccentGold -->
+    <SolidColorBrush x:Key="Red"     Color="#FFEF5350"/>   <!-- was AccentRed -->
+    <SolidColorBrush x:Key="Green"   Color="#FF66BB6A"/>   <!-- was AccentGreen -->
+
+</ResourceDictionary>

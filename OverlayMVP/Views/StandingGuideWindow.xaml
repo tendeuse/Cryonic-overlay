@@ -131,7 +131,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0"
                                        Text="{Binding StandingsStatus}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}" VerticalAlignment="Center"
                                        TextWrapping="Wrap"
                                        Margin="0,0,8,0"/>
@@ -139,7 +139,7 @@
                                     Command="{Binding RefreshStandingsCommand}"
                                     Style="{StaticResource SmallBtn}"
                                     Background="#221E3148"
-                                    BorderBrush="{StaticResource AccentBlue}"
+                                    BorderBrush="{DynamicResource Accent}"
                                     ToolTip="Refresh standings from ESI API"/>
                         </Grid>
                     </Border>
@@ -147,7 +147,7 @@
                     <!-- Auto-play briefing on standing advance -->
                     <CheckBox Content="▶ Auto-play briefing when standing advances"
                               IsChecked="{Binding AutoplayBriefingOnAdvance}"
-                              Foreground="{StaticResource TextSecondary}"
+                              Foreground="{DynamicResource TextDim}"
                               FontSize="{DynamicResource GlobalFontSizeXs}"
                               Margin="2,0,0,6"
                               ToolTip="When a standing update pushes you into the next step, its officer briefing plays automatically"/>
@@ -170,14 +170,14 @@
                                            ToolTip="+4% per level on positive standing (access only)"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                     <TextBlock Text="Level "
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding ConnectionsSkill}"
                                                Foreground="#FF4FC3F7"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                                VerticalAlignment="Bottom" Margin="1,0,0,1"/>
                                 </StackPanel>
@@ -190,14 +190,14 @@
                                            ToolTip="+4% per level on negative standing (access only)"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                     <TextBlock Text="Level "
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding DiplomacySkill}"
                                                Foreground="#FFFFD54F"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                                VerticalAlignment="Bottom" Margin="1,0,0,1"/>
                                 </StackPanel>
@@ -210,14 +210,14 @@
                                            ToolTip="+5% per level to standing GAINS from missions"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                                     <TextBlock Text="Level "
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding SocialSkill}"
                                                Foreground="#FF66BB6A"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                                VerticalAlignment="Bottom" Margin="1,0,0,1"/>
                                 </StackPanel>
@@ -233,20 +233,20 @@
 
                             <TextBlock Margin="0,0,0,6"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}">
+                                       Foreground="{DynamicResource TextDim}">
                                 <Run Text="Corp standing: "/>
                                 <Run Text="{Binding CorpStandingLabel, Mode=OneWay}"
-                                     Foreground="{StaticResource AccentBlue}" FontWeight="Bold"/>
+                                     Foreground="{DynamicResource Accent}" FontWeight="Bold"/>
                             </TextBlock>
 
                             <TextBlock Text="{Binding CorpMissionsToNextLabel, Mode=OneWay}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"
-                                       Foreground="{StaticResource AccentGold}"
+                                       Foreground="{DynamicResource Amber}"
                                        TextWrapping="Wrap" Margin="0,0,0,2"/>
 
                             <TextBlock Text="{Binding FactionStorylinesToNextLabel, Mode=OneWay}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"
-                                       Foreground="{StaticResource TextPrimary}"
+                                       Foreground="{DynamicResource Text}"
                                        TextWrapping="Wrap" Margin="0,0,0,6"/>
 
                             <ItemsControl ItemsSource="{Binding StandingProgress}">
@@ -260,11 +260,11 @@
                                             <TextBlock Grid.Column="0"
                                                        Text="{Binding Label, Mode=OneWay}"
                                                        FontSize="{DynamicResource GlobalFontSizeSm}"
-                                                       Foreground="{StaticResource TextPrimary}"/>
+                                                       Foreground="{DynamicResource Text}"/>
                                             <TextBlock Grid.Column="1"
                                                        Text="{Binding Value, StringFormat={}{0:F1}, Mode=OneWay}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                       Foreground="{StaticResource TextSecondary}"/>
+                                                       Foreground="{DynamicResource TextDim}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -272,13 +272,13 @@
 
                             <TextBlock Text="{Binding StandingCaveatLabel, Mode=OneWay}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        Opacity="0.75" TextWrapping="Wrap" Margin="0,6,0,0"/>
                         </StackPanel>
                     </Border>
 
                     <!-- Faction selector -->
-                    <TextBlock Text="SELECT FACTION" Foreground="{StaticResource TextSecondary}"
+                    <TextBlock Text="SELECT FACTION" Foreground="{DynamicResource TextDim}"
                                FontSize="{DynamicResource GlobalFontSizeXs}" Margin="0,0,0,4"/>
                     <ListBox ItemsSource="{Binding CatalogueFactions}"
                              SelectedItem="{Binding SelectedCatalogueFaction}"
@@ -328,7 +328,7 @@
                     <TextBlock Margin="0,10,0,4"
                                FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="{StaticResource AccentGold}"
+                               Foreground="{DynamicResource Amber}"
                                Text="{Binding SelectedCatalogueFaction.FactionName, StringFormat='▼ {0} — GUIDE'}"/>
 
                     <!-- Tutorial panel (shown when faction is selected) -->
@@ -353,7 +353,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Your standing:"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="1"
                                      x:Name="ManualStandingBox"
@@ -369,26 +369,26 @@
                                     Click="ManualStandingSet_Click"
                                     Style="{StaticResource SmallBtn}"
                                     Background="#221E3148"
-                                    BorderBrush="{StaticResource AccentGold}"/>
+                                    BorderBrush="{DynamicResource Amber}"/>
                         </Grid>
 
                         <!-- Standing label -->
                         <TextBlock HorizontalAlignment="Center" Margin="0,0,0,8">
-                            <Run Text="Standing: " Foreground="{StaticResource TextSecondary}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                            <Run Text="Standing: " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                             <Run Text="{Binding StandingLabel, Mode=OneWay}"
                                  Foreground="{Binding StandingColour, Converter={StaticResource StrBrush}}"
                                  FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSm}"/>
-                            <Run Text=" (" Foreground="{StaticResource TextSecondary}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                            <Run Text=" (" Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                             <Run Text="{Binding CurrentFactionStanding, Mode=OneWay,
                                         StringFormat={}{0:+0.00;-0.00;0.00}}"
                                  Foreground="{Binding StandingColour, Converter={StaticResource StrBrush}}"
                                  FontSize="{DynamicResource GlobalFontSizeXs}"/>
-                            <Run Text=")" Foreground="{StaticResource TextSecondary}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                            <Run Text=")" Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                         </TextBlock>
 
                         <!-- All steps — current one pre-expanded, others collapsed -->
                         <TextBlock Text="PROGRESSION STEPS" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"
-                                   Foreground="{StaticResource TextSecondary}" Margin="0,0,0,4"/>
+                                   Foreground="{DynamicResource TextDim}" Margin="0,0,0,4"/>
 
                         <ItemsControl ItemsSource="{Binding SelectedCatalogueFaction.Steps}">
                             <ItemsControl.ItemTemplate>
@@ -491,7 +491,7 @@
                                                         BorderThickness="1" CornerRadius="2"
                                                         Padding="4,1" Margin="3,0,0,0">
                                                     <TextBlock Text="{Binding TypeLabel, Mode=OneWay}"
-                                                               Foreground="{StaticResource TextSecondary}"
+                                                               Foreground="{DynamicResource TextDim}"
                                                                FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                 </Border>
                                             </Grid>
@@ -720,8 +720,8 @@
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                         Style="{StaticResource SmallBtn}"
                                                         Background="#224FC3F7"
-                                                        BorderBrush="{StaticResource AccentBlue}"
-                                                        Foreground="{StaticResource AccentBlue}"
+                                                        BorderBrush="{DynamicResource Accent}"
+                                                        Foreground="{DynamicResource Accent}"
                                                         Margin="0,0,3,0"/>
                                                 <TextBlock Grid.Column="1"/>
                                                 <Button Grid.Column="2" Content="📢 Order"
@@ -731,8 +731,8 @@
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource SmallBtn}"
                                                         Background="#22FFFFD4"
-                                                        BorderBrush="{StaticResource AccentGold}"
-                                                        Foreground="{StaticResource AccentGold}"
+                                                        BorderBrush="{DynamicResource Amber}"
+                                                        Foreground="{DynamicResource Amber}"
                                                         Visibility="{Binding DataContext.IsSuperUser,
                                                             Converter={StaticResource BoolToVis},
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
@@ -744,15 +744,15 @@
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource SmallBtn}"
                                                         Background="#2266BB6A"
-                                                        BorderBrush="{StaticResource AccentGreen}"
-                                                        Foreground="{StaticResource AccentGreen}"/>
+                                                        BorderBrush="{DynamicResource Green}"
+                                                        Foreground="{DynamicResource Green}"/>
                                             </Grid>
 
                                             <TextBlock Text="{Binding DataContext.OrderBroadcastStatus,
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                        TextWrapping="Wrap"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                       Foreground="{StaticResource AccentGold}"
+                                                       Foreground="{DynamicResource Amber}"
                                                        Margin="0,4,0,0"/>
 
                                         </StackPanel>

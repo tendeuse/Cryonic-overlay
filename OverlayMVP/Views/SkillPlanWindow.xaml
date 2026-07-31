@@ -67,7 +67,7 @@
                         <StackPanel Grid.Column="0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📋 FACTION SKILL PLAN"
-                                           Foreground="{StaticResource AccentBlue}"
+                                           Foreground="{DynamicResource Accent}"
                                            FontFamily="Consolas"
                                            FontWeight="Bold"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"
@@ -82,7 +82,7 @@
                                 </Border>
                             </StackPanel>
                             <TextBlock Text="{Binding SkillPlanTitle}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        FontFamily="Consolas"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                        Visibility="{Binding SkillPlanTitle, Converter={StaticResource NullToVisibility}}"/>
@@ -110,7 +110,7 @@
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Margin="0,0,0,2"/>
                     <TextBlock Text="{Binding SkillPlanNotes}"
-                               Foreground="{StaticResource TextSecondary}"
+                               Foreground="{DynamicResource TextDim}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                TextWrapping="Wrap"
                                Margin="0,0,0,6"/>
@@ -124,12 +124,12 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0"
                                        Text="{Binding SkillPlanStatus}"
-                                       Foreground="{StaticResource AccentGold}"
+                                       Foreground="{DynamicResource Amber}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                        VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        VerticalAlignment="Center">
                                 <Run Text="{Binding SkillPlanDone, Mode=OneWay}"/>
                                 <Run Text="/"/>
@@ -165,11 +165,11 @@
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding SkillName}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                       Foreground="{StaticResource TextPrimary}"
+                                                       Foreground="{DynamicResource Text}"
                                                        ToolTip="{Binding WhyText}"/>
                                             <TextBlock Text="{Binding Category}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                       Foreground="{StaticResource TextSecondary}"/>
+                                                       Foreground="{DynamicResource TextDim}"/>
                                         </StackPanel>
                                         <!-- Level badge with outline -->
                                         <Border Grid.Column="2"

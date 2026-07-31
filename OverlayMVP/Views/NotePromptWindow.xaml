@@ -26,18 +26,18 @@
                 <TextBlock Text="📢  MARK ORDER COMPLETE"
                            FontWeight="Bold"
                            FontSize="{DynamicResource GlobalFontSize}"
-                           Foreground="{StaticResource AccentGold}"/>
+                           Foreground="{DynamicResource Amber}"/>
             </Border>
 
             <StackPanel Margin="14,12,14,14">
                 <TextBlock Text="{Binding OrderTitle, RelativeSource={RelativeSource AncestorType=Window}}"
-                           Foreground="{StaticResource TextPrimary}"
+                           Foreground="{DynamicResource Text}"
                            FontWeight="Bold"
                            TextWrapping="Wrap"
                            Margin="0,0,0,8"/>
 
                 <TextBlock Text="Optional note for your CEO — e.g. a killmail link or what you did."
-                           Foreground="{StaticResource TextSecondary}"
+                           Foreground="{DynamicResource TextDim}"
                            FontSize="{DynamicResource GlobalFontSizeXs}"
                            TextWrapping="Wrap"
                            Margin="0,0,0,6"/>
@@ -49,13 +49,13 @@
                          MinHeight="70"
                          VerticalScrollBarVisibility="Auto"
                          Background="#221E3148"
-                         Foreground="{StaticResource TextPrimary}"
-                         BorderBrush="{StaticResource Border}"
+                         Foreground="{DynamicResource Text}"
+                         BorderBrush="{DynamicResource Border}"
                          BorderThickness="1"
                          FontFamily="Consolas"
                          FontSize="{DynamicResource GlobalFontSizeSm}"
                          Padding="6,4"
-                         CaretBrush="{StaticResource AccentBlue}"/>
+                         CaretBrush="{DynamicResource Accent}"/>
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
@@ -64,15 +64,15 @@
                             Click="Cancel_Click"
                             Style="{StaticResource SmallBtn}"
                             Background="#33FFFFFF"
-                            BorderBrush="{StaticResource Border}"
+                            BorderBrush="{DynamicResource Border}"
                             Margin="0,0,8,0"/>
                     <Button Content="✔ Mark complete"
                             Click="Ok_Click"
                             IsDefault="True"
                             Style="{StaticResource SmallBtn}"
                             Background="#3366BB6A"
-                            BorderBrush="{StaticResource AccentGreen}"
-                            Foreground="{StaticResource AccentGreen}"/>
+                            BorderBrush="{DynamicResource Green}"
+                            Foreground="{DynamicResource Green}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

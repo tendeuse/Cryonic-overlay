@@ -58,7 +58,7 @@
                 <StackPanel>
 
                     <TextBlock Text="{Binding OrdersStatus}"
-                               Foreground="{StaticResource TextSecondary}"
+                               Foreground="{DynamicResource TextDim}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Margin="0,0,0,6"/>
 
@@ -78,12 +78,12 @@
                                             <TextBlock Grid.Column="0"
                                                        Text="{Binding Title, Mode=OneWay}"
                                                        FontWeight="Bold"
-                                                       Foreground="{StaticResource AccentGold}"
+                                                       Foreground="{DynamicResource Amber}"
                                                        TextWrapping="Wrap"
                                                        VerticalAlignment="Center"/>
                                             <Border Grid.Column="1"
                                                     Background="#221E3148"
-                                                    BorderBrush="{StaticResource Border}"
+                                                    BorderBrush="{DynamicResource Border}"
                                                     BorderThickness="1"
                                                     CornerRadius="3"
                                                     Padding="5,1"
@@ -91,11 +91,11 @@
                                                     VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding TargetScope, Mode=OneWay}"
                                                            FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                           Foreground="{StaticResource AccentBlue}"/>
+                                                           Foreground="{DynamicResource Accent}"/>
                                             </Border>
                                         </Grid>
                                         <TextBlock Text="{Binding Description, Mode=OneWay}"
-                                                   Foreground="{StaticResource TextSecondary}"
+                                                   Foreground="{DynamicResource TextDim}"
                                                    FontSize="{DynamicResource GlobalFontSizeSm}"
                                                    TextWrapping="Wrap"
                                                    Margin="0,4,0,0"/>
@@ -103,12 +103,12 @@
                                         <!-- Reward + slots -->
                                         <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                             <TextBlock Text="{Binding RewardLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource AccentGold}"
+                                                       Foreground="{DynamicResource Amber}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        Margin="0,0,10,0"
                                                        Visibility="{Binding HasReward, Converter={StaticResource BoolToVis}}"/>
                                             <TextBlock Text="{Binding SlotsLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextSecondary}"
+                                                       Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                         </StackPanel>
 
@@ -116,28 +116,28 @@
                                         <StackPanel Visibility="{Binding IsBounty, Converter={StaticResource BoolToVis}}"
                                                     Margin="0,4,0,0">
                                             <TextBlock Text="{Binding BountyRewardLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource AccentGold}"
+                                                       Foreground="{DynamicResource Amber}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                             <TextBlock Text="{Binding BountyProgressLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextPrimary}"
+                                                       Foreground="{DynamicResource Text}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                             <!-- What actually qualifies for a payout -->
                                             <TextBlock Text="{Binding BountyTargetLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextPrimary}"
+                                                       Foreground="{DynamicResource Text}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        TextWrapping="Wrap"/>
                                             <TextBlock Text="{Binding BountyRulesLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextSecondary}"
+                                                       Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        TextWrapping="Wrap"/>
                                             <TextBlock Text="{Binding BountyAutoNote, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextSecondary}"
+                                                       Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        Opacity="0.8" TextWrapping="Wrap"/>
                                             <Button Content="Submit kill"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="#33FFD54F"
-                                                    BorderBrush="{StaticResource AccentGold}"
+                                                    BorderBrush="{DynamicResource Amber}"
                                                     HorizontalAlignment="Left"
                                                     Margin="0,4,0,0"
                                                     Command="{Binding DataContext.SubmitKillCommand,
@@ -150,20 +150,20 @@
                                         <StackPanel Visibility="{Binding IsStandingGoal, Converter={StaticResource BoolToVis}}"
                                                     Margin="0,4,0,0">
                                             <TextBlock Text="{Binding StandingGoalLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource AccentGold}"
+                                                       Foreground="{DynamicResource Amber}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        TextWrapping="Wrap"/>
                                             <TextBlock Text="{Binding StandingProgressLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextPrimary}"
+                                                       Foreground="{DynamicResource Text}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                             <TextBlock Text="{Binding StandingTokenNote, Mode=OneWay}"
-                                                       Foreground="{StaticResource TextSecondary}"
+                                                       Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        Opacity="0.8" TextWrapping="Wrap"/>
                                             <Button Content="Claim standing"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="#3327AE60"
-                                                    BorderBrush="{StaticResource AccentGold}"
+                                                    BorderBrush="{DynamicResource Amber}"
                                                     HorizontalAlignment="Left"
                                                     Margin="0,4,0,0"
                                                     Command="{Binding DataContext.ClaimStandingCommand,
@@ -175,14 +175,14 @@
                                         <!-- State + actions -->
                                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                                             <TextBlock Text="{Binding StateLabel, Mode=OneWay}"
-                                                       Foreground="{StaticResource AccentGreen}"
+                                                       Foreground="{DynamicResource Green}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        VerticalAlignment="Center"
                                                        Margin="0,0,10,0"/>
                                             <Button Content="Join"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="#334FC3F7"
-                                                    BorderBrush="{StaticResource AccentBlue}"
+                                                    BorderBrush="{DynamicResource Accent}"
                                                     Margin="0,0,6,0"
                                                     Command="{Binding DataContext.JoinOrderCommand,
                                                         RelativeSource={RelativeSource AncestorType=Window}}"
@@ -191,7 +191,7 @@
                                             <Button Content="Mark complete"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="#3366BB6A"
-                                                    BorderBrush="{StaticResource AccentGreen}"
+                                                    BorderBrush="{DynamicResource Green}"
                                                     Margin="0,0,6,0"
                                                     Command="{Binding DataContext.CompleteOrderCommand,
                                                         RelativeSource={RelativeSource AncestorType=Window}}"
@@ -200,7 +200,7 @@
                                             <Button Content="Leave"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="#33EF5350"
-                                                    BorderBrush="{StaticResource AccentRed}"
+                                                    BorderBrush="{DynamicResource Red}"
                                                     Command="{Binding DataContext.LeaveOrderCommand,
                                                         RelativeSource={RelativeSource AncestorType=Window}}"
                                                     CommandParameter="{Binding}"

@@ -69,14 +69,14 @@
                                FontFamily="Consolas"
                                FontSize="9"
                                FontWeight="Bold"
-                               Foreground="{StaticResource AccentGold}"
+                               Foreground="{DynamicResource Amber}"
                                VerticalAlignment="Center"/>
 
                     <!-- Re-attach button -->
                     <TextBlock Grid.Column="1"
                                Text="⤡"
                                FontSize="10"
-                               Foreground="{StaticResource AccentBlue}"
+                               Foreground="{DynamicResource Accent}"
                                ToolTip="Re-attach to overlay"
                                Cursor="Hand"
                                Margin="0,0,6,0"

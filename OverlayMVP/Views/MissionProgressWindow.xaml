@@ -65,10 +65,10 @@
                     <!-- Header line: playtime + reset countdown -->
                     <TextBlock Margin="0,0,0,10"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                               Foreground="{StaticResource TextSecondary}">
+                               Foreground="{DynamicResource TextDim}">
                         <Run Text="played "/>
                         <Run Text="{Binding Session.PlayedLabel, Mode=OneWay}"
-                             Foreground="{StaticResource AccentBlue}"/>
+                             Foreground="{DynamicResource Accent}"/>
                         <Run Text="  ·  "/>
                         <Run Text="{Binding Session.ResetsInLabel, Mode=OneWay}"/>
                     </TextBlock>
@@ -79,7 +79,7 @@
                         <TextBlock Text="{Binding Session.RelinkPrompt, Mode=OneWay}"
                                    TextWrapping="Wrap"
                                    FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Foreground="{StaticResource TextPrimary}"/>
+                                   Foreground="{DynamicResource Text}"/>
                     </Border>
 
                     <!-- ISK -->
@@ -90,14 +90,14 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="ISK (net)" FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"/>
+                                       Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.IskTodayLabel, Mode=OneWay}"
-                                       FontWeight="Bold" Foreground="{StaticResource AccentGold}"/>
+                                       FontWeight="Bold" Foreground="{DynamicResource Amber}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
                                    Text="{Binding Session.IskPerHourLabel, Mode=OneWay}"
                                    FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Foreground="{StaticResource TextSecondary}"/>
+                                   Foreground="{DynamicResource TextDim}"/>
                     </Grid>
 
                     <!-- LP -->
@@ -108,14 +108,14 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Loyalty points" FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"/>
+                                       Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.LpTodayLabel, Mode=OneWay}"
-                                       FontWeight="Bold" Foreground="{StaticResource AccentBlue}"/>
+                                       FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
                                    Text="{Binding Session.LpPerHourLabel, Mode=OneWay}"
                                    FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Foreground="{StaticResource TextSecondary}"/>
+                                   Foreground="{DynamicResource TextDim}"/>
                     </Grid>
 
                     <!-- Kills -->
@@ -126,21 +126,21 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="Kills" FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"/>
+                                       Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.KillsToday, Mode=OneWay}"
-                                       FontWeight="Bold" Foreground="{StaticResource AccentRed}"/>
+                                       FontWeight="Bold" Foreground="{DynamicResource Red}"/>
                         </StackPanel>
                         <TextBlock Grid.Column="1" VerticalAlignment="Bottom"
                                    Text="{Binding Session.KillsPerHourLabel, Mode=OneWay}"
                                    FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Foreground="{StaticResource TextSecondary}"/>
+                                   Foreground="{DynamicResource TextDim}"/>
                     </Grid>
 
                     <!-- Mining -->
                     <TextBlock Text="MINED TODAY" Style="{StaticResource SectionHeader}" Margin="0,0,0,2"/>
                     <TextBlock Text="ledger updates daily — recent mining may lag"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                               Foreground="{StaticResource TextSecondary}"
+                               Foreground="{DynamicResource TextDim}"
                                Opacity="0.7" Margin="0,0,0,6"/>
                     <ItemsControl ItemsSource="{Binding Session.MinedToday}">
                         <ItemsControl.ItemTemplate>
@@ -152,15 +152,15 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding OreName}"
-                                               Foreground="{StaticResource TextPrimary}"
+                                               Foreground="{DynamicResource Text}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                TextTrimming="CharacterEllipsis"/>
                                     <TextBlock Grid.Column="1" Text="{Binding UnitsLabel}"
-                                               Foreground="{StaticResource AccentGold}"
+                                               Foreground="{DynamicResource Amber}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                Margin="8,0,0,0"/>
                                     <TextBlock Grid.Column="2" Text="{Binding PerHourLabel}"
-                                               Foreground="{StaticResource TextSecondary}"
+                                               Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                                Margin="8,0,0,0"/>
                                 </Grid>
@@ -170,7 +170,7 @@
                     <TextBlock Text="No mining recorded today."
                                FontStyle="Italic"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                               Foreground="{StaticResource TextSecondary}"
+                               Foreground="{DynamicResource TextDim}"
                                Visibility="{Binding Session.MinedToday.Count, Converter={StaticResource ZeroToCollapsed}}"/>
                 </StackPanel>
             </ScrollViewer>
