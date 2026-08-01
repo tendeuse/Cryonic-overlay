@@ -12,8 +12,8 @@
         ShowActivated="False"
         ResizeMode="CanResize">
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -24,7 +24,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -38,15 +38,15 @@
                                Text="📢  ORDERS"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="#FFFFD54F"
+                               Foreground="{DynamicResource Amber}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="#FFEF5350"
-                            Foreground="#FFEF5350"/>
+                            Background="{DynamicResource Red33}"
+                            BorderBrush="{DynamicResource Red}"
+                            Foreground="{DynamicResource Red}"/>
                 </Grid>
             </Border>
 
@@ -65,7 +65,7 @@
                     <ItemsControl ItemsSource="{Binding Orders}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="#11FFFFFF"
+                                <Border Background="{DynamicResource White11}"
                                         CornerRadius="4"
                                         Padding="8,6"
                                         Margin="0,0,0,6">
@@ -82,7 +82,7 @@
                                                        TextWrapping="Wrap"
                                                        VerticalAlignment="Center"/>
                                             <Border Grid.Column="1"
-                                                    Background="#221E3148"
+                                                    Background="{DynamicResource Border22}"
                                                     BorderBrush="{DynamicResource Border}"
                                                     BorderThickness="1"
                                                     CornerRadius="3"
@@ -136,7 +136,7 @@
                                                        Opacity="0.8" TextWrapping="Wrap"/>
                                             <Button Content="Submit kill"
                                                     Style="{StaticResource SmallBtn}"
-                                                    Background="#33FFD54F"
+                                                    Background="{DynamicResource Amber33}"
                                                     BorderBrush="{DynamicResource Amber}"
                                                     HorizontalAlignment="Left"
                                                     Margin="0,4,0,0"
@@ -162,7 +162,7 @@
                                                        Opacity="0.8" TextWrapping="Wrap"/>
                                             <Button Content="Claim standing"
                                                     Style="{StaticResource SmallBtn}"
-                                                    Background="#3327AE60"
+                                                    Background="{DynamicResource Emerald33}"
                                                     BorderBrush="{DynamicResource Amber}"
                                                     HorizontalAlignment="Left"
                                                     Margin="0,4,0,0"
@@ -181,7 +181,7 @@
                                                        Margin="0,0,10,0"/>
                                             <Button Content="Join"
                                                     Style="{StaticResource SmallBtn}"
-                                                    Background="#334FC3F7"
+                                                    Background="{DynamicResource Accent33}"
                                                     BorderBrush="{DynamicResource Accent}"
                                                     Margin="0,0,6,0"
                                                     Command="{Binding DataContext.JoinOrderCommand,
@@ -190,7 +190,7 @@
                                                     Visibility="{Binding CanJoin, Converter={StaticResource BoolToVis}}"/>
                                             <Button Content="Mark complete"
                                                     Style="{StaticResource SmallBtn}"
-                                                    Background="#3366BB6A"
+                                                    Background="{DynamicResource Green33}"
                                                     BorderBrush="{DynamicResource Green}"
                                                     Margin="0,0,6,0"
                                                     Command="{Binding DataContext.CompleteOrderCommand,
@@ -199,7 +199,7 @@
                                                     Visibility="{Binding CanComplete, Converter={StaticResource BoolToVis}}"/>
                                             <Button Content="Leave"
                                                     Style="{StaticResource SmallBtn}"
-                                                    Background="#33EF5350"
+                                                    Background="{DynamicResource Red33}"
                                                     BorderBrush="{DynamicResource Red}"
                                                     Command="{Binding DataContext.LeaveOrderCommand,
                                                         RelativeSource={RelativeSource AncestorType=Window}}"

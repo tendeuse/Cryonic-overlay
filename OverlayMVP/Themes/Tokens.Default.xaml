@@ -43,4 +43,22 @@
     <SolidColorBrush x:Key="Abyss"        Color="#FF0A0F14"/>   <!-- ThumbnailWindow thumbnail host -->
     <SolidColorBrush x:Key="BorderStrong" Color="#FF1E3A50"/>   <!-- ThumbnailWindow BorderClr (hoisted) -->
 
+    <!-- Task 4: mid-size windows -->
+    <SolidColorBrush x:Key="GunMetal"     Color="#0A0D12"/>     <!-- BriefingWindow window background -->
+    <SolidColorBrush x:Key="Charcoal"     Color="#141A24"/>     <!-- BriefingWindow title bar / transport bar -->
+    <SolidColorBrush x:Key="Accent22"     Color="#224FC3F7"/>   <!-- Accent, alpha 22 -->
+    <SolidColorBrush x:Key="Accent88"     Color="#884FC3F7"/>   <!-- Accent, alpha 88 -->
+    <SolidColorBrush x:Key="Green22"      Color="#2266BB6A"/>   <!-- Green, alpha 22 -->
+    <SolidColorBrush x:Key="Green88"      Color="#8866BB6A"/>   <!-- Green, alpha 88 -->
+    <SolidColorBrush x:Key="Gray22"       Color="#22808080"/>   <!-- Gray, alpha 22 -->
+    <SolidColorBrush x:Key="Gray88"       Color="#88808080"/>   <!-- Gray, alpha 88 -->
+    <SolidColorBrush x:Key="SteelGrey"    Color="#FFB0BEC5"/>   <!-- BriefingWindow Close button text -->
+    <SolidColorBrush x:Key="White11"      Color="#11FFFFFF"/>   <!-- White, alpha 11 -->
+    <SolidColorBrush x:Key="Amber33"      Color="#33FFD54F"/>   <!-- Amber, alpha 33 -->
+    <SolidColorBrush x:Key="Emerald33"    Color="#3327AE60"/>   <!-- Emerald, alpha 33 -->
+    <SolidColorBrush x:Key="Accent33"     Color="#334FC3F7"/>   <!-- Accent, alpha 33 -->
+    <SolidColorBrush x:Key="White22"      Color="#22FFFFFF"/>   <!-- White, alpha 22 -->
+    <SolidColorBrush x:Key="DeepInk"      Color="#FF111820"/>   <!-- IntelWindow search box background -->
+    <SolidColorBrush x:Key="PaleLavender" Color="#FFCCD6F6"/>   <!-- IntelWindow search box text -->
+
 </ResourceDictionary>
