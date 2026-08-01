@@ -82,7 +82,10 @@ namespace OverlayMVP
                 if (_multibox.Instances.Count > 0) _vm.Session.TickPlaytime(5);
             };
             _multiboxTimer.Start();
-            _vm.StartPolling();
+            // Screenshot mode (--screenshot) must capture a deterministic baseline:
+            // the poll loop hits ESI and the network on a 10s cadence, so leaving
+            // it running would race the capture and make every diff noise.
+            if (!App.IsScreenshotMode) _vm.StartPolling();
             _vm.SystemChangedNotify = NotifySystemChanged;
         }
 
