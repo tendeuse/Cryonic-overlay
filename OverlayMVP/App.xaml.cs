@@ -82,16 +82,33 @@ namespace OverlayMVP
                     // Let WPF finish layout and render before capturing.
                     main.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        var rtb = new RenderTargetBitmap(
-                            (int)main.ActualWidth, (int)main.ActualHeight,
-                            96, 96, PixelFormats.Pbgra32);
-                        rtb.Render(main);
-                        var enc = new PngBitmapEncoder();
-                        enc.Frames.Add(BitmapFrame.Create(rtb));
-                        System.IO.Directory.CreateDirectory(
-                            System.IO.Path.GetDirectoryName(_screenshotPath!)!);
-                        using (var fs = System.IO.File.Create(_screenshotPath!)) enc.Save(fs);
-                        Shutdown();
+                        try
+                        {
+                            // Resolve against the working directory explicitly. A bare
+                            // filename lands wherever the caller happened to be -- which
+                            // for a shell launched in Program Files is not writable.
+                            var full = System.IO.Path.GetFullPath(_screenshotPath!);
+                            var dir  = System.IO.Path.GetDirectoryName(full);
+                            if (!string.IsNullOrEmpty(dir)) System.IO.Directory.CreateDirectory(dir);
+
+                            var rtb = new RenderTargetBitmap(
+                                (int)main.ActualWidth, (int)main.ActualHeight,
+                                96, 96, PixelFormats.Pbgra32);
+                            rtb.Render(main);
+                            var enc = new PngBitmapEncoder();
+                            enc.Frames.Add(BitmapFrame.Create(rtb));
+                            using (var fs = System.IO.File.Create(full)) enc.Save(fs);
+                            Shutdown();
+                        }
+                        catch (Exception ex)
+                        {
+                            // This is a headless capture tool. NEVER let a failure reach
+                            // the app's fatal-error dialog -- a scripted run would hang
+                            // on a modal box, and a human sees a crash from a feature
+                            // they never invoked. Print and exit non-zero instead.
+                            Console.Error.WriteLine($"--screenshot failed: {ex.Message}");
+                            Environment.Exit(2);
+                        }
                     }), DispatcherPriority.ContextIdle);
                 };
             }
