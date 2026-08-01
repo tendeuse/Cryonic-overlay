@@ -247,8 +247,14 @@
                                 Padding="{TemplateBinding Padding}">
                             <StackPanel>
                                 <!-- Header row. Collapses entirely when no Header is
-                                     set, so the footer can use the same control. -->
-                                <Grid x:Name="HeaderRow" Margin="0,0,0,4">
+                                     set, so the footer can use the same control. No
+                                     margin here: the header content (a TextBlock
+                                     styled with SectionHeader, or a Grid built to
+                                     match it) already carries its own bottom margin.
+                                     Adding one here doubled the gap under row 2's
+                                     plain text header (0,0,0,4 template plus 0,0,0,4
+                                     from the SectionHeader style = 8px, not 4px). -->
+                                <Grid x:Name="HeaderRow">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>

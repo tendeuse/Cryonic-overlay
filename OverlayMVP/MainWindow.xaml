@@ -4,6 +4,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:OverlayMVP.ViewModels"
+        xmlns:ctl="clr-namespace:OverlayMVP.Controls"
         Title="Cryonic Overlay"
         Width="460"
         Height="Auto"
@@ -201,17 +202,17 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  MULTIBOX SWITCHER  (always visible)                    -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="2"
-                    Background="{DynamicResource Well}"
-                    BorderBrush="{DynamicResource SteelBlue}"
-                    BorderThickness="0,0,0,1"
-                    Padding="8,6"
-                    Visibility="{Binding ShowMultibox, Converter={StaticResource BoolToVis}}">
-                <StackPanel>
-
+            <ctl:SectionPanel Grid.Row="2"
+                              Background="{DynamicResource Well}"
+                              BorderBrush="{DynamicResource SteelBlue}"
+                              BorderThickness="0,0,0,1"
+                              Padding="8,6"
+                              Visibility="{Binding ShowMultibox, Converter={StaticResource BoolToVis}}">
+                <ctl:SectionPanel.Header>
                     <TextBlock Text="◈ ACTIVE INSTANCES"
                                Style="{StaticResource SectionHeader}"
                                Foreground="{DynamicResource Amber}"/>
+                </ctl:SectionPanel.Header>
 
                     <!-- Scroll horizontally if many instances -->
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -300,8 +301,7 @@
                             </ItemsControl.Style>
                         </ItemsControl>
                     </ScrollViewer>
-                </StackPanel>
-            </Border>
+            </ctl:SectionPanel>
 
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  CONTENT PANELS                                          -->
