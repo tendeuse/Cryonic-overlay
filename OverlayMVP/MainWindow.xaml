@@ -554,9 +554,11 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  FOOTER + RESIZE GRIPS                                   -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="6" Background="{DynamicResource Obsidian}"
-                    CornerRadius="0,0,8,8"
-                    Padding="0">
+            <ctl:SectionPanel Grid.Row="6"
+                               Background="{DynamicResource Obsidian}"
+                               BorderThickness="0"
+                               CornerRadius="0,0,8,8"
+                               Padding="0">
                 <StackPanel>
 
                     <!-- ── SPONSOR BANNER ─────────────────────────────────────
@@ -656,7 +658,7 @@
                     </Border>
 
                 </StackPanel>
-            </Border>
+            </ctl:SectionPanel>
 
             <!-- Right-edge resize strip -->
             <Border Grid.Row="0" Grid.RowSpan="7"

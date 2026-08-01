@@ -232,6 +232,9 @@
           Background/BorderBrush/BorderThickness/Padding are TemplateBound so each
           usage keeps its own values — row 2 is Well/SteelBlue/0,0,0,1 while rows 3
           and 4 are Panel/Border/0,1,0,1, and merging them would be a visual change.
+          CornerRadius is TemplateBound too but has no Setter here — its DP default
+          is 0, matching rows 2/3/4 (square corners); the footer sets 0,0,8,8 on the
+          instance.
         -->
         <Style TargetType="{x:Type ctl:SectionPanel}">
             <Setter Property="Background"      Value="{DynamicResource Panel}"/>
@@ -244,6 +247,7 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
                                 Padding="{TemplateBinding Padding}">
                             <StackPanel>
                                 <!-- Header row. Collapses entirely when no Header is

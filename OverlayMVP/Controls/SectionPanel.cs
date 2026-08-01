@@ -31,5 +31,21 @@ namespace OverlayMVP.Controls
             get => GetValue(HeaderAccessoryProperty);
             set => SetValue(HeaderAccessoryProperty, value);
         }
+
+        /// <summary>
+        /// Corner rounding for the template's root Border. HeaderedContentControl has
+        /// no CornerRadius of its own, so this exists purely to give the footer (which
+        /// needs 0,0,8,8) somewhere to put it. Defaults to 0 so rows 2/3/4, which never
+        /// set it, render unchanged.
+        /// </summary>
+        public static readonly DependencyProperty CornerRadiusProperty =
+            DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(SectionPanel),
+                new FrameworkPropertyMetadata(new CornerRadius(0)));
+
+        public CornerRadius CornerRadius
+        {
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
+        }
     }
 }
