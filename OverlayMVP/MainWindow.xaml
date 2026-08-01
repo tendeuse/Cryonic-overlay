@@ -32,7 +32,13 @@
     </Window.Resources>
 
     <!-- ── Outer container: rounded dark panel ────────────────────────── -->
-    <Border Background="{DynamicResource Bg}"
+    <!--
+      TextElement.FontSize stays here on the instance, not in the WindowShell
+      template. It's a user setting (SettingsWindow writes it, App.xaml.cs
+      pushes it into Application.Current.Resources at startup), not chrome —
+      a skin swapping the template must not be able to silently reset it.
+    -->
+    <ctl:WindowShell Background="{DynamicResource Bg}"
             BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="8"
@@ -53,7 +59,7 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  TITLE BAR                                               -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="0" Background="{DynamicResource Onyx}"
+            <ctl:TitleBar Grid.Row="0" Background="{DynamicResource Onyx}"
                     CornerRadius="8,8,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -156,7 +162,7 @@
                                 Margin="0,0,6,0"/>
                     </Grid>
                 </StackPanel>
-            </Border>
+            </ctl:TitleBar>
 
             <!-- ── Update notice ────────────────────────────────────────────
                  Stacked inside row 1 (rather than adding a new RowDefinition)
@@ -677,5 +683,5 @@
                     MouseLeftButtonDown="ResizeBottom_MouseDown"/>
 
         </Grid>
-    </Border>
+    </ctl:WindowShell>
 </Window>
