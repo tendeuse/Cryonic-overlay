@@ -310,27 +310,26 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  INTEL & ALERTS  (always visible, never scrolls)         -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="3"
-                    Background="{DynamicResource Panel}"
-                    BorderBrush="{DynamicResource Border}"
-                    BorderThickness="0,1,0,1"
-                    Padding="8,6"
-                    Visibility="{Binding ShowIntelAlerts, Converter={StaticResource BoolToVis}}">
-                <StackPanel>
-                    <Grid Margin="0,0,0,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding Loc.IntelAlerts}"
-                                   Style="{StaticResource SectionHeader}" Margin="0"/>
-                        <TextBlock Grid.Column="1" Text="{Binding IntelStatus}"
-                                   Foreground="{Binding HasAlerts, Converter={StaticResource IntelStatusColour}}"
-                                   FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   FontWeight="{Binding HasAlerts, Converter={StaticResource BoolToWeight}}"
-                                   VerticalAlignment="Center"/>
-                    </Grid>
+            <ctl:SectionPanel Grid.Row="3"
+                              Background="{DynamicResource Panel}"
+                              BorderBrush="{DynamicResource Border}"
+                              BorderThickness="0,1,0,1"
+                              Padding="8,6"
+                              Visibility="{Binding ShowIntelAlerts, Converter={StaticResource BoolToVis}}">
+                <ctl:SectionPanel.Header>
+                    <TextBlock Text="{Binding Loc.IntelAlerts}"
+                               Style="{StaticResource SectionHeader}"/>
+                </ctl:SectionPanel.Header>
+                <ctl:SectionPanel.HeaderAccessory>
+                    <TextBlock Text="{Binding IntelStatus}"
+                               Foreground="{Binding HasAlerts, Converter={StaticResource IntelStatusColour}}"
+                               FontSize="{DynamicResource GlobalFontSizeXs}"
+                               FontWeight="{Binding HasAlerts, Converter={StaticResource BoolToWeight}}"
+                               VerticalAlignment="Center"
+                               Margin="0,0,0,4"/>
+                </ctl:SectionPanel.HeaderAccessory>
 
+                <StackPanel>
                     <!-- System input -->
                     <Grid Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
@@ -390,37 +389,32 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-            </Border>
+            </ctl:SectionPanel>
 
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  PILOT STATUS  (always visible, inline)                  -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="4"
-                    Background="{DynamicResource Panel}"
-                    BorderBrush="{DynamicResource Border}"
-                    BorderThickness="0,1,0,1"
-                    Padding="8,6"
-                    Visibility="{Binding ShowPilotStatus, Converter={StaticResource BoolToVis}}">
+            <ctl:SectionPanel Grid.Row="4"
+                              Background="{DynamicResource Panel}"
+                              BorderBrush="{DynamicResource Border}"
+                              BorderThickness="0,1,0,1"
+                              Padding="8,6"
+                              Visibility="{Binding ShowPilotStatus, Converter={StaticResource BoolToVis}}">
+                <ctl:SectionPanel.Header>
+                    <TextBlock Text="{Binding Loc.PilotStatus}"
+                               Style="{StaticResource SectionHeader}"/>
+                </ctl:SectionPanel.Header>
+                <ctl:SectionPanel.HeaderAccessory>
+                    <Button Content="⟳"
+                            Command="{Binding RefreshStandingsCommand}"
+                            Style="{StaticResource SmallBtn}"
+                            ToolTip="Refresh ESI standings"
+                            Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"
+                            VerticalAlignment="Center"
+                            Margin="0,0,0,4"/>
+                </ctl:SectionPanel.HeaderAccessory>
+
                 <StackPanel>
-
-                    <!-- Header row: label + refresh button -->
-                    <Grid Margin="0,0,0,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0"
-                                   Text="{Binding Loc.PilotStatus}"
-                                   Style="{StaticResource SectionHeader}"
-                                   Margin="0"/>
-                        <Button Grid.Column="1"
-                                Content="⟳"
-                                Command="{Binding RefreshStandingsCommand}"
-                                Style="{StaticResource SmallBtn}"
-                                ToolTip="Refresh ESI standings"
-                                Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"/>
-                    </Grid>
-
                     <!-- ESI character selector -->
                     <Border Background="{DynamicResource White11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
                             Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
@@ -505,7 +499,7 @@
                     </Grid>
 
                 </StackPanel>
-            </Border>
+            </ctl:SectionPanel>
 
             <!-- ══ Panel launcher buttons (one per row) ════════════════════════════ -->
             <Border Grid.Row="5" Background="{DynamicResource Graphite}" Padding="8,6">
