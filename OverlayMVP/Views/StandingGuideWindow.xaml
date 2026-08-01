@@ -25,8 +25,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Expander">
                         <Border x:Name="Root"
-                                Background="#0A0D1117"
-                                BorderBrush="#221E3148"
+                                Background="{DynamicResource Bg0A}"
+                                BorderBrush="{DynamicResource Border22}"
                                 BorderThickness="1"
                                 CornerRadius="4"
                                 Margin="0,0,0,3">
@@ -51,7 +51,7 @@
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="Bd" Property="Background" Value="#11FFFFFF"/>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource White11}"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -67,7 +67,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsExpanded" Value="True">
-                                <Setter TargetName="Root" Property="BorderBrush" Value="#334FC3F7"/>
+                                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Accent33}"/>
                                 <Setter TargetName="Body" Property="Visibility" Value="Visible"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -77,8 +77,8 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -89,7 +89,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -103,15 +103,15 @@
                                Text="📋  FACTION STANDING GUIDE"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="#FFFFD54F"
+                               Foreground="{DynamicResource Amber}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="#FFEF5350"
-                            Foreground="#FFEF5350"/>
+                            Background="{DynamicResource Red33}"
+                            BorderBrush="{DynamicResource Red}"
+                            Foreground="{DynamicResource Red}"/>
                 </Grid>
             </Border>
 
@@ -123,7 +123,7 @@
                 <StackPanel>
 
                     <!-- ESI Standing status bar -->
-                    <Border Background="#110D1117" CornerRadius="3" Padding="6,4" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource Bg11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -138,7 +138,7 @@
                             <Button Grid.Column="1" Content="⟳ ESI"
                                     Command="{Binding RefreshStandingsCommand}"
                                     Style="{StaticResource SmallBtn}"
-                                    Background="#221E3148"
+                                    Background="{DynamicResource Border22}"
                                     BorderBrush="{DynamicResource Accent}"
                                     ToolTip="Refresh standings from ESI API"/>
                         </Grid>
@@ -153,7 +153,7 @@
                               ToolTip="When a standing update pushes you into the next step, its officer briefing plays automatically"/>
 
                     <!-- Skill modifiers — auto-loaded from ESI -->
-                    <Border Background="#0A4FC3F7" BorderBrush="#221E3148"
+                    <Border Background="{DynamicResource Accent0A}" BorderBrush="{DynamicResource Border22}"
                             BorderThickness="1" CornerRadius="3"
                             Padding="8,5" Margin="0,0,0,6">
                         <Grid>
@@ -165,7 +165,7 @@
                             <!-- Connections -->
                             <StackPanel Grid.Column="0" Margin="0,0,6,0">
                                 <TextBlock Text="Connections"
-                                           Foreground="#FF4FC3F7"
+                                           Foreground="{DynamicResource Accent}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            ToolTip="+4% per level on positive standing (access only)"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
@@ -173,7 +173,7 @@
                                                Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding ConnectionsSkill}"
-                                               Foreground="#FF4FC3F7"
+                                               Foreground="{DynamicResource Accent}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
@@ -185,7 +185,7 @@
                             <!-- Diplomacy -->
                             <StackPanel Grid.Column="1" Margin="0,0,6,0">
                                 <TextBlock Text="Diplomacy"
-                                           Foreground="#FFFFD54F"
+                                           Foreground="{DynamicResource Amber}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            ToolTip="+4% per level on negative standing (access only)"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
@@ -193,7 +193,7 @@
                                                Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding DiplomacySkill}"
-                                               Foreground="#FFFFD54F"
+                                               Foreground="{DynamicResource Amber}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
@@ -205,7 +205,7 @@
                             <!-- Social -->
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Social"
-                                           Foreground="#FF66BB6A"
+                                           Foreground="{DynamicResource Green}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            ToolTip="+5% per level to standing GAINS from missions"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
@@ -213,7 +213,7 @@
                                                Foreground="{DynamicResource TextDim}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                     <TextBlock Text="{Binding SocialSkill}"
-                                               Foreground="#FF66BB6A"
+                                               Foreground="{DynamicResource Green}"
                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                FontWeight="Bold"/>
                                     <TextBlock Text="/5"
@@ -226,7 +226,7 @@
                     </Border>
 
                     <!-- ── Access thresholds ─────────────────────────────── -->
-                    <Border Background="#22FFFFFF" CornerRadius="4" Padding="10,8" Margin="0,6,0,10">
+                    <Border Background="{DynamicResource White22}" CornerRadius="4" Padding="10,8" Margin="0,6,0,10">
                         <StackPanel>
                             <TextBlock Text="AGENT ACCESS PROGRESS"
                                        Style="{StaticResource SectionHeader}" Margin="0,0,0,4"/>
@@ -302,10 +302,10 @@
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="Bd" Property="Background" Value="#221E3148"/>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Border22}"/>
                                                 </Trigger>
                                                 <Trigger Property="IsSelected" Value="True">
-                                                    <Setter TargetName="Bd" Property="Background" Value="#331E3A5A"/>
+                                                    <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DuskBlue}"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -337,11 +337,11 @@
                                 Margin="0,8,0,0">
 
                         <!-- Faction intro -->
-                        <Border Background="#1A4FC3F7" BorderBrush="#224FC3F7"
+                        <Border Background="{DynamicResource Accent1A}" BorderBrush="{DynamicResource Accent22}"
                                 BorderThickness="0,0,0,0" CornerRadius="3" Padding="6,5"
                                 Margin="0,0,0,6">
                             <TextBlock Text="{Binding SelectedCatalogueFaction.IntroText, Mode=OneWay}"
-                                       Foreground="#FFB0BEC5" FontSize="{DynamicResource GlobalFontSizeXs}" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SteelGrey}" FontSize="{DynamicResource GlobalFontSizeXs}" TextWrapping="Wrap"
                                        LineHeight="14"/>
                         </Border>
 
@@ -359,16 +359,16 @@
                                      x:Name="ManualStandingBox"
                                      Text="{Binding CurrentFactionStanding, Mode=OneWay,
                                             StringFormat={}{0:0.00}}"
-                                     Background="#0D1117"
+                                     Background="{DynamicResource Jet}"
                                      Foreground="{Binding StandingColour,
                                          Converter={StaticResource StrBrush}}"
-                                     BorderBrush="#331E3148" BorderThickness="1"
+                                     BorderBrush="{DynamicResource Border33}" BorderThickness="1"
                                      Padding="4,2" FontSize="{DynamicResource GlobalFontSizeSm}" FontWeight="Bold"
                                      Margin="4,0"/>
                             <Button Grid.Column="2" Content="Set"
                                     Click="ManualStandingSet_Click"
                                     Style="{StaticResource SmallBtn}"
-                                    Background="#221E3148"
+                                    Background="{DynamicResource Border22}"
                                     BorderBrush="{DynamicResource Amber}"/>
                         </Grid>
 
@@ -431,18 +431,18 @@
                                                         CornerRadius="2" Padding="4,1" Margin="0,0,6,0"
                                                         VerticalAlignment="Center">
                                                     <TextBlock Text="{Binding LevelLabel, Mode=OneWay}"
-                                                               Foreground="#FF0D1117"
+                                                               Foreground="{DynamicResource BgFF}"
                                                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                FontWeight="Bold"/>
                                                 </Border>
                                                 <TextBlock Grid.Column="2"
                                                            Text="{Binding StepLabel, Mode=OneWay}"
-                                                           Foreground="#FFE8EDF2"
+                                                           Foreground="{DynamicResource Text}"
                                                            FontWeight="Bold"
                                                            FontSize="{DynamicResource GlobalFontSizeSm}"
                                                            VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="3"
-                                                           Foreground="#FF6A7A8A"
+                                                           Foreground="{DynamicResource TextFaint}"
                                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                                            VerticalAlignment="Center" Margin="6,0,0,0">
                                                     <Run Text="req "/>
@@ -476,18 +476,18 @@
                                                 </TextBlock>
                                                 <TextBlock Grid.Column="1"
                                                            Text="{Binding StepLabel, Mode=OneWay}"
-                                                           Foreground="#FFE8EDF2"
+                                                           Foreground="{DynamicResource Text}"
                                                            FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                                 <Border Grid.Column="2"
                                                         Background="{Binding LevelColour,
                                                             Converter={StaticResource StrBrush}}"
                                                         CornerRadius="2" Padding="4,1" Margin="4,0,0,0">
                                                     <TextBlock Text="{Binding LevelLabel, Mode=OneWay}"
-                                                               Foreground="#FF0D1117"
+                                                               Foreground="{DynamicResource BgFF}"
                                                                FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                 </Border>
                                                 <Border Grid.Column="3"
-                                                        Background="#110D1117" BorderBrush="#221E3148"
+                                                        Background="{DynamicResource Bg11}" BorderBrush="{DynamicResource Border22}"
                                                         BorderThickness="1" CornerRadius="2"
                                                         Padding="4,1" Margin="3,0,0,0">
                                                     <TextBlock Text="{Binding TypeLabel, Mode=OneWay}"
@@ -503,27 +503,27 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0">
-                                                    <Run Text="Requires " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                    <Run Text="Requires " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                     <Run Text="{Binding StandingRequired, Mode=OneWay,
                                                                 StringFormat={}{0:+0.0;-0.0;0.0}}"
                                                          Foreground="{Binding LevelColour,
                                                              Converter={StaticResource StrBrush}}"
                                                          FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeXs}"/>
-                                                    <Run Text="  →  goal " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                    <Run Text="  →  goal " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                     <Run Text="{Binding StandingGoal, Mode=OneWay,
                                                                 StringFormat={}{0:+0.0;-0.0;0.0}}"
-                                                         Foreground="#FFFFD54F" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                         Foreground="{DynamicResource Amber}" FontWeight="Bold" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                 </TextBlock>
                                                 <TextBlock Grid.Column="1"
                                                            Text="{Binding GainLabel, Mode=OneWay}"
-                                                           Foreground="#FF66BB6A" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                           Foreground="{DynamicResource Green}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                             </Grid>
 
                                             <!-- Progress bar -->
                                             <ProgressBar Height="4" Margin="0,0,0,5"
                                                          Minimum="0" Maximum="1"
                                                          Foreground="{Binding LevelColour, Converter={StaticResource StrBrush}}"
-                                                         Background="#221E3148"
+                                                         Background="{DynamicResource Border22}"
                                                          BorderThickness="0">
                                                 <ProgressBar.Value>
                                                     <MultiBinding Converter="{StaticResource StepProgressConverter}"
@@ -538,17 +538,17 @@
 
                                             <!-- WHY text -->
                                             <TextBlock Text="{Binding WhyText, Mode=OneWay}"
-                                                       Foreground="#FFB0BEC5"
+                                                       Foreground="{DynamicResource SteelGrey}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}" TextWrapping="Wrap"
                                                        LineHeight="13" Margin="0,0,0,4"/>
 
                                             <!-- TIP text -->
-                                            <Border Background="#0A66BB6A" CornerRadius="2"
+                                            <Border Background="{DynamicResource Green0A}" CornerRadius="2"
                                                     Padding="5,3" Margin="0,0,0,4"
                                                     Visibility="{Binding TipText,
                                                         Converter={StaticResource NullToVisibility}}">
                                                 <TextBlock Text="{Binding TipText, Mode=OneWay}"
-                                                           Foreground="#FF90CAF9"
+                                                           Foreground="{DynamicResource SkyBlue}"
                                                            FontSize="{DynamicResource GlobalFontSizeXs}" TextWrapping="Wrap"
                                                            LineHeight="12"/>
                                             </Border>
@@ -556,20 +556,20 @@
                                             <!-- Corporation highlight + Agent / Station -->
                                             <StackPanel Margin="0,0,0,3">
                                                 <!-- "Run for" corp -->
-                                                <Border Background="#1AFFD54F" BorderBrush="#33FFD54F"
+                                                <Border Background="{DynamicResource Amber1A}" BorderBrush="{DynamicResource Amber33}"
                                                         BorderThickness="1" CornerRadius="3"
                                                         Padding="6,4" Margin="0,0,0,5"
                                                         Visibility="{Binding HasCorporation, Converter={StaticResource BoolToVis}}">
                                                     <StackPanel>
                                                         <TextBlock>
-                                                            <Run Text="🏢 Run for: " Foreground="#FFFFD54F"
+                                                            <Run Text="🏢 Run for: " Foreground="{DynamicResource Amber}"
                                                                  FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                             <Run Text="{Binding Corporation, Mode=OneWay}"
-                                                                 Foreground="#FFFFFFFF"
+                                                                 Foreground="{DynamicResource White}"
                                                                  FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                         </TextBlock>
                                                         <TextBlock Text="{Binding CorpNote, Mode=OneWay}"
-                                                                   Foreground="#FFB0BEC5"
+                                                                   Foreground="{DynamicResource SteelGrey}"
                                                                    FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                    TextWrapping="Wrap" LineHeight="12"
                                                                    Margin="0,2,0,0"
@@ -577,14 +577,14 @@
                                                     </StackPanel>
                                                 </Border>
                                                 <!-- Ship spec recommendation -->
-                                                <Border Background="#0A4FC3F7" BorderBrush="#224FC3F7"
+                                                <Border Background="{DynamicResource Accent0A}" BorderBrush="{DynamicResource Accent22}"
                                                         BorderThickness="1" CornerRadius="3"
                                                         Padding="6,5" Margin="0,0,0,5"
                                                         Visibility="{Binding HasSpec, Converter={StaticResource BoolToVis}}">
                                                     <StackPanel>
                                                         <!-- Ships row — clickable fit buttons -->
                                                         <WrapPanel Margin="0,0,0,3" VerticalAlignment="Center">
-                                                            <TextBlock Text="🚀 " Foreground="#FF4FC3F7"
+                                                            <TextBlock Text="🚀 " Foreground="{DynamicResource Accent}"
                                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                        VerticalAlignment="Center" Margin="0,0,2,0"/>
                                                             <ItemsControl ItemsSource="{Binding Spec.Ships}">
@@ -601,9 +601,9 @@
                                                                                     RelativeSource={RelativeSource AncestorType=Window}}"
                                                                                 CommandParameter="{Binding}"
                                                                                 Style="{StaticResource SmallBtn}"
-                                                                                Background="#224FC3F7"
-                                                                                BorderBrush="#FF4FC3F7"
-                                                                                Foreground="#FF4FC3F7"
+                                                                                Background="{DynamicResource Accent22}"
+                                                                                BorderBrush="{DynamicResource Accent}"
+                                                                                Foreground="{DynamicResource Accent}"
                                                                                 Margin="0,0,3,2"
                                                                                 Cursor="Hand"/>
                                                                     </DataTemplate>
@@ -613,61 +613,61 @@
                                                         <!-- Stats row: DPS · EHP · Cargo -->
                                                         <WrapPanel Margin="0,0,0,3">
                                                             <!-- DPS -->
-                                                            <Border Background="#1566BB6A" CornerRadius="2" Padding="4,1" Margin="0,0,4,2">
+                                                            <Border Background="{DynamicResource Green15}" CornerRadius="2" Padding="4,1" Margin="0,0,4,2">
                                                                 <TextBlock>
-                                                                    <Run Text="⚔ " Foreground="#FF66BB6A" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                    <Run Text="⚔ " Foreground="{DynamicResource Green}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                                     <Run Text="{Binding Spec.DpsLabel, Mode=OneWay}"
-                                                                         Foreground="#FF66BB6A" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
+                                                                         Foreground="{DynamicResource Green}" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                                 </TextBlock>
                                                             </Border>
                                                             <!-- EHP -->
-                                                            <Border Background="#154FC3F7" CornerRadius="2" Padding="4,1" Margin="0,0,4,2">
+                                                            <Border Background="{DynamicResource Accent15}" CornerRadius="2" Padding="4,1" Margin="0,0,4,2">
                                                                 <TextBlock>
-                                                                    <Run Text="🛡 " Foreground="#FF4FC3F7" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                    <Run Text="🛡 " Foreground="{DynamicResource Accent}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                                     <Run Text="{Binding Spec.EhpLabel, Mode=OneWay}"
-                                                                         Foreground="#FF4FC3F7" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
+                                                                         Foreground="{DynamicResource Accent}" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                                 </TextBlock>
                                                             </Border>
                                                             <!-- Cargo (only shown when needed) -->
-                                                            <Border Background="#15FFD54F" CornerRadius="2" Padding="4,1" Margin="0,0,4,2"
+                                                            <Border Background="{DynamicResource Amber15}" CornerRadius="2" Padding="4,1" Margin="0,0,4,2"
                                                                     Visibility="{Binding Spec.NeedsCargo, Converter={StaticResource BoolToVis}}">
                                                                 <TextBlock>
-                                                                    <Run Text="📦 " Foreground="#FFFFD54F" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                    <Run Text="📦 " Foreground="{DynamicResource Amber}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                                     <Run Text="{Binding Spec.CargoLabel, Mode=OneWay}"
-                                                                         Foreground="#FFFFD54F" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
+                                                                         Foreground="{DynamicResource Amber}" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
                                                                 </TextBlock>
                                                             </Border>
                                                         </WrapPanel>
                                                         <!-- Resist profile -->
                                                         <TextBlock Margin="0,0,0,2"
                                                                    Visibility="{Binding Spec.ResistList, Converter={StaticResource NullToVisibility}}">
-                                                            <Run Text="🔥 Tank: " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                            <Run Text="🔥 Tank: " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                             <Run Text="{Binding Spec.ResistList, Mode=OneWay}"
-                                                                 Foreground="#FFEF5350" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
-                                                            <Run Text=" — " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                 Foreground="{DynamicResource Red}" FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"/>
+                                                            <Run Text=" — " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                             <Run Text="{Binding Spec.EnemyNote, Mode=OneWay}"
-                                                                 Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                 Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                         </TextBlock>
                                                         <!-- Fit note -->
                                                         <TextBlock Text="{Binding Spec.FitNote, Mode=OneWay}"
-                                                                   Foreground="#FFB0BEC5" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                                   Foreground="{DynamicResource SteelGrey}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                    TextWrapping="Wrap" LineHeight="12"
                                                                    Visibility="{Binding Spec.FitNote, Converter={StaticResource NullToVisibility}}"/>
                                                     </StackPanel>
                                                 </Border>
                                                 <TextBlock>
-                                                    <Run Text="Agent: " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                    <Run Text="Agent: " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                     <Run Text="{Binding Agent, Mode=OneWay}"
-                                                         Foreground="#FF4FC3F7" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                         Foreground="{DynamicResource Accent}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                 </TextBlock>
                                                 <TextBlock Text="{Binding Station, Mode=OneWay}"
-                                                           Foreground="#FF6A7A8A" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                           Foreground="{DynamicResource TextFaint}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                                            TextTrimming="CharacterEllipsis"
                                                            ToolTip="{Binding Station, Mode=OneWay}"/>
                                                 <TextBlock>
-                                                    <Run Text="Region: " Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                    <Run Text="Region: " Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                     <Run Text="{Binding Region, Mode=OneWay}"
-                                                         Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                         Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                 </TextBlock>
                                             </StackPanel>
 
@@ -677,7 +677,7 @@
                                                               Converter={StaticResource ZeroToCollapsed}}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Background="#1AEF5350"
+                                                        <Border Background="{DynamicResource Red1A}"
                                                                 BorderBrush="{Binding Colour,
                                                                     Converter={StaticResource StrBrush}}"
                                                                 BorderThickness="0,0,0,1"
@@ -693,12 +693,12 @@
                                                                 <Run Text=" " FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                                 <Run Text="{Binding StandingLoss, Mode=OneWay,
                                                                             StringFormat={}{0:0.00}}"
-                                                                     Foreground="#FFEF5350" FontSize="{DynamicResource GlobalFontSizeXs}"
+                                                                     Foreground="{DynamicResource Red}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                                                      FontWeight="Bold"/>
                                                                 <Run Text=" / run — " FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                                     Foreground="#FF8A99AA"/>
+                                                                     Foreground="{DynamicResource TextDim}"/>
                                                                 <Run Text="{Binding Note, Mode=OneWay}"
-                                                                     Foreground="#FF8A99AA" FontSize="{DynamicResource GlobalFontSizeXs}"/>
+                                                                     Foreground="{DynamicResource TextDim}" FontSize="{DynamicResource GlobalFontSizeXs}"/>
                                                             </TextBlock>
                                                         </Border>
                                                     </DataTemplate>
@@ -719,7 +719,7 @@
                                                         Command="{Binding DataContext.CopyCurrentStepInfoCommand,
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                         Style="{StaticResource SmallBtn}"
-                                                        Background="#224FC3F7"
+                                                        Background="{DynamicResource Accent22}"
                                                         BorderBrush="{DynamicResource Accent}"
                                                         Foreground="{DynamicResource Accent}"
                                                         Margin="0,0,3,0"/>
@@ -730,7 +730,7 @@
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource SmallBtn}"
-                                                        Background="#22FFFFD4"
+                                                        Background="{DynamicResource Ivory}"
                                                         BorderBrush="{DynamicResource Amber}"
                                                         Foreground="{DynamicResource Amber}"
                                                         Visibility="{Binding DataContext.IsSuperUser,
@@ -743,7 +743,7 @@
                                                             RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}"
                                                         Style="{StaticResource SmallBtn}"
-                                                        Background="#2266BB6A"
+                                                        Background="{DynamicResource Green22}"
                                                         BorderBrush="{DynamicResource Green}"
                                                         Foreground="{DynamicResource Green}"/>
                                             </Grid>
