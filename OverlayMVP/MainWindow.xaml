@@ -211,7 +211,8 @@
                 <ctl:SectionPanel.Header>
                     <TextBlock Text="◈ ACTIVE INSTANCES"
                                Style="{StaticResource SectionHeader}"
-                               Foreground="{DynamicResource Amber}"/>
+                               Foreground="{DynamicResource Amber}"
+                               Margin="0"/>
                 </ctl:SectionPanel.Header>
 
                     <!-- Scroll horizontally if many instances -->
@@ -318,15 +319,15 @@
                               Visibility="{Binding ShowIntelAlerts, Converter={StaticResource BoolToVis}}">
                 <ctl:SectionPanel.Header>
                     <TextBlock Text="{Binding Loc.IntelAlerts}"
-                               Style="{StaticResource SectionHeader}"/>
+                               Style="{StaticResource SectionHeader}"
+                               Margin="0"/>
                 </ctl:SectionPanel.Header>
                 <ctl:SectionPanel.HeaderAccessory>
                     <TextBlock Text="{Binding IntelStatus}"
                                Foreground="{Binding HasAlerts, Converter={StaticResource IntelStatusColour}}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                FontWeight="{Binding HasAlerts, Converter={StaticResource BoolToWeight}}"
-                               VerticalAlignment="Center"
-                               Margin="0,0,0,4"/>
+                               VerticalAlignment="Center"/>
                 </ctl:SectionPanel.HeaderAccessory>
 
                 <StackPanel>
@@ -402,7 +403,8 @@
                               Visibility="{Binding ShowPilotStatus, Converter={StaticResource BoolToVis}}">
                 <ctl:SectionPanel.Header>
                     <TextBlock Text="{Binding Loc.PilotStatus}"
-                               Style="{StaticResource SectionHeader}"/>
+                               Style="{StaticResource SectionHeader}"
+                               Margin="0"/>
                 </ctl:SectionPanel.Header>
                 <ctl:SectionPanel.HeaderAccessory>
                     <Button Content="⟳"
@@ -410,8 +412,7 @@
                             Style="{StaticResource SmallBtn}"
                             ToolTip="Refresh ESI standings"
                             Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"
-                            VerticalAlignment="Center"
-                            Margin="0,0,0,4"/>
+                            VerticalAlignment="Center"/>
                 </ctl:SectionPanel.HeaderAccessory>
 
                 <StackPanel>
