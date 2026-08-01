@@ -61,4 +61,30 @@
     <SolidColorBrush x:Key="DeepInk"      Color="#FF111820"/>   <!-- IntelWindow search box background -->
     <SolidColorBrush x:Key="PaleLavender" Color="#FFCCD6F6"/>   <!-- IntelWindow search box text -->
 
+    <!-- Task 5: SkillPlan, MainWindow, Settings -->
+    <SolidColorBrush x:Key="BgFF"         Color="#FF0D1117"/>   <!-- Bg, alpha FF -->
+    <SolidColorBrush x:Key="Bg11"         Color="#110D1117"/>   <!-- Bg, alpha 11 -->
+    <SolidColorBrush x:Key="BgDD"         Color="#DD0D1117"/>   <!-- Bg, alpha DD -->
+    <SolidColorBrush x:Key="BorderCC"     Color="#CC1E3148"/>   <!-- Border, alpha CC -->
+    <SolidColorBrush x:Key="SteelBlue"    Color="#FF1A3A50"/>   <!-- MainWindow/SettingsWindow border colour -->
+    <SolidColorBrush x:Key="White"        Color="#FFFFFFFF"/>   <!-- base white -->
+    <SolidColorBrush x:Key="White0D"      Color="#0DFFFFFF"/>   <!-- White, alpha 0D -->
+    <SolidColorBrush x:Key="White44"      Color="#44FFFFFF"/>   <!-- White, alpha 44 -->
+    <SolidColorBrush x:Key="Accent1A"     Color="#1A4FC3F7"/>   <!-- Accent, alpha 1A -->
+    <SolidColorBrush x:Key="Accent66"     Color="#664FC3F7"/>   <!-- Accent, alpha 66 -->
+    <SolidColorBrush x:Key="Amber22"      Color="#22FFD54F"/>   <!-- Amber, alpha 22 -->
+    <SolidColorBrush x:Key="Orange"       Color="#FFFF9800"/>   <!-- MainWindow PIRATES report button -->
+    <SolidColorBrush x:Key="Orange33"     Color="#33FF9800"/>   <!-- Orange, alpha 33 -->
+    <SolidColorBrush x:Key="SlateGray"    Color="#FF607D8B"/>   <!-- SkillPlanWindow tooltip note text -->
+    <SolidColorBrush x:Key="AquaBlue"     Color="#220099CC"/>   <!-- MainWindow multibox card hover highlight -->
+    <SolidColorBrush x:Key="Graphite"     Color="#CC0A0E14"/>   <!-- MainWindow panel launcher background -->
+    <SolidColorBrush x:Key="Obsidian"     Color="#CC080C10"/>   <!-- MainWindow footer background -->
+    <SolidColorBrush x:Key="InkBlue"      Color="#CC0B1016"/>   <!-- MainWindow sponsor banner background -->
+    <SolidColorBrush x:Key="Black01"      Color="#01000000"/>   <!-- MainWindow resize-strip hit-test regions -->
+    <SolidColorBrush x:Key="TwilightBlue" Color="#FF0D2137"/>   <!-- SettingsWindow default button background -->
+    <SolidColorBrush x:Key="Cyan"         Color="#FF00B4D4"/>   <!-- SettingsWindow accent cyan -->
+    <SolidColorBrush x:Key="DeepTeal"     Color="#FF003D5C"/>   <!-- SettingsWindow primary button background -->
+    <SolidColorBrush x:Key="MintGreen"    Color="#FF2ECC71"/>   <!-- SettingsWindow linked-character bullet -->
+    <SolidColorBrush x:Key="SlateNavy"    Color="#FF445566"/>   <!-- SettingsWindow faint hint text -->
+
 </ResourceDictionary>

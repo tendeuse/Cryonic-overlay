@@ -12,8 +12,8 @@
         ShowActivated="False"
         ResizeMode="CanResize">
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -24,7 +24,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -38,15 +38,15 @@
                                Text="🎓  FACTION SKILL PLAN"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="#FF4FC3F7"
+                               Foreground="{DynamicResource Accent}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="#FFEF5350"
-                            Foreground="#FFEF5350"/>
+                            Background="{DynamicResource Red33}"
+                            BorderBrush="{DynamicResource Red}"
+                            Foreground="{DynamicResource Red}"/>
                 </Grid>
             </Border>
 
@@ -72,13 +72,13 @@
                                            FontWeight="Bold"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"
                                            VerticalAlignment="Center"/>
-                                <Border Background="#221E3148" CornerRadius="3"
+                                <Border Background="{DynamicResource Border22}" CornerRadius="3"
                                         Margin="6,0,0,0" Padding="4,1"
                                         VerticalAlignment="Center">
                                     <TextBlock Text="{Binding AccountTypeLabel}"
                                                FontFamily="Consolas"
                                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                                               Foreground="#FFFFD54F"/>
+                                               Foreground="{DynamicResource Amber}"/>
                                 </Border>
                             </StackPanel>
                             <TextBlock Text="{Binding SkillPlanTitle}"
@@ -106,7 +106,7 @@
 
                     <!-- Ships + notes -->
                     <TextBlock Text="{Binding SkillPlanShips}"
-                               Foreground="#FF4FC3F7"
+                               Foreground="{DynamicResource Accent}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Margin="0,0,0,2"/>
                     <TextBlock Text="{Binding SkillPlanNotes}"
@@ -116,7 +116,7 @@
                                Margin="0,0,0,6"/>
 
                     <!-- Progress summary -->
-                    <Border Background="#110D1117" CornerRadius="3" Padding="6,4" Margin="0,0,0,6">
+                    <Border Background="{DynamicResource Bg11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,6">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -144,8 +144,8 @@
                             <DataTemplate>
                                 <!-- Row outline border -->
                                 <Border Margin="0,2,0,0"
-                                        Background="#0DFFFFFF"
-                                        BorderBrush="#33FFFFFF"
+                                        Background="{DynamicResource White0D}"
+                                        BorderBrush="{DynamicResource White33}"
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Padding="5,4">
@@ -173,8 +173,8 @@
                                         </StackPanel>
                                         <!-- Level badge with outline -->
                                         <Border Grid.Column="2"
-                                                Background="#1A4FC3F7"
-                                                BorderBrush="#664FC3F7"
+                                                Background="{DynamicResource Accent1A}"
+                                                BorderBrush="{DynamicResource Accent66}"
                                                 BorderThickness="1"
                                                 CornerRadius="3"
                                                 Padding="6,2"
@@ -184,20 +184,20 @@
                                                 <ToolTip>
                                                     <StackPanel>
                                                         <TextBlock>
-                                                            <Run Text="Skill ID: " Foreground="#FFB0BEC5"/>
-                                                            <Run Text="{Binding SkillId, Mode=OneWay}" Foreground="#FFFFFFFF" FontWeight="Bold"/>
+                                                            <Run Text="Skill ID: " Foreground="{DynamicResource SteelGrey}"/>
+                                                            <Run Text="{Binding SkillId, Mode=OneWay}" Foreground="{DynamicResource White}" FontWeight="Bold"/>
                                                         </TextBlock>
                                                         <TextBlock>
-                                                            <Run Text="Active level: " Foreground="#FFB0BEC5"/>
-                                                            <Run Text="{Binding TrainedLevel, Mode=OneWay}" Foreground="#FF4FC3F7" FontWeight="Bold"/>
-                                                            <Run Text=" (matches in-game sheet)" Foreground="#FF607D8B" FontSize="9"/>
+                                                            <Run Text="Active level: " Foreground="{DynamicResource SteelGrey}"/>
+                                                            <Run Text="{Binding TrainedLevel, Mode=OneWay}" Foreground="{DynamicResource Accent}" FontWeight="Bold"/>
+                                                            <Run Text=" (matches in-game sheet)" Foreground="{DynamicResource SlateGray}" FontSize="9"/>
                                                         </TextBlock>
                                                         <TextBlock>
-                                                            <Run Text="Target:    " Foreground="#FFB0BEC5"/>
-                                                            <Run Text="{Binding EffectiveTarget, Mode=OneWay}" Foreground="#FFFFD54F" FontWeight="Bold"/>
+                                                            <Run Text="Target:    " Foreground="{DynamicResource SteelGrey}"/>
+                                                            <Run Text="{Binding EffectiveTarget, Mode=OneWay}" Foreground="{DynamicResource Amber}" FontWeight="Bold"/>
                                                         </TextBlock>
                                                         <TextBlock Text="{Binding WhyText, Mode=OneWay}"
-                                                                   Foreground="#FFB0BEC5"
+                                                                   Foreground="{DynamicResource SteelGrey}"
                                                                    FontStyle="Italic"
                                                                    MaxWidth="260"
                                                                    TextWrapping="Wrap"/>
@@ -207,7 +207,7 @@
                                             <TextBlock Text="{Binding LevelText}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        FontWeight="Bold"
-                                                       Foreground="#FF4FC3F7"
+                                                       Foreground="{DynamicResource Accent}"
                                                        VerticalAlignment="Center"/>
                                         </Border>
                                         <!-- Mini progress bar -->
@@ -217,8 +217,8 @@
                                                      Minimum="0"
                                                      Maximum="{Binding EffectiveTarget}"
                                                      Value="{Binding TrainedLevel, Mode=OneWay}"
-                                                     Background="#221E3148"
-                                                     Foreground="#FF4FC3F7"/>
+                                                     Background="{DynamicResource Border22}"
+                                                     Foreground="{DynamicResource Accent}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
