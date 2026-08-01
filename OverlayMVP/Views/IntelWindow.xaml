@@ -13,8 +13,8 @@
         Focusable="False"
         ResizeMode="CanResize">
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -27,7 +27,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -43,28 +43,28 @@
                     <TextBlock Grid.Column="0"
                                Text="🔍  PILOT INTEL"
                                FontFamily="Consolas" FontWeight="Bold"
-                               FontSize="{DynamicResource GlobalFontSizeSm}" Foreground="#FFEF5350"
+                               FontSize="{DynamicResource GlobalFontSizeSm}" Foreground="{DynamicResource Red}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             x:Name="ClearBtn"
                             Content="Clear"
                             Click="Clear_Click"
                             FontFamily="Consolas" FontSize="{DynamicResource GlobalFontSizeXs}"
-                            Background="#22FFFFFF" Foreground="#FF8A99AA"
-                            BorderBrush="#FF1E3148" BorderThickness="1"
+                            Background="{DynamicResource White22}" Foreground="{DynamicResource TextDim}"
+                            BorderBrush="{DynamicResource Border}" BorderThickness="1"
                             Padding="6,2" Cursor="Hand" Margin="0,0,6,0"/>
                     <Button Grid.Column="2"
                             Content="✕"
                             Click="Close_Click"
                             FontFamily="Consolas" FontSize="{DynamicResource GlobalFontSizeXs}"
-                            Background="#33EF5350" Foreground="#FFEF5350"
-                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Background="{DynamicResource Red33}" Foreground="{DynamicResource Red}"
+                            BorderBrush="{DynamicResource Red}" BorderThickness="1"
                             Padding="6,2" Cursor="Hand"/>
                 </Grid>
             </Border>
 
             <!-- Search bar -->
-            <Border Grid.Row="1" Background="#CC0D1117" Padding="8,6" BorderBrush="#FF1E3148" BorderThickness="0,0,0,1">
+            <Border Grid.Row="1" Background="{DynamicResource Bg}" Padding="8,6" BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -72,14 +72,14 @@
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="SearchBox"
                              Grid.Column="0"
-                             Background="#FF111820"
-                             Foreground="#FFCCD6F6"
-                             BorderBrush="#FF1E3148"
+                             Background="{DynamicResource DeepInk}"
+                             Foreground="{DynamicResource PaleLavender}"
+                             BorderBrush="{DynamicResource Border}"
                              BorderThickness="1"
                              FontFamily="Consolas"
                              FontSize="{DynamicResource GlobalFontSizeSm}"
                              Padding="6,4"
-                             CaretBrush="#FF4FC3F7"
+                             CaretBrush="{DynamicResource Accent}"
                              VerticalContentAlignment="Center"
                              KeyDown="SearchBox_KeyDown"/>
                     <Button Grid.Column="1"
@@ -87,15 +87,15 @@
                             Content="Search"
                             Click="Search_Click"
                             FontFamily="Consolas" FontSize="{DynamicResource GlobalFontSizeXs}"
-                            Background="#33EF5350" Foreground="#FFEF5350"
-                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Background="{DynamicResource Red33}" Foreground="{DynamicResource Red}"
+                            BorderBrush="{DynamicResource Red}" BorderThickness="1"
                             Padding="10,4" Cursor="Hand" Margin="6,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- Time range selector -->
-            <Border Grid.Row="2" Background="#CC0D1117"
-                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1"
+            <Border Grid.Row="2" Background="{DynamicResource Bg}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1"
                     Padding="8,5">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -104,7 +104,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="Lookback: "
-                               Foreground="#FF8A99AA" FontFamily="Consolas"
+                               Foreground="{DynamicResource TextDim}" FontFamily="Consolas"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                VerticalAlignment="Center"/>
                     <Slider Grid.Column="1"
@@ -116,7 +116,7 @@
                     <TextBlock Grid.Column="2"
                                x:Name="LookbackLabel"
                                Text="90 days"
-                               Foreground="#FF4FC3F7" FontFamily="Consolas"
+                               Foreground="{DynamicResource Accent}" FontFamily="Consolas"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                VerticalAlignment="Center"
                                Margin="8,0,0,0" MinWidth="55"/>

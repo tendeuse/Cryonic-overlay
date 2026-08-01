@@ -15,7 +15,7 @@
             <Setter Property="FontFamily"    Value="Consolas"/>
             <Setter Property="FontSize"      Value="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
             <Setter Property="Background"    Value="Transparent"/>
-            <Setter Property="Foreground"    Value="#FF8A99AA"/>
+            <Setter Property="Foreground"    Value="{DynamicResource TextDim}"/>
             <Setter Property="BorderThickness" Value="0,0,0,2"/>
             <Setter Property="BorderBrush"   Value="Transparent"/>
             <Setter Property="Padding"       Value="10,6"/>
@@ -35,7 +35,7 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="#EE0D1117" BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}" BorderBrush="{DynamicResource Border}"
             BorderThickness="1" CornerRadius="6">
         <Grid>
             <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
             </Grid.RowDefinitions>
 
             <!-- Title bar -->
-            <Border Grid.Row="0" Background="#CC111820" CornerRadius="6,6,0,0"
+            <Border Grid.Row="0" Background="{DynamicResource Onyx}" CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
                     MouseMove="TitleBar_MouseMove"
@@ -62,26 +62,26 @@
                                Text="🌐  SYSTEM INFO"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
-                               Foreground="#FF4FC3F7" VerticalAlignment="Center"/>
+                               Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
                     <Button Grid.Column="1" Content="⟳" x:Name="RefreshBtn"
                             Click="Refresh_Click"
                             FontFamily="Consolas"
                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
-                            Background="#22FFFFFF" Foreground="#FF8A99AA"
-                            BorderBrush="#FF1E3148" BorderThickness="1"
+                            Background="{DynamicResource White22}" Foreground="{DynamicResource TextDim}"
+                            BorderBrush="{DynamicResource Border}" BorderThickness="1"
                             Padding="6,2" Cursor="Hand" Margin="0,0,6,0"/>
                     <Button Grid.Column="2" Content="✕" Click="Close_Click"
                             FontFamily="Consolas"
                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
-                            Background="#33EF5350" Foreground="#FFEF5350"
-                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Background="{DynamicResource Red33}" Foreground="{DynamicResource Red}"
+                            BorderBrush="{DynamicResource Red}" BorderThickness="1"
                             Padding="6,2" Cursor="Hand"/>
                 </Grid>
             </Border>
 
             <!-- Tab bar -->
-            <Border Grid.Row="1" Background="#CC0D1117"
-                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1">
+            <Border Grid.Row="1" Background="{DynamicResource Bg}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1">
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="TabSystem"    Content="📍 System"   Style="{StaticResource TabBtn}" Click="Tab_Click" Tag="system"/>
                     <Button x:Name="TabRoute"     Content="🗺 Route"    Style="{StaticResource TabBtn}" Click="Tab_Click" Tag="route"/>
@@ -91,8 +91,8 @@
 
             <!-- Input row (changes per tab) -->
             <Border Grid.Row="2" x:Name="InputRow"
-                    Background="#CC0D1117"
-                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1" Padding="8,6">
+                    Background="{DynamicResource Bg}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1" Padding="8,6">
                 <!-- System tab input -->
                 <Grid x:Name="SystemInput">
                     <Grid.ColumnDefinitions>
@@ -101,25 +101,25 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="SystemSearchBox" Grid.Column="0"
-                             Background="#FF111820" Foreground="#FFCCD6F6"
-                             BorderBrush="#FF1E3148" BorderThickness="1"
+                             Background="{DynamicResource DeepInk}" Foreground="{DynamicResource PaleLavender}"
+                             BorderBrush="{DynamicResource Border}" BorderThickness="1"
                              FontFamily="Consolas"
                              FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
-                             Padding="6,4" CaretBrush="#FF4FC3F7"/>
+                             Padding="6,4" CaretBrush="{DynamicResource Accent}"/>
                     <Button Grid.Column="1" Content="Search"
                             Click="SystemSearch_Click"
                             FontFamily="Consolas"
                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
-                            Background="#334FC3F7" Foreground="#FF4FC3F7"
-                            BorderBrush="#FF4FC3F7" BorderThickness="1"
+                            Background="{DynamicResource Accent33}" Foreground="{DynamicResource Accent}"
+                            BorderBrush="{DynamicResource Accent}" BorderThickness="1"
                             Padding="8,4" Cursor="Hand" Margin="6,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- Route input (hidden by default) -->
             <Border Grid.Row="2" x:Name="RouteInput"
-                    Background="#CC0D1117"
-                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1"
+                    Background="{DynamicResource Bg}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1"
                     Padding="8,6" Visibility="Collapsed">
                 <StackPanel>
                     <Grid Margin="0,0,0,4">
@@ -128,15 +128,15 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="From: "
-                                   FontFamily="Consolas" Foreground="#FF8A99AA"
+                                   FontFamily="Consolas" Foreground="{DynamicResource TextDim}"
                                    FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
                                    VerticalAlignment="Center"/>
                         <TextBox x:Name="RouteOriginBox" Grid.Column="1"
-                                 Background="#FF111820" Foreground="#FFCCD6F6"
-                                 BorderBrush="#FF1E3148" BorderThickness="1"
+                                 Background="{DynamicResource DeepInk}" Foreground="{DynamicResource PaleLavender}"
+                                 BorderBrush="{DynamicResource Border}" BorderThickness="1"
                                  FontFamily="Consolas"
                                  FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
-                                 Padding="6,3" CaretBrush="#FF4FC3F7"/>
+                                 Padding="6,3" CaretBrush="{DynamicResource Accent}"/>
                     </Grid>
                     <Grid Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
@@ -144,15 +144,15 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="To:   "
-                                   FontFamily="Consolas" Foreground="#FF8A99AA"
+                                   FontFamily="Consolas" Foreground="{DynamicResource TextDim}"
                                    FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
                                    VerticalAlignment="Center"/>
                         <TextBox x:Name="RouteDestBox" Grid.Column="1"
-                                 Background="#FF111820" Foreground="#FFCCD6F6"
-                                 BorderBrush="#FF1E3148" BorderThickness="1"
+                                 Background="{DynamicResource DeepInk}" Foreground="{DynamicResource PaleLavender}"
+                                 BorderBrush="{DynamicResource Border}" BorderThickness="1"
                                  FontFamily="Consolas"
                                  FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
-                                 Padding="6,3" CaretBrush="#FF4FC3F7"/>
+                                 Padding="6,3" CaretBrush="{DynamicResource Accent}"/>
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -163,22 +163,22 @@
                         </Grid.ColumnDefinitions>
                         <RadioButton x:Name="RouteShortest" Grid.Column="0"
                                      Content="Shortest" IsChecked="True"
-                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontFamily="Consolas" Foreground="{DynamicResource TextDim}"
                                      FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
                         <RadioButton x:Name="RouteSecure" Grid.Column="1"
                                      Content="Secure"
-                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontFamily="Consolas" Foreground="{DynamicResource TextDim}"
                                      FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
                         <RadioButton x:Name="RouteInsecure" Grid.Column="2"
                                      Content="Insecure"
-                                     FontFamily="Consolas" Foreground="#FF8A99AA"
+                                     FontFamily="Consolas" Foreground="{DynamicResource TextDim}"
                                      FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"/>
                         <Button Grid.Column="3" Content="Go"
                                 Click="RouteSearch_Click"
                                 FontFamily="Consolas"
                                 FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
-                                Background="#33FFD54F" Foreground="#FFFFD54F"
-                                BorderBrush="#FFFFD54F" BorderThickness="1"
+                                Background="{DynamicResource Amber33}" Foreground="{DynamicResource Amber}"
+                                BorderBrush="{DynamicResource Amber}" BorderThickness="1"
                                 Padding="10,3" Cursor="Hand"/>
                     </Grid>
                 </StackPanel>
@@ -186,8 +186,8 @@
 
             <!-- Sov filter (hidden by default) -->
             <Border Grid.Row="2" x:Name="SovInput"
-                    Background="#CC0D1117"
-                    BorderBrush="#FF1E3148" BorderThickness="0,0,0,1"
+                    Background="{DynamicResource Bg}"
+                    BorderBrush="{DynamicResource Border}" BorderThickness="0,0,0,1"
                     Padding="8,6" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -195,18 +195,18 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="SovFilterBox" Grid.Column="0"
-                             Background="#FF111820" Foreground="#FFCCD6F6"
-                             BorderBrush="#FF1E3148" BorderThickness="1"
+                             Background="{DynamicResource DeepInk}" Foreground="{DynamicResource PaleLavender}"
+                             BorderBrush="{DynamicResource Border}" BorderThickness="1"
                              FontFamily="Consolas"
                              FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeSm]}"
-                             Padding="6,4" CaretBrush="#FF4FC3F7"
+                             Padding="6,4" CaretBrush="{DynamicResource Accent}"
                              TextChanged="SovFilter_TextChanged"/>
                     <Button Grid.Column="1" Content="Load"
                             Click="SovLoad_Click"
                             FontFamily="Consolas"
                             FontSize="{Binding Source={x:Static Application.Current}, Path=Resources[GlobalFontSizeXs]}"
-                            Background="#33EF5350" Foreground="#FFEF5350"
-                            BorderBrush="#FFEF5350" BorderThickness="1"
+                            Background="{DynamicResource Red33}" Foreground="{DynamicResource Red}"
+                            BorderBrush="{DynamicResource Red}" BorderThickness="1"
                             Padding="8,4" Cursor="Hand" Margin="6,0,0,0"/>
                 </Grid>
             </Border>

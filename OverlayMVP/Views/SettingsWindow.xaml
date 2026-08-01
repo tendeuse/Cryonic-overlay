@@ -7,35 +7,35 @@
         MinWidth="420" MinHeight="400"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
-        Background="#FF0A1A2F"
-        Foreground="White"
+        Background="{DynamicResource Surface}"
+        Foreground="{DynamicResource White}"
         ShowInTaskbar="False">
 
     <Window.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#FFCCD6F6"/>
+            <Setter Property="Foreground" Value="{DynamicResource PaleLavender}"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize"   Value="12"/>
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Background"   Value="#FF0D1117"/>
-            <Setter Property="Foreground"   Value="#FFCCD6F6"/>
-            <Setter Property="BorderBrush"  Value="#FF1A3A50"/>
+            <Setter Property="Background"   Value="{DynamicResource BgFF}"/>
+            <Setter Property="Foreground"   Value="{DynamicResource PaleLavender}"/>
+            <Setter Property="BorderBrush"  Value="{DynamicResource SteelBlue}"/>
             <Setter Property="Padding"      Value="6,5"/>
             <Setter Property="FontFamily"   Value="Consolas"/>
             <Setter Property="FontSize"     Value="12"/>
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Background"   Value="#FF0D2137"/>
-            <Setter Property="Foreground"   Value="#FFCCD6F6"/>
-            <Setter Property="BorderBrush"  Value="#FF1A3A50"/>
+            <Setter Property="Background"   Value="{DynamicResource TwilightBlue}"/>
+            <Setter Property="Foreground"   Value="{DynamicResource PaleLavender}"/>
+            <Setter Property="BorderBrush"  Value="{DynamicResource SteelBlue}"/>
             <Setter Property="Padding"      Value="12,6"/>
             <Setter Property="Cursor"       Value="Hand"/>
             <Setter Property="FontFamily"   Value="Segoe UI"/>
             <Setter Property="FontSize"     Value="12"/>
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="#FFCCD6F6"/>
+            <Setter Property="Foreground" Value="{DynamicResource PaleLavender}"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize"   Value="12"/>
         </Style>
@@ -70,7 +70,7 @@
         <TextBlock Grid.Row="0"
                    Text="⚙  Settings"
                    FontSize="18" FontWeight="Bold"
-                   Foreground="#FF00B4D4"/>
+                   Foreground="{DynamicResource Cyan}"/>
 
         <!-- Faction Focus + Account Type -->
         <StackPanel Grid.Row="6">
@@ -103,7 +103,7 @@
                 <ComboBoxItem Content="Omega clone  (no skill caps)"    Tag="OMEGA"/>
             </ComboBox>
             <TextBlock Text="Auto-detected when you refresh the skill plan via ESI."
-                       Foreground="#FF445566" FontSize="10" Margin="0,3,0,0"/>
+                       Foreground="{DynamicResource SlateNavy}" FontSize="10" Margin="0,3,0,0"/>
         </StackPanel>
 
         <!-- EVE Characters (multi-account) -->
@@ -117,15 +117,15 @@
                 <Button Grid.Column="1" Content="+ Add Character"
                         x:Name="LinkEveBtn"
                         Click="LinkEve_Click"
-                        Background="#FF003D5C"
-                        BorderBrush="#FF00B4D4"
-                        Foreground="#FF00B4D4"/>
+                        Background="{DynamicResource DeepTeal}"
+                        BorderBrush="{DynamicResource Cyan}"
+                        Foreground="{DynamicResource Cyan}"/>
             </Grid>
             <!-- Linked characters list -->
             <ItemsControl x:Name="CharacterList">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="#FF0D1117" BorderBrush="#FF1A3A50"
+                        <Border Background="{DynamicResource BgFF}" BorderBrush="{DynamicResource SteelBlue}"
                                 BorderThickness="1" CornerRadius="3"
                                 Padding="10,6" Margin="0,0,0,4">
                             <Grid>
@@ -136,12 +136,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="●" FontSize="10"
-                                           Foreground="#FF2ECC71" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource MintGreen}" VerticalAlignment="Center"
                                            Margin="0,0,8,0"/>
                                 <TextBlock Grid.Column="1"
                                            Text="{Binding CharacterName}"
                                            FontSize="12" VerticalAlignment="Center"
-                                           Foreground="#FFCCD6F6"/>
+                                           Foreground="{DynamicResource PaleLavender}"/>
                                 <Button Grid.Column="2" Content="Set Active"
                                         Tag="{Binding}"
                                         Click="SetActive_Click"
@@ -150,9 +150,9 @@
                                 <Button Grid.Column="3" Content="✕"
                                         Tag="{Binding}"
                                         Click="UnlinkChar_Click"
-                                        Background="#33EF5350"
-                                        BorderBrush="#FFEF5350"
-                                        Foreground="#FFEF5350"
+                                        Background="{DynamicResource Red33}"
+                                        BorderBrush="{DynamicResource Red}"
+                                        Foreground="{DynamicResource Red}"
                                         Padding="8,3" FontSize="10"/>
                             </Grid>
                         </Border>
@@ -161,16 +161,16 @@
             </ItemsControl>
             <TextBlock x:Name="EveStatusLabel"
                        Text="No characters linked."
-                       Foreground="#FF8A99AA" FontSize="11" Margin="0,2,0,0"/>
+                       Foreground="{DynamicResource TextDim}" FontSize="11" Margin="0,2,0,0"/>
             <TextBlock Text="Tokens stored locally — never sent to the server."
-                       Foreground="#FF445566" FontSize="10" Margin="0,2,0,0"/>
+                       Foreground="{DynamicResource SlateNavy}" FontSize="10" Margin="0,2,0,0"/>
         </StackPanel>
 
         <!-- Font Size -->
         <StackPanel Grid.Row="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                 <TextBlock Text="Font Size" Opacity="0.8"/>
-                <TextBlock Text="  (restart required)" Foreground="#FF00B4D4" FontSize="11"/>
+                <TextBlock Text="  (restart required)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -188,7 +188,7 @@
                            TextAlignment="Right"
                            VerticalAlignment="Center"
                            FontSize="13" FontWeight="Bold"
-                           Foreground="#FF00B4D4"/>
+                           Foreground="{DynamicResource Cyan}"/>
             </Grid>
             <WrapPanel Margin="0,8,0,0">
                 <Button Content="Small (9)"   Tag="9"  Click="FontPreset_Click" Margin="0,0,6,0" FontSize="10"/>
@@ -201,7 +201,7 @@
         <!-- Features -->
         <StackPanel Grid.Row="12">
             <TextBlock Text="FEATURES" Opacity="0.7" FontWeight="Bold" FontSize="10"
-                       Foreground="#FF4FC3F7" Margin="0,0,0,6"/>
+                       Foreground="{DynamicResource Accent}" Margin="0,0,0,6"/>
             <WrapPanel>
                 <CheckBox x:Name="ChkMultibox"        Content="Active Instances"       Margin="0,0,14,5"/>
                 <CheckBox x:Name="ChkIntelAlerts"     Content="Intel &amp; Alerts"     Margin="0,0,14,5"/>
@@ -220,7 +220,7 @@
                    Text=""
                    TextWrapping="Wrap"
                    FontSize="11"
-                   Foreground="#FF9AD1FF"/>
+                   Foreground="{DynamicResource PaleCyan}"/>
 
         <!-- Buttons -->
         <WrapPanel Grid.Row="18" HorizontalAlignment="Right">
@@ -229,9 +229,9 @@
                     Margin="0,0,6,0"/>
             <Button Content="Save"
                     Click="SaveOnly_Click"
-                    Background="#FF003D5C"
-                    BorderBrush="#FF00B4D4"
-                    Foreground="#FF00B4D4"/>
+                    Background="{DynamicResource DeepTeal}"
+                    BorderBrush="{DynamicResource Cyan}"
+                    Foreground="{DynamicResource Cyan}"/>
         </WrapPanel>
 
     </Grid>

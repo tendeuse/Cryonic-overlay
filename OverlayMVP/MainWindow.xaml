@@ -31,8 +31,8 @@
     </Window.Resources>
 
     <!-- ── Outer container: rounded dark panel ────────────────────────── -->
-    <Border Background="{StaticResource BgPanel}"
-            BorderBrush="{StaticResource Border}"
+    <Border Background="{DynamicResource Bg}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="8"
             Padding="0"
@@ -52,7 +52,7 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  TITLE BAR                                               -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="0" Background="#CC111820"
+            <Border Grid.Row="0" Background="{DynamicResource Onyx}"
                     CornerRadius="8,8,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -70,7 +70,7 @@
                                    Text="◈ CRYONIC OVERLAY"
                                    FontWeight="Bold"
                                    FontSize="{DynamicResource GlobalFontSize}"
-                                   Foreground="{StaticResource AccentBlue}"
+                                   Foreground="{DynamicResource Accent}"
                                    VerticalAlignment="Center"/>
 
                         <!-- Close -->
@@ -78,9 +78,9 @@
                                 Content="✕"
                                 Click="CloseBtn_Click"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#33EF5350"
-                                BorderBrush="{StaticResource AccentRed}"
-                                Foreground="{StaticResource AccentRed}"/>
+                                Background="{DynamicResource Red33}"
+                                BorderBrush="{DynamicResource Red}"
+                                Foreground="{DynamicResource Red}"/>
                     </Grid>
 
                     <!-- Line 2: connection status + tool buttons -->
@@ -98,7 +98,7 @@
                         <TextBlock Grid.Column="0"
                                    Text="{Binding ConnectionStatus}"
                                    FontSize="{DynamicResource GlobalFontSizeXs}"
-                                   Foreground="{StaticResource TextSecondary}"
+                                   Foreground="{DynamicResource TextDim}"
                                    VerticalAlignment="Center"
                                    Margin="0,0,8,0"/>
 
@@ -107,8 +107,8 @@
                                 Content="{Binding Loc.LanguageButtonLabel}"
                                 Command="{Binding ToggleLanguageCommand}"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#33FFFFFF"
-                                BorderBrush="{StaticResource Border}"
+                                Background="{DynamicResource White33}"
+                                BorderBrush="{DynamicResource Border}"
                                 Margin="0,0,4,0"/>
 
                         <!-- Intel search button -->
@@ -116,8 +116,8 @@
                                 Content="&#x1F50D;"
                                 Click="IntelBtn_Click"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#33EF5350"
-                                BorderBrush="{StaticResource AccentRed}"
+                                Background="{DynamicResource Red33}"
+                                BorderBrush="{DynamicResource Red}"
                                 ToolTip="Pilot Intel Search"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding ShowPilotIntelBtn, Converter={StaticResource BoolToVis}}"/>
@@ -127,8 +127,8 @@
                                 Content="&#x1F30D;"
                                 Click="SystemBtn_Click"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#334FC3F7"
-                                BorderBrush="{StaticResource AccentBlue}"
+                                Background="{DynamicResource Accent33}"
+                                BorderBrush="{DynamicResource Accent}"
                                 ToolTip="System Info (Dotlan)"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
@@ -138,8 +138,8 @@
                                 Content="🛠"
                                 Click="ControlPanelBtn_Click"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#334FC3F7"
-                                BorderBrush="{StaticResource AccentBlue}"
+                                Background="{DynamicResource Accent33}"
+                                BorderBrush="{DynamicResource Accent}"
                                 ToolTip="Open Control Panel"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding IsSuperUser, Converter={StaticResource BoolToVis}}"/>
@@ -149,8 +149,8 @@
                                 Content="⚙"
                                 Click="SettingsBtn_Click"
                                 Style="{StaticResource SmallBtn}"
-                                Background="#33FFFFFF"
-                                BorderBrush="{StaticResource Border}"
+                                Background="{DynamicResource White33}"
+                                BorderBrush="{DynamicResource Border}"
                                 ToolTip="Paramètres"
                                 Margin="0,0,6,0"/>
                     </Grid>
@@ -164,7 +164,7 @@
             <StackPanel Grid.Row="1">
                 <!-- ── Update notice (server-driven; non-intrusive banner row —
                      never a modal, never blocks overlay use; dismissible) ───── -->
-                <Border Background="#CC1E3148"
+                <Border Background="{DynamicResource BorderCC}"
                         CornerRadius="0"
                         Padding="8,4"
                         Visibility="{Binding ShowUpdateNotice, Converter={StaticResource BoolToVis}}">
@@ -176,12 +176,12 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
                             <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"
-                                       Foreground="{StaticResource AccentBlue}" TextWrapping="Wrap">
+                                       Foreground="{DynamicResource Accent}" TextWrapping="Wrap">
                                 <Run Text="⬆ Update available — v"/><Run Text="{Binding UpdateVersion, Mode=OneWay}"/>
                             </TextBlock>
                             <TextBlock Text="{Binding UpdateNotes}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1"
@@ -202,8 +202,8 @@
             <!--  MULTIBOX SWITCHER  (always visible)                    -->
             <!-- ════════════════════════════════════════════════════════ -->
             <Border Grid.Row="2"
-                    Background="{StaticResource BgMultibox}"
-                    BorderBrush="#FF1A3A50"
+                    Background="{DynamicResource Well}"
+                    BorderBrush="{DynamicResource SteelBlue}"
                     BorderThickness="0,0,0,1"
                     Padding="8,6"
                     Visibility="{Binding ShowMultibox, Converter={StaticResource BoolToVis}}">
@@ -211,7 +211,7 @@
 
                     <TextBlock Text="◈ ACTIVE INSTANCES"
                                Style="{StaticResource SectionHeader}"
-                               Foreground="{StaticResource AccentGold}"/>
+                               Foreground="{DynamicResource Amber}"/>
 
                     <!-- Scroll horizontally if many instances -->
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
@@ -233,7 +233,7 @@
                                     <Border Width="100" Height="76"
                                             Margin="0,0,4,0"
                                             CornerRadius="4"
-                                            BorderBrush="#FF1E3A50"
+                                            BorderBrush="{DynamicResource BorderStrong}"
                                             BorderThickness="1"
                                             Cursor="Hand"
                                             MouseLeftButtonDown="MultiboxCard_Click"
@@ -241,13 +241,13 @@
                                         <Grid>
                                             <!-- DWM thumbnail destination area -->
                                             <Border x:Name="ThumbnailHost"
-                                                    Background="#FF0A0F14"
+                                                    Background="{DynamicResource Abyss}"
                                                     CornerRadius="4,4,0,0"
                                                     Height="56"
                                                     VerticalAlignment="Top"/>
 
                                             <!-- Label strip at bottom -->
-                                            <Border Background="#DD0D1117"
+                                            <Border Background="{DynamicResource BgDD}"
                                                     CornerRadius="0,0,4,4"
                                                     Height="20"
                                                     VerticalAlignment="Bottom"
@@ -255,7 +255,7 @@
                                                 <Grid>
                                                     <TextBlock Text="{Binding Label, Mode=OneWay}"
                                                                FontSize="{DynamicResource GlobalFontSizeXs}"
-                                                               Foreground="{StaticResource AccentGold}"
+                                                               Foreground="{DynamicResource Amber}"
                                                                TextTrimming="CharacterEllipsis"
                                                                VerticalAlignment="Center"/>
                                                 </Grid>
@@ -268,7 +268,7 @@
                                                     <Style TargetType="Border">
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#220099CC"/>
+                                                                <Setter Property="Background" Value="{DynamicResource AquaBlue}"/>
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -288,7 +288,7 @@
                                                 <Setter.Value>
                                                     <ControlTemplate>
                                                         <TextBlock Text="No EVE instances detected"
-                                                                   Foreground="{StaticResource TextSecondary}"
+                                                                   Foreground="{DynamicResource TextDim}"
                                                                    FontStyle="Italic"
                                                                    Padding="4,8"/>
                                                     </ControlTemplate>
@@ -311,8 +311,8 @@
             <!--  INTEL & ALERTS  (always visible, never scrolls)         -->
             <!-- ════════════════════════════════════════════════════════ -->
             <Border Grid.Row="3"
-                    Background="{StaticResource BgCard}"
-                    BorderBrush="{StaticResource Border}"
+                    Background="{DynamicResource Panel}"
+                    BorderBrush="{DynamicResource Border}"
                     BorderThickness="0,1,0,1"
                     Padding="8,6"
                     Visibility="{Binding ShowIntelAlerts, Converter={StaticResource BoolToVis}}">
@@ -338,19 +338,19 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="System: "
-                                   Foreground="{StaticResource TextSecondary}"
+                                   Foreground="{DynamicResource TextDim}"
                                    FontSize="{DynamicResource GlobalFontSizeSm}"
                                    VerticalAlignment="Center"/>
                         <TextBox Grid.Column="1"
                                  Text="{Binding CurrentSystem, UpdateSourceTrigger=PropertyChanged}"
-                                 Background="#221E3148"
-                                 Foreground="{StaticResource TextPrimary}"
-                                 BorderBrush="{StaticResource Border}"
+                                 Background="{DynamicResource Border22}"
+                                 Foreground="{DynamicResource Text}"
+                                 BorderBrush="{DynamicResource Border}"
                                  BorderThickness="1"
                                  FontFamily="Consolas"
                                  FontSize="{DynamicResource GlobalFontSizeSm}"
                                  Padding="4,2"
-                                 CaretBrush="{StaticResource AccentBlue}"/>
+                                 CaretBrush="{DynamicResource Accent}"/>
                     </Grid>
 
                     <!-- Report buttons -->
@@ -358,20 +358,20 @@
                         <Button Content="⚠ GATE CAMP"
                                 Command="{Binding ReportGateCampCommand}"
                                 Style="{StaticResource IntelBtn}"
-                                Background="#33EF5350"
-                                BorderBrush="{StaticResource AccentRed}"
+                                Background="{DynamicResource Red33}"
+                                BorderBrush="{DynamicResource Red}"
                                 Margin="0,0,4,0"/>
                         <Button Content="☠ PIRATES"
                                 Command="{Binding ReportPiratesCommand}"
                                 Style="{StaticResource IntelBtn}"
-                                Background="#33FF9800"
-                                BorderBrush="#FFFF9800"
+                                Background="{DynamicResource Orange33}"
+                                BorderBrush="{DynamicResource Orange}"
                                 Margin="0,0,4,0"/>
                         <Button Content="⟳ ROAMING"
                                 Command="{Binding ReportRoamingCommand}"
                                 Style="{StaticResource IntelBtn}"
-                                Background="#33FFD54F"
-                                BorderBrush="{StaticResource AccentGold}"/>
+                                Background="{DynamicResource Amber33}"
+                                BorderBrush="{DynamicResource Amber}"/>
                     </WrapPanel>
 
                     <!-- Intel feed -->
@@ -379,12 +379,12 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Margin="0,1"
-                                           Foreground="{StaticResource TextPrimary}">
-                                    <Run Text="{Binding AgeLabel, Mode=OneWay}" Foreground="{StaticResource TextSecondary}"/>
+                                           Foreground="{DynamicResource Text}">
+                                    <Run Text="{Binding AgeLabel, Mode=OneWay}" Foreground="{DynamicResource TextDim}"/>
                                     <Run Text=" "/>
-                                    <Run Text="{Binding System, Mode=OneWay}"   Foreground="{StaticResource AccentBlue}"/>
-                                    <Run Text=" — " Foreground="{StaticResource TextSecondary}"/>
-                                    <Run Text="{Binding Notes, Mode=OneWay}"   Foreground="{StaticResource TextPrimary}"/>
+                                    <Run Text="{Binding System, Mode=OneWay}"   Foreground="{DynamicResource Accent}"/>
+                                    <Run Text=" — " Foreground="{DynamicResource TextDim}"/>
+                                    <Run Text="{Binding Notes, Mode=OneWay}"   Foreground="{DynamicResource Text}"/>
                                 </TextBlock>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -396,8 +396,8 @@
             <!--  PILOT STATUS  (always visible, inline)                  -->
             <!-- ════════════════════════════════════════════════════════ -->
             <Border Grid.Row="4"
-                    Background="{StaticResource BgCard}"
-                    BorderBrush="{StaticResource Border}"
+                    Background="{DynamicResource Panel}"
+                    BorderBrush="{DynamicResource Border}"
                     BorderThickness="0,1,0,1"
                     Padding="8,6"
                     Visibility="{Binding ShowPilotStatus, Converter={StaticResource BoolToVis}}">
@@ -422,7 +422,7 @@
                     </Grid>
 
                     <!-- ESI character selector -->
-                    <Border Background="#11FFFFFF" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
+                    <Border Background="{DynamicResource White11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
                             Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -430,7 +430,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="ESI: "
-                                       Foreground="{StaticResource AccentBlue}"
+                                       Foreground="{DynamicResource Accent}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"
                                        VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
@@ -450,7 +450,7 @@
 
                     <!-- Connection status -->
                     <TextBlock Text="{Binding ConnectionStatus}"
-                               Foreground="{StaticResource TextSecondary}"
+                               Foreground="{DynamicResource TextDim}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Margin="0,0,0,4"/>
 
@@ -465,12 +465,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0"
                                                Text="{Binding ActiveIndicator, Mode=OneWay}"
-                                               Foreground="{StaticResource AccentGold}"
+                                               Foreground="{DynamicResource Amber}"
                                                FontSize="{DynamicResource GlobalFontSize}"
                                                VerticalAlignment="Center"/>
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding DisplayLabel, Mode=OneWay}"
-                                               Foreground="{StaticResource TextPrimary}"
+                                               Foreground="{DynamicResource Text}"
                                                FontWeight="Bold"
                                                FontSize="{DynamicResource GlobalFontSize}"
                                                VerticalAlignment="Center"/>
@@ -487,15 +487,15 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="0,0,4,0">
                             <TextBlock Text="{Binding ShipType}"
-                                       Foreground="{StaticResource AccentBlue}"
+                                       Foreground="{DynamicResource Accent}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"/>
                             <TextBlock Text="{Binding Corporation}"
-                                       Foreground="{StaticResource TextSecondary}"
+                                       Foreground="{DynamicResource TextDim}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1">
                             <TextBlock Text="{Binding SolarSystem}"
-                                       Foreground="{StaticResource TextPrimary}"
+                                       Foreground="{DynamicResource Text}"
                                        FontWeight="Bold"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"/>
                             <TextBlock Text="{Binding SecurityStatus}"
@@ -508,7 +508,7 @@
             </Border>
 
             <!-- ══ Panel launcher buttons (one per row) ════════════════════════════ -->
-            <Border Grid.Row="5" Background="#CC0A0E14" Padding="8,6">
+            <Border Grid.Row="5" Background="{DynamicResource Graphite}" Padding="8,6">
                 <StackPanel>
                     <Button x:Name="BtnStanding"
                             Content="📋  Standing"
@@ -543,7 +543,7 @@
                                 Padding="10,5"
                                 ToolTip="Orders from your corp / coalition"/>
                         <TextBlock Text="⚠"
-                                   Foreground="{StaticResource AccentGold}"
+                                   Foreground="{DynamicResource Amber}"
                                    FontWeight="Bold"
                                    FontSize="{DynamicResource GlobalFontSize}"
                                    HorizontalAlignment="Right"
@@ -559,7 +559,7 @@
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  FOOTER + RESIZE GRIPS                                   -->
             <!-- ════════════════════════════════════════════════════════ -->
-            <Border Grid.Row="6" Background="#CC080C10"
+            <Border Grid.Row="6" Background="{DynamicResource Obsidian}"
                     CornerRadius="0,0,8,8"
                     Padding="0">
                 <StackPanel>
@@ -569,8 +569,8 @@
                          Clicking opens SponsorUrl in the default browser.
                          NOT linked to donations — never remove/alter it for donors. -->
                     <Border x:Name="SponsorBanner"
-                            Background="#CC0B1016"
-                            BorderBrush="{StaticResource Border}"
+                            Background="{DynamicResource InkBlue}"
+                            BorderBrush="{DynamicResource Border}"
                             BorderThickness="0,1,0,0"
                             Padding="8,5"
                             Cursor="Hand"
@@ -585,7 +585,7 @@
                             </Grid.ColumnDefinitions>
                             <!-- "AD" disclosure tag (honesty / store-policy safe) -->
                             <Border Grid.Column="0"
-                                    Background="#22FFD54F"
+                                    Background="{DynamicResource Amber22}"
                                     CornerRadius="3"
                                     Padding="4,1"
                                     Margin="0,0,6,0"
@@ -593,22 +593,22 @@
                                 <TextBlock Text="AD"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            FontWeight="Bold"
-                                           Foreground="{StaticResource AccentGold}"/>
+                                           Foreground="{DynamicResource Amber}"/>
                             </Border>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding SponsorHeadline}"
-                                           Foreground="{StaticResource TextPrimary}"
+                                           Foreground="{DynamicResource Text}"
                                            FontWeight="Bold"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"
                                            TextTrimming="CharacterEllipsis"/>
                                 <TextBlock Text="{Binding SponsorSubtext}"
-                                           Foreground="{StaticResource TextSecondary}"
+                                           Foreground="{DynamicResource TextDim}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            TextTrimming="CharacterEllipsis"/>
                             </StackPanel>
                             <TextBlock Grid.Column="2"
                                        Text="↗"
-                                       Foreground="{StaticResource AccentBlue}"
+                                       Foreground="{DynamicResource Accent}"
                                        FontSize="{DynamicResource GlobalFontSize}"
                                        VerticalAlignment="Center"
                                        Margin="6,0,0,0"/>
@@ -627,13 +627,13 @@
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding AppVersion}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
-                                           Foreground="{StaticResource TextSecondary}"
+                                           Foreground="{DynamicResource TextDim}"
                                            Opacity="0.6"/>
                             </StackPanel>
                             <TextBlock Grid.Column="1"
                                        Text="{Binding ClickThroughLabel}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
-                                       Foreground="{StaticResource AccentGold}"
+                                       Foreground="{DynamicResource Amber}"
                                        VerticalAlignment="Center"/>
 
                             <!-- Voluntary donation link — decoupled from ads/features (§4.4b) -->
@@ -641,9 +641,9 @@
                                     Content="♥ Support"
                                     Click="SupportBtn_Click"
                                     Style="{StaticResource SmallBtn}"
-                                    Background="#33EF5350"
-                                    BorderBrush="{StaticResource AccentRed}"
-                                    Foreground="{StaticResource AccentRed}"
+                                    Background="{DynamicResource Red33}"
+                                    BorderBrush="{DynamicResource Red}"
+                                    Foreground="{DynamicResource Red}"
                                     Margin="8,0,0,0"
                                     ToolTip="Support development on GitHub Sponsors — a voluntary donation. It does not unlock features or remove ads."/>
 
@@ -651,7 +651,7 @@
                             <TextBlock Grid.Column="3"
                                        Text="◢"
                                        FontSize="{DynamicResource GlobalFontSize}"
-                                       Foreground="#44FFFFFF"
+                                       Foreground="{DynamicResource White44}"
                                        Cursor="SizeNWSE"
                                        VerticalAlignment="Bottom"
                                        Margin="8,0,0,0"
@@ -667,7 +667,7 @@
             <Border Grid.Row="0" Grid.RowSpan="7"
                     Width="5"
                     HorizontalAlignment="Right"
-                    Background="#01000000"
+                    Background="{DynamicResource Black01}"
                     Cursor="SizeWE"
                     MouseLeftButtonDown="ResizeRight_MouseDown"/>
 
@@ -675,7 +675,7 @@
             <Border Grid.Row="6"
                     Height="5"
                     VerticalAlignment="Bottom"
-                    Background="#01000000"
+                    Background="{DynamicResource Black01}"
                     Cursor="SizeNS"
                     MouseLeftButtonDown="ResizeBottom_MouseDown"/>
 

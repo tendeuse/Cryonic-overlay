@@ -7,8 +7,8 @@
         MinWidth="400" MinHeight="320"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
-        Background="#FF0A1A2F"
-        Foreground="White">
+        Background="{DynamicResource Surface}"
+        Foreground="{DynamicResource White}">
 
   <Grid Margin="16">
     <Grid.RowDefinitions>
@@ -53,7 +53,7 @@
         <ComboBoxItem Content="Society of Conscious Thought" Tag="SOCT"/>
       </ComboBox>
 
-      <TextBlock Text="{Binding Status}" Foreground="#FF9AD1FF" Margin="0,8,0,0" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding Status}" Foreground="{DynamicResource PaleCyan}" Margin="0,8,0,0" TextWrapping="Wrap"/>
     </StackPanel>
 
     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">

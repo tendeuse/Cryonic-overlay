@@ -18,12 +18,6 @@
         Focusable="False">
 
     <Window.Resources>
-        <SolidColorBrush x:Key="TitleBg"    Color="#EE080D10"/>
-        <SolidColorBrush x:Key="BorderClr"  Color="#FF1E3A50"/>
-        <SolidColorBrush x:Key="AccentBlue" Color="#FF4FC3F7"/>
-        <SolidColorBrush x:Key="AccentGold" Color="#FFFFD54F"/>
-        <SolidColorBrush x:Key="TextPrimary" Color="#FFE8EDF2"/>
-
         <!-- Resize grip thumb style -->
         <Style x:Key="ResizeThumb" TargetType="Thumb">
             <Setter Property="Background"       Value="Transparent"/>
@@ -38,10 +32,10 @@
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{StaticResource BorderClr}"
+    <Border BorderBrush="{DynamicResource BorderStrong}"
             BorderThickness="1"
             CornerRadius="4"
-            Background="#EE080D10">
+            Background="{DynamicResource Well}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="22"/>   <!-- title bar -->
@@ -50,7 +44,7 @@
 
             <!-- ── Title bar ───────────────────────────────────────── -->
             <Border Grid.Row="0"
-                    Background="{StaticResource TitleBg}"
+                    Background="{DynamicResource Well}"
                     CornerRadius="4,4,0,0"
                     MouseLeftButtonDown="TitleBar_MouseDown"
                     MouseMove="TitleBar_MouseMove"
@@ -69,14 +63,14 @@
                                FontFamily="Consolas"
                                FontSize="9"
                                FontWeight="Bold"
-                               Foreground="{StaticResource AccentGold}"
+                               Foreground="{DynamicResource Amber}"
                                VerticalAlignment="Center"/>
 
                     <!-- Re-attach button -->
                     <TextBlock Grid.Column="1"
                                Text="⤡"
                                FontSize="10"
-                               Foreground="{StaticResource AccentBlue}"
+                               Foreground="{DynamicResource Accent}"
                                ToolTip="Re-attach to overlay"
                                Cursor="Hand"
                                Margin="0,0,6,0"
@@ -87,7 +81,7 @@
                     <TextBlock Grid.Column="2"
                                Text="✕"
                                FontSize="9"
-                               Foreground="#FFEF5350"
+                               Foreground="{DynamicResource Red}"
                                Cursor="Hand"
                                VerticalAlignment="Center"
                                MouseLeftButtonDown="Close_Click"/>
@@ -98,7 +92,7 @@
             <!-- Click = switch focus to this EVE window without activating us -->
             <Border Grid.Row="1"
                     x:Name="ThumbnailHost"
-                    Background="#FF0A0F14"
+                    Background="{DynamicResource Abyss}"
                     CornerRadius="0,0,4,4"
                     Cursor="Hand"
                     ToolTip="Click to switch to this EVE client"
@@ -116,7 +110,7 @@
                     <ControlTemplate TargetType="Thumb">
                         <TextBlock Text="◢"
                                    FontSize="10"
-                                   Foreground="{StaticResource BorderClr}"
+                                   Foreground="{DynamicResource BorderStrong}"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Bottom"/>
                     </ControlTemplate>

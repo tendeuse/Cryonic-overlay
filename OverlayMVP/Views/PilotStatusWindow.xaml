@@ -12,8 +12,8 @@
         ShowActivated="False"
         ResizeMode="CanResize">
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -24,7 +24,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -38,15 +38,15 @@
                                Text="👤  PILOT STATUS"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="#FF4FC3F7"
+                               Foreground="{DynamicResource Accent}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="#FFEF5350"
-                            Foreground="#FFEF5350"/>
+                            Background="{DynamicResource Red33}"
+                            BorderBrush="{DynamicResource Red}"
+                            Foreground="{DynamicResource Red}"/>
                 </Grid>
             </Border>
 
@@ -74,7 +74,7 @@
                     </Grid>
 
                     <!-- ESI character selector -->
-                    <Border Background="#11FFFFFF" CornerRadius="3" Padding="6,4" Margin="0,0,0,6"
+                    <Border Background="{DynamicResource White11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,6"
                             Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -82,7 +82,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="ESI: "
-                                       Foreground="#FF4FC3F7"
+                                       Foreground="{DynamicResource Accent}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"
                                        VerticalAlignment="Center"/>
                             <ComboBox Grid.Column="1"
@@ -101,7 +101,7 @@
                     </Border>
 
                     <TextBlock Text="{Binding ConnectionStatus}"
-                               Foreground="#FF8A99AA"
+                               Foreground="{DynamicResource TextDim}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Margin="0,0,0,6"/>
 
@@ -119,12 +119,12 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0"
                                                    Text="{Binding ActiveIndicator, Mode=OneWay}"
-                                                   Foreground="#FFFFD54F"
+                                                   Foreground="{DynamicResource Amber}"
                                                    FontSize="{DynamicResource GlobalFontSize}"
                                                    VerticalAlignment="Center"/>
                                         <TextBlock Grid.Column="1"
                                                    Text="{Binding DisplayLabel, Mode=OneWay}"
-                                                   Foreground="#FFE8EDF2"
+                                                   Foreground="{DynamicResource Text}"
                                                    FontWeight="Bold"
                                                    FontSize="{DynamicResource GlobalFontSize}"
                                                    VerticalAlignment="Center"/>
@@ -143,15 +143,15 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,4,0">
                                 <TextBlock Text="{Binding ShipType}"
-                                           Foreground="#FF4FC3F7"
+                                           Foreground="{DynamicResource Accent}"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                 <TextBlock Text="{Binding Corporation}"
-                                           Foreground="#FF8A99AA"
+                                           Foreground="{DynamicResource TextDim}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="{Binding SolarSystem}"
-                                           Foreground="#FFE8EDF2"
+                                           Foreground="{DynamicResource Text}"
                                            FontWeight="Bold"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"/>
                                 <TextBlock Text="{Binding SecurityStatus}"
