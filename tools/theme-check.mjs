@@ -15,6 +15,25 @@ const ROOT   = "OverlayMVP";
 const TOKENS = path.join(ROOT, "Themes", "Tokens.Default.xaml");
 const BASE   = path.join("tools", "theme-baseline.json");
 
+// WPF treats a 6-digit hex as fully opaque, so #0D1117 and #FF0D1117 paint the
+// SAME pixel. Comparing the raw text would let them look like different colours
+// and, worse, let two tokens hold one colour under different names -- a skin
+// author would change one and silently miss the other.
+const norm = (hex) => {
+  const h = hex.replace("#", "").toUpperCase();
+  return "#" + (h.length === 6 ? "FF" + h : h);
+};
+
+// Named colours WPF accepts in place of a hex. Only the ones this app actually
+// uses are mapped: they must resolve to a colour so that converting such a site
+// to a token is a no-op to the checker rather than a colour appearing from
+// nowhere. Transparent is deliberately absent -- it is structural (windows use
+// AllowsTransparency), not a theme colour, and is never tokenised.
+const KEYWORD = {
+  White: "#FFFFFFFF",
+  Black: "#FF000000",
+};
+
 // Colour-bearing attributes, in two syntaxes:
 //   Background="#FF0D1117"                              (direct attribute)
 //   <Setter Property="Background" Value="#FF0D1117"/>   (style setter)
@@ -63,7 +82,7 @@ function loadTokens() {
     if (!fs.existsSync(f)) continue;
     const src = fs.readFileSync(f, "utf8");
     for (const m of src.matchAll(/<SolidColorBrush\s+x:Key="([^"]+)"\s+Color="([^"]+)"/g)) {
-      map[m[1]] = m[2].toUpperCase();
+      map[m[1]] = norm(m[2]);
     }
   }
   return map;
@@ -98,13 +117,14 @@ function coloursOf(file, globalTokens, resolve) {
   // a real token later looks like a colour appearing from nowhere.
   const tokens = { ...globalTokens };
   for (const m of src.matchAll(/<SolidColorBrush\s+x:Key="([^"]+)"\s+Color="([^"]+)"/g)) {
-    tokens[m[1]] = m[2].toUpperCase();
+    tokens[m[1]] = norm(m[2]);
   }
 
   const out = [];
   for (const m of src.matchAll(ATTR)) {
     const v = (m[1] ?? m[2]).trim();
-    if (v.startsWith("#")) { out.push(v.toUpperCase()); continue; }
+    if (v.startsWith("#")) { out.push(norm(v)); continue; }
+    if (v in KEYWORD) { out.push(KEYWORD[v]); continue; }
     const dyn = v.match(/^\{DynamicResource\s+([^}]+)\}$/);
     if (dyn) {
       const key = dyn[1].trim();

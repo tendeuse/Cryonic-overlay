@@ -45,7 +45,7 @@
         </Border>
 
         <!-- Video (click to toggle play/pause) -->
-        <Border Grid.Row="1" Background="Black" MouseLeftButtonDown="Video_MouseDown">
+        <Border Grid.Row="1" Background="{DynamicResource Black}" MouseLeftButtonDown="Video_MouseDown">
             <MediaElement x:Name="Player"
                           LoadedBehavior="Manual"
                           UnloadedBehavior="Stop"

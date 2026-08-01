@@ -18,8 +18,8 @@
 
         <!-- Drop-down list item -->
         <Style TargetType="ComboBoxItem">
-            <Setter Property="Background"  Value="#FF0D1320"/>
-            <Setter Property="Foreground"  Value="#FFE8EDF2"/>
+            <Setter Property="Background"  Value="{DynamicResource ComboBg}"/>
+            <Setter Property="Foreground"  Value="{DynamicResource Text}"/>
             <Setter Property="FontFamily"  Value="Consolas"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSize}"/>
             <Setter Property="Padding"     Value="10,5"/>
@@ -33,18 +33,18 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#FF1A3A5C"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ComboHover}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#FF0C2E52"/>
-                                <Setter Property="Foreground" Value="#FF7DD3FC"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ComboSelect}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource IceBlue}"/>
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsSelected"   Value="True"/>
                                     <Condition Property="IsMouseOver"  Value="True"/>
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#FF1A4A78"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ComboEdge}"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -54,7 +54,7 @@
 
         <!-- The collapsed box + the popup together -->
         <Style TargetType="ComboBox">
-            <Setter Property="Foreground"           Value="#FFE8EDF2"/>
+            <Setter Property="Foreground"           Value="{DynamicResource Text}"/>
             <Setter Property="FontFamily"           Value="Consolas"/>
             <Setter Property="FontSize"             Value="{DynamicResource GlobalFontSize}"/>
             <Setter Property="MinHeight"            Value="26"/>
@@ -71,8 +71,8 @@
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border x:Name="Shell"
-                                                Background="#FF0D1320"
-                                                BorderBrush="#FF3A5A82"
+                                                Background="{DynamicResource ComboBg}"
+                                                BorderBrush="{DynamicResource ComboBorder}"
                                                 BorderThickness="1"
                                                 CornerRadius="3">
                                             <Grid>
@@ -84,7 +84,7 @@
                                                 <TextBlock Grid.Column="0"
                                                            Text="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
                                                                           Path=SelectionBoxItem}"
-                                                           Foreground="#FFE8EDF2"
+                                                           Foreground="{DynamicResource Text}"
                                                            FontFamily="Consolas"
                                                            FontSize="{DynamicResource GlobalFontSize}"
                                                            Margin="8,4,4,4"
@@ -92,10 +92,10 @@
                                                            TextTrimming="CharacterEllipsis"/>
                                                 <!-- Chevron separator + arrow -->
                                                 <Border Grid.Column="1"
-                                                        BorderBrush="#FF3A5A82"
+                                                        BorderBrush="{DynamicResource ComboBorder}"
                                                         BorderThickness="1,0,0,0">
                                                     <TextBlock Text="▾"
-                                                               Foreground="#FF4FC3F7"
+                                                               Foreground="{DynamicResource Accent}"
                                                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                                                HorizontalAlignment="Center"
                                                                VerticalAlignment="Center"/>
@@ -104,12 +104,12 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Shell" Property="BorderBrush" Value="#FF4FC3F7"/>
-                                                <Setter TargetName="Shell" Property="Background"  Value="#FF111D30"/>
+                                                <Setter TargetName="Shell" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                <Setter TargetName="Shell" Property="Background"  Value="{DynamicResource ComboItemBg}"/>
                                             </Trigger>
                                             <Trigger Property="IsChecked" Value="True">
-                                                <Setter TargetName="Shell" Property="BorderBrush" Value="#FF4FC3F7"/>
-                                                <Setter TargetName="Shell" Property="Background"  Value="#FF111D30"/>
+                                                <Setter TargetName="Shell" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                                <Setter TargetName="Shell" Property="Background"  Value="{DynamicResource ComboItemBg}"/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -124,8 +124,8 @@
                                    Focusable="False"
                                    PopupAnimation="Slide">
                                 <Border x:Name="DropDown"
-                                        Background="#FF0D1320"
-                                        BorderBrush="#FF3A5A82"
+                                        Background="{DynamicResource ComboBg}"
+                                        BorderBrush="{DynamicResource ComboBorder}"
                                         BorderThickness="1"
                                         CornerRadius="0,0,3,3"
                                         MinWidth="{TemplateBinding ActualWidth}"
@@ -164,8 +164,8 @@
             <Setter Property="FontSize"          Value="{DynamicResource GlobalFontSizeSm}"/>
             <Setter Property="FontWeight"        Value="Bold"/>
             <Setter Property="Foreground"        Value="{DynamicResource Accent}"/>
-            <Setter Property="Background"        Value="#221E3148"/>
-            <Setter Property="BorderBrush"       Value="#443060A0"/>
+            <Setter Property="Background"        Value="{DynamicResource Border22}"/>
+            <Setter Property="BorderBrush"       Value="{DynamicResource Indigo44}"/>
             <Setter Property="BorderThickness"   Value="1"/>
             <Setter Property="Padding"           Value="8,4"/>
             <Setter Property="Cursor"            Value="Hand"/>
@@ -203,7 +203,7 @@
              Without this, tooltips use WPF's pale default background while
              inheriting the app's near-white foreground — unreadable. -->
         <Style TargetType="ToolTip">
-            <Setter Property="Background"      Value="#FF0D1117"/>
+            <Setter Property="Background"      Value="{DynamicResource BgFF}"/>
             <Setter Property="Foreground"      Value="{DynamicResource Text}"/>
             <Setter Property="BorderBrush"     Value="{DynamicResource Accent}"/>
             <Setter Property="BorderThickness" Value="1"/>

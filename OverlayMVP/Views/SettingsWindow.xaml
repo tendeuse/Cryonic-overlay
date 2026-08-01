@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="{DynamicResource Surface}"
-        Foreground="White"
+        Foreground="{DynamicResource White}"
         ShowInTaskbar="False">
 
     <Window.Resources>

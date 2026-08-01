@@ -359,7 +359,7 @@
                                      x:Name="ManualStandingBox"
                                      Text="{Binding CurrentFactionStanding, Mode=OneWay,
                                             StringFormat={}{0:0.00}}"
-                                     Background="{DynamicResource Jet}"
+                                     Background="{DynamicResource BgFF}"
                                      Foreground="{Binding StandingColour,
                                          Converter={StaticResource StrBrush}}"
                                      BorderBrush="{DynamicResource Border33}" BorderThickness="1"

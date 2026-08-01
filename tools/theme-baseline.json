@@ -115,14 +115,14 @@
     "#01000000"
   ],
   "OverlayMVP/Views/BriefingWindow.xaml": [
-    "#0A0D12",
-    "#141A24",
+    "#FF0A0D12",
+    "#FF141A24",
     "#FF4FC3F7",
     "#FFE8EDF2",
     "OTHER:Transparent",
     "#FF6A7A8A",
-    "OTHER:Black",
-    "#141A24",
+    "#FF000000",
+    "#FF141A24",
     "#FF8A99AA",
     "#FF8A99AA",
     "#224FC3F7",
@@ -137,7 +137,7 @@
   ],
   "OverlayMVP/Views/FirstRunWindow.xaml": [
     "#FF0A1A2F",
-    "OTHER:White",
+    "#FFFFFFFF",
     "#FF9AD1FF"
   ],
   "OverlayMVP/Views/IntelWindow.xaml": [
@@ -269,7 +269,7 @@
   ],
   "OverlayMVP/Views/SettingsWindow.xaml": [
     "#FF0A1A2F",
-    "OTHER:White",
+    "#FFFFFFFF",
     "#FFCCD6F6",
     "#FF0D1117",
     "#FFCCD6F6",
@@ -399,7 +399,7 @@
     "#224FC3F7",
     "#FFB0BEC5",
     "#FF8A99AA",
-    "#0D1117",
+    "#FF0D1117",
     "OTHER:{Binding StandingColour,\r\n                                         Converter={StaticResource StrBrush}}",
     "#331E3148",
     "#221E3148",
