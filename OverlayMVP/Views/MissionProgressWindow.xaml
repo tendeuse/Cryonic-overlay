@@ -17,8 +17,8 @@
         <local:ZeroToCollapsedConverter x:Key="ZeroToCollapsed"/>
     </Window.Resources>
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#FF1E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -29,7 +29,7 @@
 
             <!-- Title bar -->
             <Border Grid.Row="0"
-                    Background="#CC111820"
+                    Background="{DynamicResource Onyx}"
                     CornerRadius="6,6,0,0"
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
@@ -43,15 +43,15 @@
                                Text="⚡ SESSION — TODAY"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
-                               Foreground="#FF66BB6A"
+                               Foreground="{DynamicResource Green}"
                                VerticalAlignment="Center"/>
                     <Button Grid.Column="1"
                             Content="✕"
                             Click="CloseBtn_Click"
                             Style="{StaticResource SmallBtn}"
-                            Background="#33EF5350"
-                            BorderBrush="#FFEF5350"
-                            Foreground="#FFEF5350"/>
+                            Background="{DynamicResource Red33}"
+                            BorderBrush="{DynamicResource Red}"
+                            Foreground="{DynamicResource Red}"/>
                 </Grid>
             </Border>
 
@@ -74,7 +74,7 @@
                     </TextBlock>
 
                     <!-- Re-link prompt (only when a character lacks the new scopes) -->
-                    <Border Background="#33EF5350" CornerRadius="3" Padding="8,5" Margin="0,0,0,10"
+                    <Border Background="{DynamicResource Red33}" CornerRadius="3" Padding="8,5" Margin="0,0,0,10"
                             Visibility="{Binding Session.RelinkPrompt, Converter={StaticResource NullToVisibility}}">
                         <TextBlock Text="{Binding Session.RelinkPrompt, Mode=OneWay}"
                                    TextWrapping="Wrap"

@@ -28,4 +28,19 @@
     <SolidColorBrush x:Key="Red"     Color="#FFEF5350"/>   <!-- was AccentRed -->
     <SolidColorBrush x:Key="Green"   Color="#FF66BB6A"/>   <!-- was AccentGreen -->
 
+    <!-- Task 3: five smallest windows -->
+    <SolidColorBrush x:Key="Surface"      Color="#FF0A1A2F"/>   <!-- FirstRunWindow background -->
+    <SolidColorBrush x:Key="PaleCyan"     Color="#FF9AD1FF"/>   <!-- FirstRunWindow status text -->
+    <SolidColorBrush x:Key="BgEE"         Color="#EE0D1117"/>   <!-- Bg, alpha EE -->
+    <SolidColorBrush x:Key="Border44"     Color="#441E3148"/>   <!-- Border, alpha 44 -->
+    <SolidColorBrush x:Key="DeepNavy"     Color="#CC1A1F2E"/>   <!-- ShipFitWindow title bar -->
+    <SolidColorBrush x:Key="TextFaint"    Color="#FF6A7A8A"/>   <!-- ShipFitWindow close button -->
+    <SolidColorBrush x:Key="Onyx"         Color="#CC111820"/>   <!-- NotePrompt/MissionProgress title bar -->
+    <SolidColorBrush x:Key="Border22"     Color="#221E3148"/>   <!-- Border, alpha 22 -->
+    <SolidColorBrush x:Key="White33"      Color="#33FFFFFF"/>   <!-- NotePromptWindow Cancel button -->
+    <SolidColorBrush x:Key="Green33"      Color="#3366BB6A"/>   <!-- Green, alpha 33 -->
+    <SolidColorBrush x:Key="Red33"        Color="#33EF5350"/>   <!-- Red, alpha 33 -->
+    <SolidColorBrush x:Key="Abyss"        Color="#FF0A0F14"/>   <!-- ThumbnailWindow thumbnail host -->
+    <SolidColorBrush x:Key="BorderStrong" Color="#FF1E3A50"/>   <!-- ThumbnailWindow BorderClr (hoisted) -->
+
 </ResourceDictionary>

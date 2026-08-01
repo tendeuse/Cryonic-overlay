@@ -12,8 +12,8 @@
         ShowActivated="True"
         ResizeMode="CanResize">
 
-    <Border Background="#EE0D1117"
-            BorderBrush="#441E3148"
+    <Border Background="{DynamicResource BgEE}"
+            BorderBrush="{DynamicResource Border44}"
             BorderThickness="1"
             CornerRadius="6">
         <Grid>
@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <!-- Title bar -->
-            <Border Grid.Row="0" Background="#CC1A1F2E" CornerRadius="6,6,0,0"
+            <Border Grid.Row="0" Background="{DynamicResource DeepNavy}" CornerRadius="6,6,0,0"
                     MouseLeftButtonDown="TitleBar_MouseLeftButtonDown" Cursor="SizeAll">
                 <Grid Margin="10,7">
                     <Grid.ColumnDefinitions>
@@ -34,7 +34,7 @@
                         <TextBlock Text="🚀" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
                         <TextBlock x:Name="TitleText"
                                    Text="Ship Fit"
-                                   Foreground="#FFE8EDF2"
+                                   Foreground="{DynamicResource Text}"
                                    FontSize="12"
                                    FontWeight="Bold"
                                    VerticalAlignment="Center"/>
@@ -44,7 +44,7 @@
                             Width="22" Height="22"
                             Background="Transparent"
                             BorderThickness="0"
-                            Foreground="#FF6A7A8A"
+                            Foreground="{DynamicResource TextFaint}"
                             FontSize="11"
                             Cursor="Hand"/>
                 </Grid>
