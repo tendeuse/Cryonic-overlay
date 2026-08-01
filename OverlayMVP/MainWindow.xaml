@@ -509,7 +509,14 @@
             </ctl:SectionPanel>
 
             <!-- ══ Panel launcher buttons (one per row) ════════════════════════════ -->
-            <Border Grid.Row="5" Background="{DynamicResource Graphite}" Padding="8,6">
+            <!-- Headerless, like the footer. BorderThickness="0" is REQUIRED:
+                 the SectionPanel style defaults to 0,1,0,1 for the intel and
+                 pilot rows, and without this the launcher gains rules it has
+                 never had. -->
+            <ctl:SectionPanel Grid.Row="5"
+                              Background="{DynamicResource Graphite}"
+                              BorderThickness="0"
+                              Padding="8,6">
                 <StackPanel>
                     <Button x:Name="BtnStanding"
                             Content="📋  Standing"
@@ -555,7 +562,7 @@
                                    Visibility="{Binding HasNewOrders, Converter={StaticResource BoolToVis}}"/>
                     </Grid>
                 </StackPanel>
-            </Border>
+            </ctl:SectionPanel>
 
             <!-- ════════════════════════════════════════════════════════ -->
             <!--  FOOTER + RESIZE GRIPS                                   -->
