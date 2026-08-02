@@ -144,17 +144,54 @@ function buildXaml(palette) {
     .filter((k) => !keySet.has(k) && !IMPLIED_BASES.includes(k))
     .sort();
 
+  const block = [];
+
   if (extras.length) {
     const width = Math.max(...extras.map((k) => k.length));
-    const block = [
+    block.push(
       "",
       "    <!-- Skin-specific tokens. No counterpart in the default theme: these",
       "         exist only for skins whose component layer draws things the",
       "         default one does not (key bevels, glass, hazard striping). -->",
       ...extras.map(
         (k) => `    <SolidColorBrush x:Key="${k}"${" ".repeat(width - k.length)} Color="#FF${palette.colours[k].toUpperCase()}"/>`
-      ),
-    ];
+      )
+    );
+  }
+
+  // GRADIENTS are composed, not authored. A gradient names colours the palette
+  // already declares, so the "colours only" rule holds -- no new colour value
+  // can enter through this door, and a recoloured skin's gradients recolour
+  // with it automatically.
+  //
+  // They exist because a WPF GradientStop takes a Color, not a Brush, so it
+  // cannot reference a SolidColorBrush token at all. Building the brush here is
+  // the only way a skin gets real depth without hand-writing hex into XAML.
+  //
+  // The default palette declares none, which is what keeps Tokens.Default.xaml
+  // byte-identical.
+  for (const [key, g] of Object.entries(palette.gradients ?? {})) {
+    // A stop may carry an alpha. That is not a new colour -- it is how opaque
+    // this stop is, the same structural role alpha plays on a token -- and it
+    // is what lets a skin describe a specular sheen that fades to nothing
+    // rather than to a specific colour.
+    const stop = (name, alpha) => {
+      const rgb = palette.colours[name];
+      if (!rgb) throw new Error(`gradient "${key}" references unknown colour "${name}"`);
+      return `#${(alpha ?? "FF").toUpperCase()}${rgb.toUpperCase()}`;
+    };
+    // angle 90 = top-to-bottom, the only direction the cockpit reference uses.
+    const [x2, y2] = g.angle === 0 ? [1, 0] : [0, 1];
+    block.push(
+      "",
+      `    <LinearGradientBrush x:Key="${key}" StartPoint="0,0" EndPoint="${x2},${y2}">`,
+      `        <GradientStop Offset="0" Color="${stop(g.from, g.fromAlpha)}"/>`,
+      `        <GradientStop Offset="1" Color="${stop(g.to, g.toAlpha)}"/>`,
+      `    </LinearGradientBrush>`
+    );
+  }
+
+  if (block.length) {
     const close = lines.lastIndexOf("</ResourceDictionary>");
     lines.splice(close, 0, ...block);
   }

@@ -78,5 +78,18 @@
 
     "HazardA": "C9A23E",
     "HazardB": "0E1620"
+  },
+  "gradients": {
+    "KeyFace": { "from": "KeyHi", "to": "KeyLo", "angle": 90 },
+    "AccentKeyFace": { "from": "AccentKeyHi", "to": "AccentKeyLo", "angle": 90 },
+    "AmberKeyFace": { "from": "AmberKeyHi", "to": "AmberKeyLo", "angle": 90 },
+    "RedKeyFace": { "from": "RedKeyHi", "to": "RedKeyLo", "angle": 90 },
+    "GreenKeyFace": { "from": "GreenKeyHi", "to": "GreenKeyLo", "angle": 90 },
+    "GlassFace": { "from": "GlassTop", "to": "GlassBottom", "angle": 90 },
+    "PlateFace": { "from": "Panel", "to": "Bg", "angle": 90 },
+
+    "KeySheen": { "from": "White", "fromAlpha": "26", "to": "White", "toAlpha": "00", "angle": 90 },
+    "KeySheenLit": { "from": "White", "fromAlpha": "40", "to": "White", "toAlpha": "00", "angle": 90 },
+    "PlateSheen": { "from": "White", "fromAlpha": "0D", "to": "White", "toAlpha": "00", "angle": 90 }
   }
 }

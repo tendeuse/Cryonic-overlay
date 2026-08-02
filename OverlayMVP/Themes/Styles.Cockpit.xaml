@@ -158,42 +158,86 @@
             <Setter Property="Foreground"  Value="{DynamicResource Text}"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSize}"/>
         </Style>
+        <!-- Instrument label: wide-tracked brass lettering, the way a physical
+             console legends its panels. Gold rather than the accent colour
+             because in this skin grey IS the accent and gold carries emphasis. -->
         <Style x:Key="SectionHeader" TargetType="TextBlock">
             <Setter Property="FontFamily"  Value="Consolas"/>
             <Setter Property="FontWeight"  Value="Bold"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeSm}"/>
-            <Setter Property="Foreground"  Value="{DynamicResource Accent}"/>
+            <Setter Property="Foreground"  Value="{DynamicResource Amber}"/>
             <Setter Property="Margin"      Value="0,0,0,4"/>
+            <!-- Tracking is what separates a legend from a caption. WPF has no
+                 letter-spacing, so this is the closest equivalent. -->
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
         </Style>
 
-        <!-- ── Intel badge button (base for SmallBtn) ────────────────────── -->
+        <!-- ── Physical key (base for SmallBtn) ──────────────────────────────
+             A moulded key sitting in a recess, not a flat rectangle.
+
+             The FACE keeps TemplateBinding Background on purpose. The app
+             colour-codes its buttons — red for close, amber for alerts, accent
+             for tools — and a fixed key colour here would throw all of that
+             away. Depth comes from the sheen and the edge instead, so a key is
+             physical AND still carries its meaning.
+
+             TRAVEL: the face normally floats 2px above the bottom of the
+             recess. Pressed, that margin moves to the top and the face drops
+             into the edge — the whole key visibly sinks, rather than dimming.
+             ────────────────────────────────────────────────────────────────── -->
         <Style x:Key="IntelBtn" TargetType="Button">
             <Setter Property="FontFamily"        Value="Consolas"/>
             <Setter Property="FontSize"          Value="{DynamicResource GlobalFontSizeSm}"/>
             <Setter Property="FontWeight"        Value="Bold"/>
             <Setter Property="Foreground"        Value="{DynamicResource Accent}"/>
-            <Setter Property="Background"        Value="{DynamicResource Border22}"/>
-            <Setter Property="BorderBrush"       Value="{DynamicResource Indigo44}"/>
+            <Setter Property="Background"        Value="{DynamicResource KeyFace}"/>
+            <Setter Property="BorderBrush"       Value="{DynamicResource KeyBorder}"/>
             <Setter Property="BorderThickness"   Value="1"/>
             <Setter Property="Padding"           Value="8,4"/>
             <Setter Property="Cursor"            Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Margin="{TemplateBinding Padding}"/>
-                        </Border>
+                        <Grid>
+                            <!-- The recess the key sits in. Only its bottom
+                                 2px are ever visible; that sliver is what
+                                 reads as thickness. -->
+                            <Border x:Name="Edge"
+                                    Background="{DynamicResource KeyEdge}"
+                                    CornerRadius="3"/>
+
+                            <Border x:Name="Face"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="3"
+                                    Margin="0,0,0,2">
+                                <Grid>
+                                    <!-- Specular sheen: bright along the top
+                                         lip, gone by the middle. Painted over
+                                         the face so it works with whatever
+                                         colour that button carries. -->
+                                    <Border x:Name="Sheen"
+                                            Background="{DynamicResource KeySheen}"
+                                            CornerRadius="2"/>
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Margin="{TemplateBinding Padding}"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="Sheen" Property="Background"
+                                        Value="{DynamicResource KeySheenLit}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter TargetName="Face"  Property="Margin" Value="0,2,0,0"/>
+                                <Setter TargetName="Sheen" Property="Opacity" Value="0.3"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter TargetName="Sheen" Property="Opacity" Value="0"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -251,11 +295,19 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ctl:SectionPanel}">
+                      <Grid>
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 Padding="{TemplateBinding Padding}">
+                          <Grid>
+                            <!-- Plate lighting. A panel is a sheet of metal lit
+                                 from above, so the top edge catches and the rest
+                                 falls away. Behind the content, never over it. -->
+                            <Border Background="{DynamicResource PlateSheen}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Margin="-8,-6,-8,-6"/>
                             <StackPanel>
                                 <!-- Header row. Collapses entirely when no Header is
                                      set, so the footer can use the same control.
@@ -287,12 +339,32 @@
                                                       Content="{TemplateBinding HeaderAccessory}"
                                                       VerticalAlignment="Center"/>
                                 </Grid>
+
+                                <!-- Gold rule under the header. This is the
+                                     cockpit's signature: every instrument
+                                     block is ruled off in brass. It is
+                                     DECORATION SUPPLIED BY THE TEMPLATE, not
+                                     content — no window knows it exists, so
+                                     adding a sixth section gets it free. -->
+                                <Border x:Name="HeaderRule"
+                                        Height="1"
+                                        Margin="0,0,0,6"
+                                        Background="{DynamicResource Amber}"
+                                        Opacity="0.55"/>
+
                                 <ContentPresenter/>
                             </StackPanel>
+                          </Grid>
                         </Border>
+                      </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Header" Value="{x:Null}">
-                                <Setter TargetName="HeaderRow" Property="Visibility" Value="Collapsed"/>
+                                <!-- Headerless sections (the footer, the panel
+                                     launcher) get neither the header row nor
+                                     its rule — a rule with nothing above it
+                                     would read as a stray divider. -->
+                                <Setter TargetName="HeaderRow"  Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="HeaderRule" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

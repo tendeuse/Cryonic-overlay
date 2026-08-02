@@ -113,6 +113,11 @@
     <SolidColorBrush x:Key="Indigo44" Color="#4433465C"/>   <!-- ComboBox popup shadow -->
 
 
+    <!-- Role marker. ThemeManager swaps dictionaries by this, not by
+         guessing from the keys they contain. -->
+    <sys:String x:Key="__SkinDictionaryRole"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib">Tokens</sys:String>
+
     <!-- Skin-specific tokens. No counterpart in the default theme: these
          exist only for skins whose component layer draws things the
          default one does not (key bevels, glass, hazard striping). -->
@@ -136,8 +141,53 @@
     <SolidColorBrush x:Key="RedKeyHi"    Color="#FF442426"/>
     <SolidColorBrush x:Key="RedKeyLo"    Color="#FF33191B"/>
 
-    <!-- Role marker. ThemeManager swaps dictionaries by this, not by
-         guessing from the keys they contain. -->
-    <sys:String x:Key="__SkinDictionaryRole"
-                xmlns:sys="clr-namespace:System;assembly=mscorlib">Tokens</sys:String>
+    <LinearGradientBrush x:Key="KeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF4E5A66"/>
+        <GradientStop Offset="1" Color="#FF39434D"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AccentKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF68757F"/>
+        <GradientStop Offset="1" Color="#FF4A555E"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AmberKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF4A3D1F"/>
+        <GradientStop Offset="1" Color="#FF382E15"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="RedKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF442426"/>
+        <GradientStop Offset="1" Color="#FF33191B"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GreenKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF1E3A34"/>
+        <GradientStop Offset="1" Color="#FF152A26"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF0A1826"/>
+        <GradientStop Offset="1" Color="#FF050B13"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlateFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF1A2634"/>
+        <GradientStop Offset="1" Color="#FF0E1620"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="KeySheen" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#26FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="KeySheenLit" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#40FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlateSheen" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#0DFFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
 </ResourceDictionary>
