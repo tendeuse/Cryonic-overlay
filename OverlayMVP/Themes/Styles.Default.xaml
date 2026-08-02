@@ -194,6 +194,23 @@
             </Setter>
         </Style>
 
+        <!-- ── Launcher key ───────────────────────────────────────────────
+             The full-width keys in the panel launcher row.
+
+             Exists so a skin can change how BIG a launcher key is, not only
+             what colour it is. These three values used to sit on each button
+             in MainWindow.xaml, where a style cannot override them — so a
+             cockpit skin could restyle a key's surface but never its
+             proportions, which is half of what makes a key look physical.
+
+             Values are exactly what the instances carried, so the default
+             renders identically. -->
+        <Style x:Key="LauncherBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
+            <Setter Property="Padding"             Value="10,5"/>
+            <Setter Property="Margin"              Value="0,2"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
         <!-- ── Small action button ────────────────────────────────────────── -->
         <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeXs}"/>

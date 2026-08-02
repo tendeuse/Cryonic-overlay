@@ -303,6 +303,17 @@
             </Setter>
         </Style>
 
+        <!-- ── Launcher key ───────────────────────────────────────────────
+             A console key is a big thing you hit with a gloved hand. The
+             default's 10,5 is a web button; this is hardware. Made possible
+             by lifting these values off the instances in MainWindow.xaml,
+             where no skin could reach them. -->
+        <Style x:Key="LauncherBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
+            <Setter Property="Padding"             Value="14,10"/>
+            <Setter Property="Margin"              Value="0,3"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
         <!-- ── Small action button ────────────────────────────────────────── -->
         <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeXs}"/>

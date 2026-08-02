@@ -520,35 +520,27 @@
                 <StackPanel>
                     <Button x:Name="BtnStanding"
                             Content="📋  Standing"
-                            Style="{StaticResource IntelBtn}"
+                            Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="standing"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,2" Padding="10,5"
                             ToolTip="Faction Standing Guide"
                             Visibility="{Binding ShowStandingGuide, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnProgress"
                             Content="📊  Session"
-                            Style="{StaticResource IntelBtn}"
+                            Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="progress"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,2" Padding="10,5"
                             ToolTip="Mission Progress tracker"
                             Visibility="{Binding ShowMissionProgress, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnSkills"
                             Content="🎓  Skills"
-                            Style="{StaticResource IntelBtn}"
+                            Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="skills"
-                            HorizontalAlignment="Stretch"
-                            Margin="0,2" Padding="10,5"
                             ToolTip="Faction Skill Plan"
                             Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
-                    <Grid Margin="0,2">
+                    <Grid>
                         <Button x:Name="BtnOrders"
                                 Content="📢  Orders"
-                                Style="{StaticResource IntelBtn}"
+                                Style="{StaticResource LauncherBtn}"
                                 Click="PanelBtn_Click" Tag="orders"
-                                HorizontalAlignment="Stretch"
-                                Padding="10,5"
                                 ToolTip="Orders from your corp / coalition"/>
                         <TextBlock Text="⚠"
                                    Foreground="{DynamicResource Amber}"
