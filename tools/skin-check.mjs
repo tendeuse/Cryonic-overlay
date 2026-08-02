@@ -37,6 +37,27 @@ const refsOf = (src) => new Set(all(src, /\{DynamicResource\s+([^}]+)\}/g).map((
 // Not colours: font sizes live in App.xaml, and a *Style suffix is a style key.
 const isColourRef = (k) => !/^GlobalFontSize/.test(k) && !/Style$/.test(k);
 
+/**
+ * XAML forbids "--" inside a comment, and the compiler reports it as an opaque
+ * MC3000 with a line number and no hint about which of the many dashes on that
+ * line is illegal. It broke this build five times in one sitting, always while
+ * writing prose, so it is checked here rather than left to discipline.
+ */
+function commentDashes(file, src) {
+  const bad = [];
+  for (const m of src.matchAll(/<!--([\s\S]*?)-->/g)) {
+    if (!m[1].includes("--")) continue;
+    const line = src.slice(0, m.index).split(/\r?\n/).length;
+    bad.push(`${file}:${line}: "--" inside an XML comment (use an em dash or a semicolon)`);
+  }
+  // An unterminated comment: "-->" replaced by something else, which is the
+  // over-correction that follows from fixing the above carelessly.
+  const opens = (src.match(/<!--/g) ?? []).length;
+  const closes = (src.match(/-->/g) ?? []).length;
+  if (opens !== closes) bad.push(`${file}: ${opens} comment opens but ${closes} closes`);
+  return bad;
+}
+
 function main() {
   const skins = fs.readdirSync(THEMES)
     .filter((f) => /^Styles\..+\.xaml$/.test(f) && f !== BASE);
@@ -46,6 +67,10 @@ function main() {
   const baseTgts = targetsOf(baseSrc);
 
   let bad = 0;
+
+  for (const f of fs.readdirSync(THEMES).filter((n) => n.endsWith(".xaml"))) {
+    for (const problem of commentDashes(f, read(f))) { console.error(`XAML  ${problem}`); bad++; }
+  }
 
   for (const styleFile of skins) {
     const src  = read(styleFile);

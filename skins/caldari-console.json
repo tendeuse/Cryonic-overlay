@@ -63,8 +63,8 @@
     "RedKeyLo": "291A1B",
     "GreenKeyHi": "1E3438",
     "GreenKeyLo": "152528",
-    "GlassTop": "0A1826",
-    "GlassBottom": "050B13",
+    "GlassTop": "081420",
+    "GlassBottom": "040A12",
     "GlassBorder": "10161D",
     "GlassText": "74A4C4",
     "GlassTextHi": "6ED3F0",
@@ -132,7 +132,7 @@
     },
     "GlassGlow": {
       "from": "GlassGlowTop",
-      "fromAlpha": "59",
+      "fromAlpha": "1F",
       "to": "GlassGlowTop",
       "toAlpha": "00",
       "angle": 90
@@ -143,71 +143,6 @@
       "to": "Black",
       "toAlpha": "00",
       "angle": 90
-    },
-    "GlassBloom": {
-      "from": "GlassGlowTop",
-      "toAlpha": "3D",
-      "to": "GlassGlowTop",
-      "fromAlpha": "00",
-      "angle": 90
-    },
-    "GlassSpecular": {
-      "kind": "radial",
-      "center": "0.5,-0.35",
-      "radiusX": 1.15,
-      "radiusY": 0.95,
-      "stops": [
-        {
-          "colour": "White",
-          "alpha": "3D",
-          "offset": 0
-        },
-        {
-          "colour": "White",
-          "alpha": "1A",
-          "offset": 0.55
-        },
-        {
-          "colour": "White",
-          "alpha": "00",
-          "offset": 1
-        }
-      ]
-    },
-    "GlassStreak": {
-      "angle": 45,
-      "stops": [
-        {
-          "colour": "White",
-          "alpha": "00",
-          "offset": 0
-        },
-        {
-          "colour": "White",
-          "alpha": "00",
-          "offset": 0.34
-        },
-        {
-          "colour": "White",
-          "alpha": "24",
-          "offset": 0.4
-        },
-        {
-          "colour": "White",
-          "alpha": "24",
-          "offset": 0.46
-        },
-        {
-          "colour": "White",
-          "alpha": "00",
-          "offset": 0.52
-        },
-        {
-          "colour": "White",
-          "alpha": "00",
-          "offset": 1
-        }
-      ]
     }
   }
 }

@@ -48,12 +48,12 @@
         <!-- CRT scanlines. Tiled 3px: one dark row, two clear. Laid over glass
              at low opacity so text stays readable. -->
         <DrawingBrush x:Key="Scanlines" TileMode="Tile"
-                      Viewport="0,0,3,3" ViewportUnits="Absolute"
-                      Opacity="0.75">
+                      Viewport="0,0,2,2" ViewportUnits="Absolute"
+                      Opacity="1.0">
             <DrawingBrush.Drawing>
-                <GeometryDrawing Brush="#4D000000">
+                <GeometryDrawing Brush="#59000000">
                     <GeometryDrawing.Geometry>
-                        <RectangleGeometry Rect="0,0,3,1"/>
+                        <RectangleGeometry Rect="0,0,2,1"/>
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
             </DrawingBrush.Drawing>
@@ -532,6 +532,26 @@
                                         BorderThickness="1"
                                         CornerRadius="5"
                                         Padding="9,8">
+                                    <Border.Resources>
+                                        <!-- Text ON the readout takes the
+                                             readout's colour. A lit screen
+                                             does not print in the same ink as
+                                             the panel around it, and that
+                                             difference is a large part of why
+                                             the reference looks like a display.
+
+                                             Scoped to this Border, so it
+                                             reaches only what is presented
+                                             inside the glass. An explicit
+                                             Foreground on any TextBlock still
+                                             wins, which is deliberate: the
+                                             status colours (red alerts, green
+                                             security) must not be flattened
+                                             into one colour. -->
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Setter Property="Foreground" Value="{DynamicResource GlassText}"/>
+                                        </Style>
+                                    </Border.Resources>
                                     <Grid>
                                         <!-- BEZEL SHADOW, beneath the content.
                                              Glass sits DOWN in the plate, and
@@ -565,57 +585,24 @@
                                                 IsHitTestVisible="False"
                                                 Margin="-9,-8,-9,-8"/>
 
-                                        <!-- Phosphor bloom along the bottom
-                                             edge: a lit screen spills light
-                                             onto its own lower bezel. Small,
-                                             but it is the difference between
-                                             "dark panel" and "switched on". -->
-                                        <Border x:Name="Bloom"
-                                                Height="10"
-                                                VerticalAlignment="Bottom"
-                                                Background="{DynamicResource GlassBloom}"
-                                                CornerRadius="0,0,4,4"
-                                                IsHitTestVisible="False"
-                                                Margin="-9,0,-9,-8"/>
+                                        <!-- NO SPECULAR HERE, DELIBERATELY.
+                                             This is a CRT readout, not a
+                                             window pane. The reference carries
+                                             no highlight at all: its glassiness
+                                             comes from scanlines over a flat,
+                                             very dark surface. Every highlight
+                                             tried here read as a smudge ON the
+                                             screen rather than a reflection off
+                                             it, because a lit display does not
+                                             reflect much; it emits. -->
 
-                                        <!-- SPECULAR: the reflection ON the
-                                             pane.
-
-                                             RADIAL, not linear. A straight
-                                             top-to-bottom fade reads as
-                                             painted-on shading no matter how
-                                             strong it is; what says "glass" is
-                                             a CURVED highlight edge, because
-                                             that is the shape a reflection
-                                             actually makes. The brush is
-                                             centred above the panel so only
-                                             the lower arc of its falloff
-                                             crosses the surface. -->
-                                        <Border x:Name="Gloss"
-                                                Background="{DynamicResource GlassSpecular}"
-                                                CornerRadius="4"
-                                                IsHitTestVisible="False"
-                                                Margin="-9,-8,-9,-8"/>
-
-                                        <!-- STREAK: a hard-edged diagonal
-                                             band, the reflection of something
-                                             with an edge. Tight stops on
-                                             purpose — it has to ARRIVE and
-                                             LEAVE, not drift, or it becomes
-                                             another fade. -->
-                                        <Border x:Name="Streak"
-                                                Background="{DynamicResource GlassStreak}"
-                                                CornerRadius="4"
-                                                IsHitTestVisible="False"
-                                                Margin="-9,-8,-9,-8"/>
-
-                                        <!-- The lit top rim: light catching
-                                             the cut edge of the pane. -->
+                                        <!-- The lit top rim: light catching the
+                                             cut edge of the bezel. -->
                                         <Border x:Name="Rim"
                                                 Height="1"
                                                 VerticalAlignment="Top"
                                                 Margin="-8,-8,-8,0"
-                                                Background="{DynamicResource White33}"
+                                                Background="{DynamicResource White22}"
                                                 IsHitTestVisible="False"/>
 
                                         <!-- HUD REGISTRATION BRACKETS.
@@ -669,10 +656,7 @@
                                 <Setter TargetName="Scan"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Bezel" Property="Visibility"      Value="Collapsed"/>
-                                <Setter TargetName="Bloom" Property="Visibility"      Value="Collapsed"/>
-                                <Setter TargetName="Gloss" Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Rim"    Property="Visibility"     Value="Collapsed"/>
-                                <Setter TargetName="Streak" Property="Visibility"     Value="Collapsed"/>
                                 <Setter TargetName="Ticks" Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>

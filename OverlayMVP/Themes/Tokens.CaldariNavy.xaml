@@ -126,11 +126,11 @@
     <SolidColorBrush x:Key="AmberKeyHi"   Color="#FF4A3D1F"/>
     <SolidColorBrush x:Key="AmberKeyLo"   Color="#FF382E15"/>
     <SolidColorBrush x:Key="GlassBorder"  Color="#FF060B11"/>
-    <SolidColorBrush x:Key="GlassBottom"  Color="#FF050B13"/>
+    <SolidColorBrush x:Key="GlassBottom"  Color="#FF040A12"/>
     <SolidColorBrush x:Key="GlassGlowTop" Color="#FF46AAE6"/>
     <SolidColorBrush x:Key="GlassText"    Color="#FF74A4C4"/>
     <SolidColorBrush x:Key="GlassTextHi"  Color="#FF6ED3F0"/>
-    <SolidColorBrush x:Key="GlassTop"     Color="#FF0A1826"/>
+    <SolidColorBrush x:Key="GlassTop"     Color="#FF091420"/>
     <SolidColorBrush x:Key="GreenKeyHi"   Color="#FF1E3A34"/>
     <SolidColorBrush x:Key="GreenKeyLo"   Color="#FF152A26"/>
     <SolidColorBrush x:Key="HazardA"      Color="#FFC9A23E"/>
@@ -169,8 +169,8 @@
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="GlassFace" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#FF0A1826"/>
-        <GradientStop Offset="1" Color="#FF050B13"/>
+        <GradientStop Offset="0" Color="#FF091420"/>
+        <GradientStop Offset="1" Color="#FF040A12"/>
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="PlateFace" StartPoint="0,0" EndPoint="0,1">
@@ -194,32 +194,12 @@
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="GlassGlow" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#5946AAE6"/>
+        <GradientStop Offset="0" Color="#1F46AAE6"/>
         <GradientStop Offset="1" Color="#0046AAE6"/>
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="GlassBezel" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0" Color="#80000000"/>
         <GradientStop Offset="1" Color="#00000000"/>
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="GlassBloom" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#0046AAE6"/>
-        <GradientStop Offset="1" Color="#3D46AAE6"/>
-    </LinearGradientBrush>
-
-    <RadialGradientBrush x:Key="GlassSpecular" Center="0.5,-0.35" GradientOrigin="0.5,-0.35" RadiusX="1.15" RadiusY="0.95">
-        <GradientStop Offset="0" Color="#3DFFFFFF"/>
-        <GradientStop Offset="0.55" Color="#1AFFFFFF"/>
-        <GradientStop Offset="1" Color="#00FFFFFF"/>
-    </RadialGradientBrush>
-
-    <LinearGradientBrush x:Key="GlassStreak" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Offset="0" Color="#00FFFFFF"/>
-        <GradientStop Offset="0.34" Color="#00FFFFFF"/>
-        <GradientStop Offset="0.4" Color="#24FFFFFF"/>
-        <GradientStop Offset="0.46" Color="#24FFFFFF"/>
-        <GradientStop Offset="0.52" Color="#00FFFFFF"/>
-        <GradientStop Offset="1" Color="#00FFFFFF"/>
     </LinearGradientBrush>
 </ResourceDictionary>
