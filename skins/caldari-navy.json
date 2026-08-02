@@ -75,6 +75,8 @@
     "GlassBorder": "060B11",
     "GlassText": "74A4C4",
     "GlassTextHi": "6ED3F0",
+    "GlassGlowTop": "46AAE6",
+    "KeyLip": "8FA0B0",
 
     "HazardA": "C9A23E",
     "HazardB": "0E1620"
@@ -90,6 +92,8 @@
 
     "KeySheen": { "from": "White", "fromAlpha": "26", "to": "White", "toAlpha": "00", "angle": 90 },
     "KeySheenLit": { "from": "White", "fromAlpha": "40", "to": "White", "toAlpha": "00", "angle": 90 },
-    "PlateSheen": { "from": "White", "fromAlpha": "0D", "to": "White", "toAlpha": "00", "angle": 90 }
+    "PlateSheen": { "from": "White", "fromAlpha": "0D", "to": "White", "toAlpha": "00", "angle": 90 },
+
+    "GlassGlow": { "from": "GlassGlowTop", "fromAlpha": "38", "to": "GlassGlowTop", "toAlpha": "00", "angle": 90 }
   }
 }

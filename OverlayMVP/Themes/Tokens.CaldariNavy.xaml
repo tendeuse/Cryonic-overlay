@@ -121,25 +121,27 @@
     <!-- Skin-specific tokens. No counterpart in the default theme: these
          exist only for skins whose component layer draws things the
          default one does not (key bevels, glass, hazard striping). -->
-    <SolidColorBrush x:Key="AccentKeyHi" Color="#FF68757F"/>
-    <SolidColorBrush x:Key="AccentKeyLo" Color="#FF4A555E"/>
-    <SolidColorBrush x:Key="AmberKeyHi"  Color="#FF4A3D1F"/>
-    <SolidColorBrush x:Key="AmberKeyLo"  Color="#FF382E15"/>
-    <SolidColorBrush x:Key="GlassBorder" Color="#FF060B11"/>
-    <SolidColorBrush x:Key="GlassBottom" Color="#FF050B13"/>
-    <SolidColorBrush x:Key="GlassText"   Color="#FF74A4C4"/>
-    <SolidColorBrush x:Key="GlassTextHi" Color="#FF6ED3F0"/>
-    <SolidColorBrush x:Key="GlassTop"    Color="#FF0A1826"/>
-    <SolidColorBrush x:Key="GreenKeyHi"  Color="#FF1E3A34"/>
-    <SolidColorBrush x:Key="GreenKeyLo"  Color="#FF152A26"/>
-    <SolidColorBrush x:Key="HazardA"     Color="#FFC9A23E"/>
-    <SolidColorBrush x:Key="HazardB"     Color="#FF0E1620"/>
-    <SolidColorBrush x:Key="KeyBorder"   Color="#FF232A31"/>
-    <SolidColorBrush x:Key="KeyEdge"     Color="#FF14181C"/>
-    <SolidColorBrush x:Key="KeyHi"       Color="#FF4E5A66"/>
-    <SolidColorBrush x:Key="KeyLo"       Color="#FF39434D"/>
-    <SolidColorBrush x:Key="RedKeyHi"    Color="#FF442426"/>
-    <SolidColorBrush x:Key="RedKeyLo"    Color="#FF33191B"/>
+    <SolidColorBrush x:Key="AccentKeyHi"  Color="#FF68757F"/>
+    <SolidColorBrush x:Key="AccentKeyLo"  Color="#FF4A555E"/>
+    <SolidColorBrush x:Key="AmberKeyHi"   Color="#FF4A3D1F"/>
+    <SolidColorBrush x:Key="AmberKeyLo"   Color="#FF382E15"/>
+    <SolidColorBrush x:Key="GlassBorder"  Color="#FF060B11"/>
+    <SolidColorBrush x:Key="GlassBottom"  Color="#FF050B13"/>
+    <SolidColorBrush x:Key="GlassGlowTop" Color="#FF46AAE6"/>
+    <SolidColorBrush x:Key="GlassText"    Color="#FF74A4C4"/>
+    <SolidColorBrush x:Key="GlassTextHi"  Color="#FF6ED3F0"/>
+    <SolidColorBrush x:Key="GlassTop"     Color="#FF0A1826"/>
+    <SolidColorBrush x:Key="GreenKeyHi"   Color="#FF1E3A34"/>
+    <SolidColorBrush x:Key="GreenKeyLo"   Color="#FF152A26"/>
+    <SolidColorBrush x:Key="HazardA"      Color="#FFC9A23E"/>
+    <SolidColorBrush x:Key="HazardB"      Color="#FF0E1620"/>
+    <SolidColorBrush x:Key="KeyBorder"    Color="#FF232A31"/>
+    <SolidColorBrush x:Key="KeyEdge"      Color="#FF14181C"/>
+    <SolidColorBrush x:Key="KeyHi"        Color="#FF4E5A66"/>
+    <SolidColorBrush x:Key="KeyLip"       Color="#FF8FA0B0"/>
+    <SolidColorBrush x:Key="KeyLo"        Color="#FF39434D"/>
+    <SolidColorBrush x:Key="RedKeyHi"     Color="#FF442426"/>
+    <SolidColorBrush x:Key="RedKeyLo"     Color="#FF33191B"/>
 
     <LinearGradientBrush x:Key="KeyFace" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0" Color="#FF4E5A66"/>
@@ -189,5 +191,10 @@
     <LinearGradientBrush x:Key="PlateSheen" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0" Color="#0DFFFFFF"/>
         <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassGlow" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#3846AAE6"/>
+        <GradientStop Offset="1" Color="#0046AAE6"/>
     </LinearGradientBrush>
 </ResourceDictionary>

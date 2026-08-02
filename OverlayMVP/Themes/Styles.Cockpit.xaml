@@ -19,6 +19,53 @@
                     xmlns:ctl="clr-namespace:OverlayMVP.Controls">
 
         <!-- ══════════════════════════════════════════════════════════════════
+             CONSOLE MATERIALS
+             Patterns rather than colours, so they live here and not in a
+             palette: a scanline is black regardless of what colour the skin
+             paints its glass, and hazard striping is diagonal in every skin
+             that has it. Only their COLOURS come from tokens.
+             ══════════════════════════════════════════════════════════════════ -->
+
+        <!-- CRT scanlines. Tiled 3px: one dark row, two clear. Laid over glass
+             at low opacity so text stays readable. -->
+        <DrawingBrush x:Key="Scanlines" TileMode="Tile"
+                      Viewport="0,0,3,3" ViewportUnits="Absolute"
+                      Opacity="0.5">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Brush="#33000000">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,3,1"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <!-- Hazard striping: 45° brass and dark, the way a real panel marks a
+             caution strip. -->
+        <DrawingBrush x:Key="HazardStripe" TileMode="Tile"
+                      Viewport="0,0,14,14" ViewportUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="{DynamicResource HazardB}">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry Rect="0,0,14,14"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="{DynamicResource HazardA}">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry Figures="M0,14 L14,0 L14,7 L7,14 Z"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="{DynamicResource HazardA}">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry Figures="M0,7 L7,0 L0,0 Z"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <!-- ══════════════════════════════════════════════════════════════════
              ComboBox — application-wide dark high-contrast style.
              Full ControlTemplate required: without it the popup always renders
              with the system (light) theme regardless of Background/Foreground.
@@ -199,27 +246,32 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <!-- The recess the key sits in. Only its bottom
-                                 2px are ever visible; that sliver is what
-                                 reads as thickness. -->
+                            <!-- The moulded base the key is seated in. Only
+                                 its bottom 3px show; that sliver is the whole
+                                 illusion of thickness. -->
                             <Border x:Name="Edge"
                                     Background="{DynamicResource KeyEdge}"
-                                    CornerRadius="3"/>
+                                    CornerRadius="4"/>
 
                             <Border x:Name="Face"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="3"
-                                    Margin="0,0,0,2">
+                                    CornerRadius="4"
+                                    Margin="0,0,0,3">
                                 <Grid>
-                                    <!-- Specular sheen: bright along the top
-                                         lip, gone by the middle. Painted over
-                                         the face so it works with whatever
-                                         colour that button carries. -->
+                                    <!-- Specular sheen across the crown. -->
                                     <Border x:Name="Sheen"
                                             Background="{DynamicResource KeySheen}"
-                                            CornerRadius="2"/>
+                                            CornerRadius="3"/>
+                                    <!-- The lit top lip. One pixel of bright
+                                         edge is what separates a moulded key
+                                         from a rounded rectangle. -->
+                                    <Border x:Name="Lip"
+                                            Height="1"
+                                            VerticalAlignment="Top"
+                                            Margin="3,1,3,0"
+                                            Background="{DynamicResource KeyLip}"/>
                                     <ContentPresenter HorizontalAlignment="Center"
                                                       VerticalAlignment="Center"
                                                       Margin="{TemplateBinding Padding}"/>
@@ -232,12 +284,18 @@
                                         Value="{DynamicResource KeySheenLit}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Face"  Property="Margin" Value="0,2,0,0"/>
-                                <Setter TargetName="Sheen" Property="Opacity" Value="0.3"/>
+                                <!-- Full travel: the crown drops the whole 3px
+                                     into the base, the lip rolls out of sight
+                                     and the sheen dulls. The key is DOWN, not
+                                     merely darker. -->
+                                <Setter TargetName="Face"  Property="Margin"     Value="0,3,0,0"/>
+                                <Setter TargetName="Sheen" Property="Opacity"    Value="0.25"/>
+                                <Setter TargetName="Lip"   Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.45"/>
-                                <Setter TargetName="Sheen" Property="Opacity" Value="0"/>
+                                <Setter TargetName="Sheen" Property="Opacity"    Value="0"/>
+                                <Setter TargetName="Lip"   Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -352,7 +410,45 @@
                                         Background="{DynamicResource Amber}"
                                         Opacity="0.55"/>
 
-                                <ContentPresenter/>
+                                <!-- THE GLASS READOUT.
+                                     A headed section is an instrument that
+                                     displays something, so its content sits
+                                     behind glass: recessed, darker than the
+                                     plate around it, edge-lit, scanlined.
+
+                                     Keyed off Header rather than off any
+                                     particular section, because the template
+                                     styles a CATEGORY. A sixth section added
+                                     tomorrow gets its screen for free, and the
+                                     button rows and footer — which display
+                                     nothing and are headerless — correctly
+                                     stay bare plate. -->
+                                <Border x:Name="Glass"
+                                        Background="{DynamicResource GlassFace}"
+                                        BorderBrush="{DynamicResource GlassBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="8,7">
+                                    <Grid>
+                                        <ContentPresenter/>
+                                        <!-- Over the content, not under it:
+                                             scanlines fall ON the display.
+                                             Hit-testing off so the glass never
+                                             swallows a click. -->
+                                        <Border x:Name="Scan"
+                                                Background="{StaticResource Scanlines}"
+                                                CornerRadius="3"
+                                                IsHitTestVisible="False"
+                                                Margin="-8,-7,-8,-7"/>
+                                        <!-- Inner top glow: light entering the
+                                             screen from the bezel above. -->
+                                        <Border x:Name="Glow"
+                                                Background="{DynamicResource GlassGlow}"
+                                                CornerRadius="3"
+                                                IsHitTestVisible="False"
+                                                Margin="-8,-7,-8,-7"/>
+                                    </Grid>
+                                </Border>
                             </StackPanel>
                           </Grid>
                         </Border>
@@ -362,9 +458,15 @@
                                 <!-- Headerless sections (the footer, the panel
                                      launcher) get neither the header row nor
                                      its rule — a rule with nothing above it
-                                     would read as a stray divider. -->
+                                     would read as a stray divider — and no
+                                     glass, because they display nothing. -->
                                 <Setter TargetName="HeaderRow"  Property="Visibility" Value="Collapsed"/>
                                 <Setter TargetName="HeaderRule" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="Glass" Property="Background"      Value="Transparent"/>
+                                <Setter TargetName="Glass" Property="BorderThickness" Value="0"/>
+                                <Setter TargetName="Glass" Property="Padding"         Value="0"/>
+                                <Setter TargetName="Scan"  Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -391,13 +493,35 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ctl:WindowShell}">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter/>
-                        </Border>
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Border>
+
+                            <!-- CORNER BOLTS.
+                                 The panel is fastened to the hull at four
+                                 points. Purely template decoration — no window
+                                 knows these exist, and no window has to.
+
+                                 Drawn OVER the content, since a bolt head
+                                 stands proud of the plate it fixes. Hit-testing
+                                 is off so a bolt can never eat a click meant
+                                 for the title bar or a resize edge. -->
+                            <Grid IsHitTestVisible="False" Margin="5">
+                                <Ellipse Width="7" Height="7" HorizontalAlignment="Left"  VerticalAlignment="Top"
+                                         Fill="{DynamicResource Amber}" Opacity="0.85"/>
+                                <Ellipse Width="7" Height="7" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                         Fill="{DynamicResource Amber}" Opacity="0.85"/>
+                                <Ellipse Width="7" Height="7" HorizontalAlignment="Left"  VerticalAlignment="Bottom"
+                                         Fill="{DynamicResource Amber}" Opacity="0.85"/>
+                                <Ellipse Width="7" Height="7" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                         Fill="{DynamicResource Amber}" Opacity="0.85"/>
+                            </Grid>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -412,13 +536,36 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ctl:TitleBar}">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter/>
-                        </Border>
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <!-- Brand plate lighting, behind the bar's
+                                         own content. -->
+                                    <Border Background="{DynamicResource PlateSheen}"
+                                            CornerRadius="{TemplateBinding CornerRadius}"
+                                            Margin="-10,-6,-10,-6"/>
+                                    <ContentPresenter/>
+                                </Grid>
+                            </Border>
+
+                            <!-- CAUTION STRIP.
+                                 Every console has one. Sits along the bottom
+                                 edge of the brand bar, where the mockup puts
+                                 it, and is template decoration alone — the
+                                 window neither supplies it nor knows of it.
+                                 Hit-testing off: this strip lies over the
+                                 draggable title bar and must not steal the
+                                 drag. -->
+                            <Border Height="4"
+                                    VerticalAlignment="Bottom"
+                                    Background="{StaticResource HazardStripe}"
+                                    IsHitTestVisible="False"
+                                    Opacity="0.9"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
