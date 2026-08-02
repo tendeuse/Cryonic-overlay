@@ -248,6 +248,32 @@ namespace OverlayMVP.Services
             catch { return null; }
         }
 
+        /// <summary>
+        /// Skin ids this character owns. Returns null when the answer is
+        /// UNKNOWN -- offline, unauthenticated, server error -- which the
+        /// caller must not confuse with "owns nothing". Treating a failed
+        /// request as an empty list would strip a pilot of a skin they paid
+        /// for the moment their connection dropped.
+        /// </summary>
+        public async Task<List<string>?> GetMySkinsAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                var resp = await SendAuthedAsync(
+                    () => new HttpRequestMessage(HttpMethod.Get, $"{_baseUrl}/skins/me"), ct);
+                if (!resp.IsSuccessStatusCode) return null;
+                var text = await resp.Content.ReadAsStringAsync(ct);
+                using var doc = JsonDocument.Parse(text);
+                if (!doc.RootElement.TryGetProperty("skins", out var arr) ||
+                    arr.ValueKind != JsonValueKind.Array) return null;
+                var outList = new List<string>();
+                foreach (var e in arr.EnumerateArray())
+                    if (e.ValueKind == JsonValueKind.String) outList.Add(e.GetString()!);
+                return outList;
+            }
+            catch { return null; }
+        }
+
         public async Task<VersionInfo?> GetVersionAsync(CancellationToken ct = default)
         {
             try

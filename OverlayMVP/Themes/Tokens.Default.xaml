@@ -112,4 +112,9 @@
     <SolidColorBrush x:Key="ComboEdge" Color="#FF1A4A78"/>   <!-- ComboBox drop-down edge -->
     <SolidColorBrush x:Key="Indigo44" Color="#443060A0"/>   <!-- ComboBox popup shadow -->
 
+
+    <!-- Role marker. ThemeManager swaps dictionaries by this, not by
+         guessing from the keys they contain. -->
+    <sys:String x:Key="__SkinDictionaryRole"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib">Tokens</sys:String>
 </ResourceDictionary>

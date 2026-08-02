@@ -16,6 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Barlow, embedded so the cockpit skins look the same on every machine.
+         Resource (not Content): the font must live INSIDE the assembly, or a
+         pack:// FontFamily URI cannot resolve it and WPF silently falls back
+         to the default face with no error.
+         SIL Open Font License 1.1 — Fonts\OFL.txt travels with them. -->
+    <Resource Include="Fonts\*.ttf" />
+    <None Include="Fonts\OFL.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
     <None Include="Assets\seed_packs.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

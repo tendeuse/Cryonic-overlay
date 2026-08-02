@@ -194,6 +194,34 @@
             </Setter>
         </Style>
 
+        <!-- ── Launcher key ───────────────────────────────────────────────
+             The full-width keys in the panel launcher row.
+
+             Exists so a skin can change how BIG a launcher key is, not only
+             what colour it is. These three values used to sit on each button
+             in MainWindow.xaml, where a style cannot override them — so a
+             cockpit skin could restyle a key's surface but never its
+             proportions, which is half of what makes a key look physical.
+
+             Values are exactly what the instances carried, so the default
+             renders identically. -->
+        <Style x:Key="LauncherBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
+            <Setter Property="Padding"             Value="10,5"/>
+            <Setter Property="Margin"              Value="0,2"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <!-- ── Status key ─────────────────────────────────────────────────
+             The intel report buttons (GATE CAMP, PIRATES, ROAMING).
+
+             Adds nothing to IntelBtn here — the default draws them exactly as
+             it always has. It exists so a skin can tell a REPORT key apart
+             from a launcher key, which share IntelBtn and would otherwise be
+             indistinguishable to the styles layer. Each instance already
+             carries its own BorderBrush (red, orange, amber); a skin can read
+             that as an indicator colour. -->
+        <Style x:Key="StatusKey" TargetType="Button" BasedOn="{StaticResource IntelBtn}"/>
+
         <!-- ── Small action button ────────────────────────────────────────── -->
         <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeXs}"/>
@@ -345,4 +373,9 @@
             </Setter>
         </Style>
 
+
+    <!-- Role marker. ThemeManager swaps dictionaries by this, not by
+         guessing from the keys they contain. -->
+    <sys:String x:Key="__SkinDictionaryRole"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib">Styles</sys:String>
 </ResourceDictionary>

@@ -417,6 +417,11 @@ namespace OverlayMVP.ViewModels
             {
                 await RefreshSponsorAsync();
                 await CheckVersionAsync();
+                // Skin entitlements ride the same hourly loop. They change
+                // rarely — a purchase or a revoke — so polling harder would
+                // cost requests for nothing, and the local cache means a
+                // missed refresh is invisible rather than a lost skin.
+                await Services.SkinEntitlements.RefreshAsync(Db, _api);
                 try { await Task.Delay(SponsorVersionIntervalMs, ct); }
                 catch (TaskCanceledException) { break; }
             }

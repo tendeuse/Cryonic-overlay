@@ -25,12 +25,20 @@ namespace OverlayMVP
 
         public static bool IsScreenshotMode => _screenshotPath is not null;
 
+        // --skin <id>: render with a given skin instead of the saved one. Lets
+        // the screenshot harness capture a skin without changing what is stored,
+        // so a capture can never leave the user's own preference altered.
+        private static string? _skinOverride;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var idx = Array.IndexOf(e.Args, "--screenshot");
             if (idx >= 0 && idx + 1 < e.Args.Length) _screenshotPath = e.Args[idx + 1];
+
+            var skinIdx = Array.IndexOf(e.Args, "--skin");
+            if (skinIdx >= 0 && skinIdx + 1 < e.Args.Length) _skinOverride = e.Args[skinIdx + 1];
 
             // ── FIX: take control of shutdown ourselves ──────────────────
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -64,6 +72,22 @@ namespace OverlayMVP
         {
             // Apply saved font size (may have just been set in SettingsWindow)
             Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
+
+            // Skin before the window is constructed. Applying it afterwards
+            // works too -- every colour is a DynamicResource -- but doing it
+            // first avoids a visible repaint on startup.
+            //
+            // --skin only overrides inside --screenshot. It exists so the
+            // harness can capture a skin without touching the saved setting;
+            // honouring it during a normal run would make a paid skin a
+            // command-line flag away. Client-side cosmetics can never be fully
+            // protected -- the XAML ships in the assembly either way -- but
+            // that is no reason to build the bypass in.
+            var wanted = IsScreenshotMode && _skinOverride is not null
+                ? _skinOverride
+                : SkinEntitlements.Resolve(db, SkinStore.Load(db));
+            ThemeManager.Apply(wanted);
+
             var main = new MainWindow(db);
 
             if (IsScreenshotMode)
