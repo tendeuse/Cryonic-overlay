@@ -1,0 +1,141 @@
+{
+  "name": "Hangar Deck",
+  "description": "Gunmetal hangar plating under work lights. Steel-blue accent, brass hazard striping, warmer greys than the navy skin. Derived from Themes/design-reference/cryonic-2b-hangar-deck.css.",
+  "colours": {
+    "Bg": "15171A",
+    "Panel": "23272D",
+    "Well": "15171A",
+    "Surface": "1E2126",
+    "Border": "363C44",
+    "BorderStrong": "454D57",
+    "SteelBlue": "454D57",
+    "Text": "DFE4E9",
+    "TextDim": "9AA5B1",
+    "TextFaint": "6D7683",
+    "PaleLavender": "DFE4E9",
+    "PaleCyan": "7EA3BD",
+    "SkyBlue": "7FD0E8",
+    "IceBlue": "7FD0E8",
+    "SteelGrey": "9AA5B1",
+    "SlateGray": "6D7683",
+    "SlateNavy": "5C6672",
+    "Ivory": "E8B04A",
+    "White": "FFFFFF",
+    "Black": "000000",
+    "Accent": "5980A6",
+    "Amber": "D9A03C",
+    "Red": "C9402E",
+    "Green": "3E8A4D",
+    "Orange": "E09A52",
+    "Cyan": "7FD0E8",
+    "AquaBlue": "5996C8",
+    "Gray": "5980A6",
+    "Emerald": "3E8A4D",
+    "Indigo": "454D57",
+    "MintGreen": "8FC79B",
+    "DuskBlue": "454D57",
+    "TwilightBlue": "22262B",
+    "DeepTeal": "28332B",
+    "Onyx": "1E2126",
+    "DeepInk": "14161A",
+    "DeepNavy": "1E2126",
+    "GunMetal": "15171A",
+    "Charcoal": "23272D",
+    "Graphite": "1A1D21",
+    "Obsidian": "15171A",
+    "InkBlue": "1B1E23",
+    "Abyss": "091018",
+    "ComboBg": "22262B",
+    "ComboBorder": "454D57",
+    "ComboItemBg": "2B3037",
+    "ComboHover": "31373F",
+    "ComboSelect": "3D5A78",
+    "ComboEdge": "454D57",
+    "KeyHi": "2B3037",
+    "KeyLo": "22262B",
+    "KeyBorder": "454D57",
+    "KeyEdge": "14161A",
+    "AccentKeyHi": "5980A6",
+    "AccentKeyLo": "3D5A78",
+    "AmberKeyHi": "332D24",
+    "AmberKeyLo": "262119",
+    "RedKeyHi": "342929",
+    "RedKeyLo": "251C1C",
+    "GreenKeyHi": "28332B",
+    "GreenKeyLo": "1D251F",
+    "GlassTop": "0E1A26",
+    "GlassBottom": "091018",
+    "GlassBorder": "0A0D10",
+    "GlassText": "7EA3BD",
+    "GlassTextHi": "7FD0E8",
+    "GlassGlowTop": "5996C8",
+    "KeyLip": "8A939E",
+    "HazardA": "D9A03C",
+    "HazardB": "15171A"
+  },
+  "gradients": {
+    "KeyFace": {
+      "from": "KeyHi",
+      "to": "KeyLo",
+      "angle": 90
+    },
+    "AccentKeyFace": {
+      "from": "AccentKeyHi",
+      "to": "AccentKeyLo",
+      "angle": 90
+    },
+    "AmberKeyFace": {
+      "from": "AmberKeyHi",
+      "to": "AmberKeyLo",
+      "angle": 90
+    },
+    "RedKeyFace": {
+      "from": "RedKeyHi",
+      "to": "RedKeyLo",
+      "angle": 90
+    },
+    "GreenKeyFace": {
+      "from": "GreenKeyHi",
+      "to": "GreenKeyLo",
+      "angle": 90
+    },
+    "GlassFace": {
+      "from": "GlassTop",
+      "to": "GlassBottom",
+      "angle": 90
+    },
+    "PlateFace": {
+      "from": "Panel",
+      "to": "Bg",
+      "angle": 90
+    },
+    "KeySheen": {
+      "from": "White",
+      "fromAlpha": "26",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "KeySheenLit": {
+      "from": "White",
+      "fromAlpha": "40",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "PlateSheen": {
+      "from": "White",
+      "fromAlpha": "0D",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassGlow": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "38",
+      "to": "GlassGlowTop",
+      "toAlpha": "00",
+      "angle": 90
+    }
+  }
+}

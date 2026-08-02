@@ -23,7 +23,9 @@ const SCRATCH  = path.join("tools", ".shot-scratch");
 // (and the guarantee the structure refactor rests on) is unbroken.
 const SKINS = [
   { id: null,          baseline: "MainWindow.png" },
-  { id: "CaldariNavy", baseline: "MainWindow.CaldariNavy.png" },
+  { id: "CaldariNavy",    baseline: "MainWindow.CaldariNavy.png" },
+  { id: "HangarDeck",     baseline: "MainWindow.HangarDeck.png" },
+  { id: "CaldariConsole", baseline: "MainWindow.CaldariConsole.png" },
 ];
 
 const accept = process.argv.includes("--accept");

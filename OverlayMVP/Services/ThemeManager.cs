@@ -41,7 +41,9 @@ namespace OverlayMVP.Services
         public static readonly IReadOnlyList<Skin> Available = new[]
         {
             new Skin("Default",     "Default",      "Default",     "Default", Paid: false),
-            new Skin("CaldariNavy", "Caldari Navy", "CaldariNavy", "Cockpit", Paid: true),
+            new Skin("CaldariNavy",    "Caldari Navy",    "CaldariNavy",    "Cockpit", Paid: true),
+            new Skin("HangarDeck",     "Hangar Deck",     "HangarDeck",     "Cockpit", Paid: true),
+            new Skin("CaldariConsole", "Caldari Console", "CaldariConsole", "Cockpit", Paid: true),
         };
 
         public static Skin Find(string id) =>
