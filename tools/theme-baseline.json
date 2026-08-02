@@ -542,5 +542,12 @@
     "#FFEF5350",
     "#FF0A0F14",
     "#FF1E3A50"
+  ],
+  "STRUCTURE-REFACTOR: default-style Setters (SectionPanel, WindowShell, TitleBar)": [
+    "#881A2030",
+    "#FF1E3148",
+    "#CC0D1117",
+    "#FF1E3148",
+    "#CC111820"
   ]
 }

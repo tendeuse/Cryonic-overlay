@@ -52,8 +52,17 @@ namespace OverlayMVP
             _hotkeys.SetHandler(HotkeyManager.ID_REPORT_INTEL,  () => _vm.ReportRoamingCommand.Execute(null));
 
             _multibox.SetDestinationWindow(_hwnd);
-            _multibox.RefreshInstances();
-            RefreshMultiboxPanel();
+
+            // The multibox panel renders one card per running EVE client, so a
+            // capture taken while the game is open differs from one taken while
+            // it is closed. That makes the visual baseline depend on whether the
+            // developer happens to be playing, which is not a property a safety
+            // net can have. Skip the scan entirely when capturing.
+            if (!App.IsScreenshotMode)
+            {
+                _multibox.RefreshInstances();
+                RefreshMultiboxPanel();
+            }
 
             _multiboxTimer = new System.Windows.Threading.DispatcherTimer
             {
@@ -81,8 +90,13 @@ namespace OverlayMVP
                 // Session tracker: count wall-clock time while any EVE client is running.
                 if (_multibox.Instances.Count > 0) _vm.Session.TickPlaytime(5);
             };
-            _multiboxTimer.Start();
-            _vm.StartPolling();
+            // Not started when capturing: the app exits before 5s elapses today,
+            // but relying on that timing would make the baseline fragile.
+            if (!App.IsScreenshotMode) _multiboxTimer.Start();
+            // Screenshot mode (--screenshot) must capture a deterministic baseline:
+            // the poll loop hits ESI and the network on a 10s cadence, so leaving
+            // it running would race the capture and make every diff noise.
+            if (!App.IsScreenshotMode) _vm.StartPolling();
             _vm.SystemChangedNotify = NotifySystemChanged;
         }
 

@@ -7,6 +7,8 @@
 //
 using System;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using OverlayMVP.Services;
 using OverlayMVP.Views;
@@ -15,9 +17,20 @@ namespace OverlayMVP
 {
     public partial class App : Application
     {
+        // --screenshot <path>: render MainWindow once and exit. Used by the
+        // structure refactor's visual baseline. Polling and network are left
+        // off so the capture is deterministic -- live intel or a changing
+        // character list would make every diff noisy and useless.
+        private static string? _screenshotPath;
+
+        public static bool IsScreenshotMode => _screenshotPath is not null;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            var idx = Array.IndexOf(e.Args, "--screenshot");
+            if (idx >= 0 && idx + 1 < e.Args.Length) _screenshotPath = e.Args[idx + 1];
 
             // ── FIX: take control of shutdown ourselves ──────────────────
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -50,7 +63,7 @@ namespace OverlayMVP
         }
 
         // Called by FirstRunWindow after a successful pair exchange.
-        public void OpenMainWindow(AppDb db)
+        public MainWindow OpenMainWindow(AppDb db)
         {
             // Apply saved font size (may have just been set in SettingsWindow)
             var fontSize = Views.SettingsWindow.LoadFontSize(db);
@@ -58,7 +71,50 @@ namespace OverlayMVP
             System.Windows.Application.Current.Resources["GlobalFontSizeSm"] = Math.Max(6.0, fontSize - 2.0);
             System.Windows.Application.Current.Resources["GlobalFontSizeXs"] = Math.Max(5.0, fontSize - 3.0);
             var main = new MainWindow(db);
+
+            if (IsScreenshotMode)
+            {
+                // Subscribe BEFORE Show() -- Show() can raise Loaded synchronously
+                // for the first window, so attaching after Show() risks missing it
+                // and hanging forever with no window to capture.
+                main.Loaded += (_, __) =>
+                {
+                    // Let WPF finish layout and render before capturing.
+                    main.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        try
+                        {
+                            // Resolve against the working directory explicitly. A bare
+                            // filename lands wherever the caller happened to be -- which
+                            // for a shell launched in Program Files is not writable.
+                            var full = System.IO.Path.GetFullPath(_screenshotPath!);
+                            var dir  = System.IO.Path.GetDirectoryName(full);
+                            if (!string.IsNullOrEmpty(dir)) System.IO.Directory.CreateDirectory(dir);
+
+                            var rtb = new RenderTargetBitmap(
+                                (int)main.ActualWidth, (int)main.ActualHeight,
+                                96, 96, PixelFormats.Pbgra32);
+                            rtb.Render(main);
+                            var enc = new PngBitmapEncoder();
+                            enc.Frames.Add(BitmapFrame.Create(rtb));
+                            using (var fs = System.IO.File.Create(full)) enc.Save(fs);
+                            Shutdown();
+                        }
+                        catch (Exception ex)
+                        {
+                            // This is a headless capture tool. NEVER let a failure reach
+                            // the app's fatal-error dialog -- a scripted run would hang
+                            // on a modal box, and a human sees a crash from a feature
+                            // they never invoked. Print and exit non-zero instead.
+                            Console.Error.WriteLine($"--screenshot failed: {ex.Message}");
+                            Environment.Exit(2);
+                        }
+                    }), DispatcherPriority.ContextIdle);
+                };
+            }
+
             main.Show();
+            return main;
         }
 
         // ── Exception surfaces ───────────────────────────────────────────
