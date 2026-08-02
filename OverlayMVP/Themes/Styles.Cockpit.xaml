@@ -1,11 +1,18 @@
-<!-- filename: Themes/Styles.Default.xaml -->
+<!-- filename: Themes/Styles.Cockpit.xaml -->
 <!--
-  The default theme's control styles, moved unchanged from App.xaml.
+  The cockpit component layer, shared by all three cockpit skins.
 
-  Kept separate from Tokens.Default.xaml because the three cockpit skins share
-  ONE component layer and differ only in colour ("the markup / class names never
-  change between skins" — design-reference header). Splitting means those skins
-  reuse a single styles file over three token files instead of duplicating it.
+  Derived from Styles.Default.xaml and deliberately kept key-for-key identical
+  to it. A skin's styles dictionary REPLACES the default one wholesale, so any
+  x:Key present there and missing here renders that control with no style at
+  all — WPF raises nothing, the control simply loses its appearance. Starting
+  from a copy makes that impossible by construction; tools/skin-check.mjs keeps
+  it true.
+
+  What differs from the default is treatment, not structure: keys have a bevel
+  and travel, sections carry a gold top rule, wells read as glass. The three
+  cockpit token files supply the colours ("the markup / class names never change
+  between skins" — design-reference header), so this file is written once.
 -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

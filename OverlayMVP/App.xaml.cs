@@ -25,12 +25,20 @@ namespace OverlayMVP
 
         public static bool IsScreenshotMode => _screenshotPath is not null;
 
+        // --skin <id>: render with a given skin instead of the saved one. Lets
+        // the screenshot harness capture a skin without changing what is stored,
+        // so a capture can never leave the user's own preference altered.
+        private static string? _skinOverride;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var idx = Array.IndexOf(e.Args, "--screenshot");
             if (idx >= 0 && idx + 1 < e.Args.Length) _screenshotPath = e.Args[idx + 1];
+
+            var skinIdx = Array.IndexOf(e.Args, "--skin");
+            if (skinIdx >= 0 && skinIdx + 1 < e.Args.Length) _skinOverride = e.Args[skinIdx + 1];
 
             // ── FIX: take control of shutdown ourselves ──────────────────
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -64,6 +72,12 @@ namespace OverlayMVP
         {
             // Apply saved font size (may have just been set in SettingsWindow)
             Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
+
+            // Skin before the window is constructed. Applying it afterwards
+            // works too -- every colour is a DynamicResource -- but doing it
+            // first avoids a visible repaint on startup.
+            ThemeManager.Apply(_skinOverride ?? SkinStore.Load(db));
+
             var main = new MainWindow(db);
 
             if (IsScreenshotMode)
