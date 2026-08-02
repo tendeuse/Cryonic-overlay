@@ -49,9 +49,9 @@
              at low opacity so text stays readable. -->
         <DrawingBrush x:Key="Scanlines" TileMode="Tile"
                       Viewport="0,0,3,3" ViewportUnits="Absolute"
-                      Opacity="0.5">
+                      Opacity="0.75">
             <DrawingBrush.Drawing>
-                <GeometryDrawing Brush="#33000000">
+                <GeometryDrawing Brush="#4D000000">
                     <GeometryDrawing.Geometry>
                         <RectangleGeometry Rect="0,0,3,1"/>
                     </GeometryDrawing.Geometry>
@@ -530,9 +530,23 @@
                                         Background="{DynamicResource GlassFace}"
                                         BorderBrush="{DynamicResource GlassBorder}"
                                         BorderThickness="1"
-                                        CornerRadius="4"
-                                        Padding="8,7">
+                                        CornerRadius="5"
+                                        Padding="9,8">
                                     <Grid>
+                                        <!-- BEZEL SHADOW, beneath the content.
+                                             Glass sits DOWN in the plate, and
+                                             what says so is a hard shadow
+                                             along the top inside edge where
+                                             the surround overhangs it. Without
+                                             this the screen reads as a darker
+                                             rectangle painted on, rather than
+                                             a panel cut into the console. -->
+                                        <Border x:Name="Bezel"
+                                                Background="{DynamicResource GlassBezel}"
+                                                CornerRadius="4"
+                                                IsHitTestVisible="False"
+                                                Margin="-9,-8,-9,-8"/>
+
                                         <ContentPresenter/>
                                         <!-- Over the content, not under it:
                                              scanlines fall ON the display.
@@ -540,16 +554,29 @@
                                              swallows a click. -->
                                         <Border x:Name="Scan"
                                                 Background="{StaticResource Scanlines}"
-                                                CornerRadius="3"
+                                                CornerRadius="4"
                                                 IsHitTestVisible="False"
-                                                Margin="-8,-7,-8,-7"/>
+                                                Margin="-9,-8,-9,-8"/>
                                         <!-- Inner top glow: light entering the
                                              screen from the bezel above. -->
                                         <Border x:Name="Glow"
                                                 Background="{DynamicResource GlassGlow}"
-                                                CornerRadius="3"
+                                                CornerRadius="4"
                                                 IsHitTestVisible="False"
-                                                Margin="-8,-7,-8,-7"/>
+                                                Margin="-9,-8,-9,-8"/>
+
+                                        <!-- Phosphor bloom along the bottom
+                                             edge: a lit screen spills light
+                                             onto its own lower bezel. Small,
+                                             but it is the difference between
+                                             "dark panel" and "switched on". -->
+                                        <Border x:Name="Bloom"
+                                                Height="10"
+                                                VerticalAlignment="Bottom"
+                                                Background="{DynamicResource GlassBloom}"
+                                                CornerRadius="0,0,4,4"
+                                                IsHitTestVisible="False"
+                                                Margin="-9,0,-9,-8"/>
 
                                         <!-- HUD REGISTRATION BRACKETS.
                                              Corner ticks framing the readout,
@@ -601,6 +628,8 @@
                                 <Setter TargetName="Glass" Property="Padding"         Value="0"/>
                                 <Setter TargetName="Scan"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Bezel" Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Bloom" Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Ticks" Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>

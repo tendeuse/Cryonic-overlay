@@ -194,7 +194,17 @@
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="GlassGlow" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#385996C8"/>
+        <GradientStop Offset="0" Color="#595996C8"/>
         <GradientStop Offset="1" Color="#005996C8"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassBezel" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#80000000"/>
+        <GradientStop Offset="1" Color="#00000000"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassBloom" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#005996C8"/>
+        <GradientStop Offset="1" Color="#3D5996C8"/>
     </LinearGradientBrush>
 </ResourceDictionary>

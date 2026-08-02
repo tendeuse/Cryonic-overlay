@@ -83,10 +83,23 @@ namespace OverlayMVP
             // command-line flag away. Client-side cosmetics can never be fully
             // protected -- the XAML ships in the assembly either way -- but
             // that is no reason to build the bypass in.
-            // A corp-imposed skin outranks the stored preference: the pilot
-            // does not choose it, so an older personal choice must not win.
-            var wanted = IsScreenshotMode && _skinOverride is not null
-                ? _skinOverride
+            // SCREENSHOT MODE IGNORES THE SAVED PREFERENCE ENTIRELY.
+            //
+            // A visual baseline must not depend on machine state. Reading
+            // SkinStore here meant the "Default" capture rendered whatever
+            // skin the person at this machine last chose -- so the harness
+            // silently compared the wrong skin against the Default baseline,
+            // and re-recording would have frozen someone's personal choice in
+            // as the reference image for everyone.
+            //
+            // --skin selects explicitly; without it, screenshot mode is always
+            // the default skin.
+            //
+            // Outside screenshot mode a corp-imposed skin outranks the stored
+            // preference: the pilot does not choose it, so an older personal
+            // choice must not win.
+            var wanted = IsScreenshotMode
+                ? (_skinOverride ?? ThemeManager.DefaultTheme)
                 : SkinEntitlements.LockedTo(db)
                   ?? SkinEntitlements.Resolve(db, SkinStore.Load(db));
             ThemeManager.Apply(wanted);

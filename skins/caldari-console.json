@@ -132,9 +132,23 @@
     },
     "GlassGlow": {
       "from": "GlassGlowTop",
-      "fromAlpha": "38",
+      "fromAlpha": "59",
       "to": "GlassGlowTop",
       "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassBezel": {
+      "from": "Black",
+      "fromAlpha": "80",
+      "to": "Black",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassBloom": {
+      "from": "GlassGlowTop",
+      "toAlpha": "3D",
+      "to": "GlassGlowTop",
+      "fromAlpha": "00",
       "angle": 90
     }
   }
