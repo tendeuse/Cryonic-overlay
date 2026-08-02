@@ -249,13 +249,16 @@ namespace OverlayMVP.Services
         }
 
         /// <summary>
-        /// Skin ids this character owns. Returns null when the answer is
-        /// UNKNOWN -- offline, unauthenticated, server error -- which the
-        /// caller must not confuse with "owns nothing". Treating a failed
-        /// request as an empty list would strip a pilot of a skin they paid
-        /// for the moment their connection dropped.
+        /// What this character is entitled to. Null means UNKNOWN -- offline,
+        /// unauthenticated, server error -- which the caller must not confuse
+        /// with "entitled to nothing". Treating a failed request as an empty
+        /// answer would strip a pilot of a skin they are paying for the moment
+        /// their connection dropped.
         /// </summary>
-        public async Task<List<string>?> GetMySkinsAsync(CancellationToken ct = default)
+        public sealed record SkinEntitlementDto(
+            List<string> Skins, string? LockedTo, string? Source, long? ExpiresAt);
+
+        public async Task<SkinEntitlementDto?> GetMySkinsAsync(CancellationToken ct = default)
         {
             try
             {
@@ -264,12 +267,24 @@ namespace OverlayMVP.Services
                 if (!resp.IsSuccessStatusCode) return null;
                 var text = await resp.Content.ReadAsStringAsync(ct);
                 using var doc = JsonDocument.Parse(text);
-                if (!doc.RootElement.TryGetProperty("skins", out var arr) ||
-                    arr.ValueKind != JsonValueKind.Array) return null;
-                var outList = new List<string>();
+                var root = doc.RootElement;
+
+                if (!root.TryGetProperty("skins", out var arr) || arr.ValueKind != JsonValueKind.Array)
+                    return null;
+
+                var skins = new List<string>();
                 foreach (var e in arr.EnumerateArray())
-                    if (e.ValueKind == JsonValueKind.String) outList.Add(e.GetString()!);
-                return outList;
+                    if (e.ValueKind == JsonValueKind.String) skins.Add(e.GetString()!);
+
+                string? Str(string name) =>
+                    root.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.String
+                        ? v.GetString() : null;
+
+                long? expires = root.TryGetProperty("expires_at", out var ex) &&
+                                ex.ValueKind == JsonValueKind.Number && ex.TryGetInt64(out var n)
+                                ? n : null;
+
+                return new SkinEntitlementDto(skins, Str("locked_to"), Str("source"), expires);
             }
             catch { return null; }
         }

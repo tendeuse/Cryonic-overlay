@@ -180,12 +180,33 @@ namespace OverlayMVP.Views
             _skinOnOpen = ThemeManager.Current;
 
             var entitled = SkinEntitlements.Available(_db);
-            SkinBox.ItemsSource   = entitled;
-            SkinBox.SelectedItem  = entitled.FirstOrDefault(s => s.Id == _skinOnOpen) ?? entitled[0];
+            SkinBox.ItemsSource = entitled;
 
-            var locked = ThemeManager.Available.Count - entitled.Count;
-            SkinHint.Text = locked > 0
-                ? $"{locked} more skin(s) available. Purchased skins are granted to your character and appear here automatically."
+            // A corp-imposed skin is not a preference. The $15 tier buys the
+            // CEO's choice for the whole corp, so the picker shows what they
+            // chose and is disabled -- a member who wants their own skin
+            // sponsors personally, which unlocks the choice rather than the
+            // skin.
+            var forced = SkinEntitlements.LockedTo(_db);
+            if (forced is not null)
+            {
+                var skin = entitled.FirstOrDefault(s => s.Id == forced);
+                if (skin is not null)
+                {
+                    SkinBox.SelectedItem = skin;
+                    SkinBox.IsEnabled    = false;
+                    SkinHint.Text        = "Your corporation sets the skin for its members. " +
+                                           "Sponsor personally to choose your own.";
+                    _skinBoxReady = true;
+                    return;
+                }
+            }
+
+            SkinBox.SelectedItem = entitled.FirstOrDefault(s => s.Id == _skinOnOpen) ?? entitled[0];
+
+            var missing = ThemeManager.Available.Count - entitled.Count;
+            SkinHint.Text = missing > 0
+                ? $"{missing} more skin(s) available to sponsors. They appear here automatically once linked."
                 : "";
 
             _skinBoxReady = true;

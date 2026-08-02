@@ -83,9 +83,12 @@ namespace OverlayMVP
             // command-line flag away. Client-side cosmetics can never be fully
             // protected -- the XAML ships in the assembly either way -- but
             // that is no reason to build the bypass in.
+            // A corp-imposed skin outranks the stored preference: the pilot
+            // does not choose it, so an older personal choice must not win.
             var wanted = IsScreenshotMode && _skinOverride is not null
                 ? _skinOverride
-                : SkinEntitlements.Resolve(db, SkinStore.Load(db));
+                : SkinEntitlements.LockedTo(db)
+                  ?? SkinEntitlements.Resolve(db, SkinStore.Load(db));
             ThemeManager.Apply(wanted);
 
             var main = new MainWindow(db);

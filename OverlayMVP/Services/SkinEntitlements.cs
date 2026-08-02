@@ -23,14 +23,51 @@ namespace OverlayMVP.Services
     /// </summary>
     public static class SkinEntitlements
     {
-        private const string CacheKey  = "ui_skins_owned";      // comma-separated ids
-        private const string OverrideKey = "ui_skin_dev_unlock"; // local, developer-only
+        private const string CacheKey    = "ui_skins_owned";     // comma-separated ids
+        private const string LockedKey   = "ui_skin_locked_to";  // corp-imposed skin, or empty
+        private const string ExpiresKey  = "ui_skins_expires_at"; // unix seconds, or empty
+        private const string OverrideKey = "ui_skin_dev_unlock";  // local, developer-only
 
         public static bool IsEntitled(AppDb db, ThemeManager.Skin skin)
         {
             if (!skin.Paid) return true;
             if (DevUnlocked(db)) return true;
+            if (Expired(db)) return false;
             return Cached(db).Contains(skin.Id, StringComparer.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// The skin the pilot's CORP has chosen, which they do not get to
+        /// change. Null when they choose for themselves.
+        ///
+        /// This is the $15 corp perk: the CEO picks one skin and the members
+        /// wear it. A member who sponsors personally is never locked, because
+        /// what they bought is the choice.
+        /// </summary>
+        public static string? LockedTo(AppDb db)
+        {
+            if (DevUnlocked(db)) return null;   // never fight a developer override
+            if (Expired(db)) return null;
+            var v = Read(db, LockedKey);
+            return string.IsNullOrWhiteSpace(v) ? null : v;
+        }
+
+        /// <summary>
+        /// Has the cached entitlement gone stale?
+        ///
+        /// The cache exists so the overlay works offline, but "works offline"
+        /// must not mean "a cancelled subscription lasts forever". The backend
+        /// sends an expiry that already includes its grace window; past it, the
+        /// pilot falls back to the free skins until a refresh succeeds.
+        /// </summary>
+        private static bool Expired(AppDb db)
+        {
+            var raw = Read(db, ExpiresKey);
+            // No expiry recorded means the entitlement did not come from a
+            // subscription -- a manual grant, say -- and does not lapse.
+            if (string.IsNullOrWhiteSpace(raw)) return false;
+            return !long.TryParse(raw, out var at) ||
+                   DateTimeOffset.UtcNow.ToUnixTimeSeconds() > at;
         }
 
         public static IReadOnlyList<ThemeManager.Skin> Available(AppDb db) =>
@@ -55,18 +92,26 @@ namespace OverlayMVP.Services
         /// </summary>
         public static async Task<bool> RefreshAsync(AppDb db, OverlayApiClient api)
         {
-            List<string>? owned;
-            try { owned = await api.GetMySkinsAsync(); }
+            OverlayApiClient.SkinEntitlementDto? ent;
+            try { ent = await api.GetMySkinsAsync(); }
             catch { return false; }
 
-            // null is UNKNOWN, not "owns nothing". Do not write it.
-            if (owned is null) return false;
+            // null is UNKNOWN, not "entitled to nothing". Do not write it --
+            // that is what stops a dropped connection revoking a paid skin.
+            if (ent is null) return false;
 
-            var next = string.Join(",", owned.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct());
-            if (next == string.Join(",", Cached(db))) return false;
+            var next    = string.Join(",", ent.Skins.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct());
+            var locked  = ent.LockedTo ?? "";
+            var expires = ent.ExpiresAt?.ToString() ?? "";
 
-            Write(db, next);
-            return true;
+            var changed = next != string.Join(",", Cached(db))
+                       || locked  != (Read(db, LockedKey)  ?? "")
+                       || expires != (Read(db, ExpiresKey) ?? "");
+
+            Write(db, CacheKey,   next);
+            Write(db, LockedKey,  locked);
+            Write(db, ExpiresKey, expires);
+            return changed;
         }
 
         // ── storage ───────────────────────────────────────────────────────
@@ -94,7 +139,7 @@ namespace OverlayMVP.Services
             catch { return null; }
         }
 
-        private static void Write(AppDb db, string value)
+        private static void Write(AppDb db, string key, string value)
         {
             try
             {
@@ -102,7 +147,7 @@ namespace OverlayMVP.Services
                 using var cmd = con.CreateCommand();
                 cmd.CommandText = "INSERT INTO meta(k,v) VALUES($k,$v) " +
                                   "ON CONFLICT(k) DO UPDATE SET v=excluded.v";
-                cmd.Parameters.AddWithValue("$k", CacheKey);
+                cmd.Parameters.AddWithValue("$k", key);
                 cmd.Parameters.AddWithValue("$v", value);
                 cmd.ExecuteNonQuery();
             }
