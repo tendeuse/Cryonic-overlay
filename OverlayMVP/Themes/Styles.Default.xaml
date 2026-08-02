@@ -211,6 +211,17 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
         </Style>
 
+        <!-- ── Status key ─────────────────────────────────────────────────
+             The intel report buttons (GATE CAMP, PIRATES, ROAMING).
+
+             Adds nothing to IntelBtn here — the default draws them exactly as
+             it always has. It exists so a skin can tell a REPORT key apart
+             from a launcher key, which share IntelBtn and would otherwise be
+             indistinguishable to the styles layer. Each instance already
+             carries its own BorderBrush (red, orange, amber); a skin can read
+             that as an indicator colour. -->
+        <Style x:Key="StatusKey" TargetType="Button" BasedOn="{StaticResource IntelBtn}"/>
+
         <!-- ── Small action button ────────────────────────────────────────── -->
         <Style x:Key="SmallBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeXs}"/>

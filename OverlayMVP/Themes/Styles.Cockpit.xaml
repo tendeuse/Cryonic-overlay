@@ -328,9 +328,82 @@
              by lifting these values off the instances in MainWindow.xaml,
              where no skin could reach them. -->
         <Style x:Key="LauncherBtn" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
-            <Setter Property="Padding"             Value="14,10"/>
+            <Setter Property="Padding"             Value="12,7"/>
             <Setter Property="Margin"              Value="0,3"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <!-- ── Status key ─────────────────────────────────────────────────
+             A report key with an indicator lamp, the way a console marks a
+             switch that raises an alarm.
+
+             The lamp colour is the button's own BorderBrush. Each instance
+             already carries a distinct one — red for GATE CAMP, orange for
+             PIRATES, amber for ROAMING — so the lamp is correct per button
+             without the skin knowing any of them by name.
+
+             This is why StatusKey exists as a separate style: launcher keys
+             share IntelBtn, and their BorderBrush is the dark key surround.
+             A lamp painted with that would read as a drilled hole. -->
+        <Style x:Key="StatusKey" TargetType="Button" BasedOn="{StaticResource IntelBtn}">
+            <!-- Tighter than IntelBtn horizontally: the lamp costs width, and
+                 without this the three report keys wrap to a second row and
+                 push the footer off the bottom of the window. -->
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="Edge"
+                                    Background="{DynamicResource KeyEdge}"
+                                    CornerRadius="4"/>
+                            <Border x:Name="Face"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Margin="0,0,0,3">
+                                <Grid>
+                                    <Border x:Name="Sheen"
+                                            Background="{DynamicResource KeySheen}"
+                                            CornerRadius="3"/>
+                                    <Border x:Name="Lip"
+                                            Height="1" VerticalAlignment="Top"
+                                            Margin="3,1,3,0"
+                                            Background="{DynamicResource KeyLip}"/>
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Margin="{TemplateBinding Padding}">
+                                        <!-- The lamp. Glow ring behind a solid
+                                             core, so it reads as lit rather
+                                             than printed. -->
+                                        <Grid Width="6" Height="6" Margin="0,0,5,0" VerticalAlignment="Center">
+                                            <Ellipse Fill="{TemplateBinding BorderBrush}" Opacity="0.35"/>
+                                            <Ellipse Fill="{TemplateBinding BorderBrush}" Margin="2"/>
+                                        </Grid>
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Sheen" Property="Background" Value="{DynamicResource KeySheenLit}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Face"  Property="Margin"     Value="0,3,0,0"/>
+                                <Setter TargetName="Sheen" Property="Opacity"    Value="0.25"/>
+                                <Setter TargetName="Lip"   Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter TargetName="Lip"   Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- ── Small action button ────────────────────────────────────────── -->
@@ -477,6 +550,37 @@
                                                 CornerRadius="3"
                                                 IsHitTestVisible="False"
                                                 Margin="-8,-7,-8,-7"/>
+
+                                        <!-- HUD REGISTRATION BRACKETS.
+                                             Corner ticks framing the readout,
+                                             the same vocabulary the control
+                                             panel already uses (its "tick"
+                                             custom property). Each is an L:
+                                             two borders drawn, two at zero.
+
+                                             Generic to any glass screen, so
+                                             a section added later is framed
+                                             without the skin being touched. -->
+                                        <Grid x:Name="Ticks"
+                                              IsHitTestVisible="False"
+                                              Margin="-5,-4,-5,-4">
+                                            <Border Width="9" Height="9"
+                                                    HorizontalAlignment="Left"  VerticalAlignment="Top"
+                                                    BorderBrush="{DynamicResource Amber}" BorderThickness="1,1,0,0"
+                                                    Opacity="0.55"/>
+                                            <Border Width="9" Height="9"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                    BorderBrush="{DynamicResource Amber}" BorderThickness="0,1,1,0"
+                                                    Opacity="0.55"/>
+                                            <Border Width="9" Height="9"
+                                                    HorizontalAlignment="Left"  VerticalAlignment="Bottom"
+                                                    BorderBrush="{DynamicResource Amber}" BorderThickness="1,0,0,1"
+                                                    Opacity="0.55"/>
+                                            <Border Width="9" Height="9"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                    BorderBrush="{DynamicResource Amber}" BorderThickness="0,0,1,1"
+                                                    Opacity="0.55"/>
+                                        </Grid>
                                     </Grid>
                                 </Border>
                             </StackPanel>
@@ -497,6 +601,7 @@
                                 <Setter TargetName="Glass" Property="Padding"         Value="0"/>
                                 <Setter TargetName="Scan"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Ticks" Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

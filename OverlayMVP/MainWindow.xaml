@@ -363,19 +363,19 @@
                     <WrapPanel Margin="0,0,0,4">
                         <Button Content="⚠ GATE CAMP"
                                 Command="{Binding ReportGateCampCommand}"
-                                Style="{StaticResource IntelBtn}"
+                                Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Red33}"
                                 BorderBrush="{DynamicResource Red}"
                                 Margin="0,0,4,0"/>
                         <Button Content="☠ PIRATES"
                                 Command="{Binding ReportPiratesCommand}"
-                                Style="{StaticResource IntelBtn}"
+                                Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Orange33}"
                                 BorderBrush="{DynamicResource Orange}"
                                 Margin="0,0,4,0"/>
                         <Button Content="⟳ ROAMING"
                                 Command="{Binding ReportRoamingCommand}"
-                                Style="{StaticResource IntelBtn}"
+                                Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Amber33}"
                                 BorderBrush="{DynamicResource Amber}"/>
                     </WrapPanel>
