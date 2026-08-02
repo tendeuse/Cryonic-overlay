@@ -22,7 +22,7 @@ const SCRATCH  = path.join("tools", ".shot-scratch");
 // id -> baseline filename. The default keeps its original name so its history
 // (and the guarantee the structure refactor rests on) is unbroken.
 const FACTIONS = ["Caldari", "Gallente", "Amarr", "Minmatar"];
-const CONSOLES = ["Navy", "Hangar"];
+const CONSOLES = ["Navy", "Hangar", "Console"];
 
 // The default keeps its original filename so its history — and the guarantee
 // the structure refactor rests on — is unbroken.

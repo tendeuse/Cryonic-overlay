@@ -305,12 +305,87 @@ function buildCss(palette) {
   ].join("\n");
 }
 
+// ── inversion ──────────────────────────────────────────────────────────────
+//
+// "The accent becomes the main and the main becomes the accent."
+//
+// Implemented as a HUE swap, not a value swap. Swapping the values outright
+// would put a bright accent behind body text and a near-black on the emphasis,
+// which is unreadable. Instead each colour KEEPS ITS LIGHTNESS — so contrast
+// ratios survive — and only the hue and saturation trade places. The result
+// reads as the same console rebuilt in the other colour.
+
+function hexToHsl(hex) {
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0, sat = 0;
+  if (max !== min) {
+    const d = max - min;
+    sat = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+    else if (max === g) h = ((b - r) / d + 2) / 6;
+    else h = ((r - g) / d + 4) / 6;
+  }
+  return [h, sat, l];
+}
+
+function hslToHex(h, s, l) {
+  const f = (n) => {
+    const k = (n + h * 12) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const v = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
+    return Math.round(v * 255).toString(16).padStart(2, "0").toUpperCase();
+  };
+  return f(0) + f(8) + f(4);
+}
+
+/** Re-hue `hex` onto the hue and saturation of `donor`, keeping its lightness. */
+function reHue(hex, donor) {
+  const [, , l] = hexToHsl(hex);
+  const [dh, ds] = hexToHsl(donor);
+  return hslToHex(dh, ds, l);
+}
+
+/**
+ * Surfaces take the accent's hue; the accent takes the surfaces'.
+ *
+ * Everything else is left alone. Red, amber and green are SEMANTIC — an alert
+ * must look like an alert in every skin — and the glass and key families are
+ * derived from the surfaces, so they follow automatically by being re-hued
+ * with them.
+ */
+const INVERT_TO_ACCENT = [
+  "Bg", "Panel", "Well", "Surface", "Onyx", "DeepInk", "DeepNavy", "GunMetal",
+  "Charcoal", "Graphite", "Obsidian", "InkBlue", "Abyss", "TwilightBlue",
+  "Border", "BorderStrong", "SteelBlue", "DuskBlue", "Indigo",
+  "ComboBg", "ComboBorder", "ComboItemBg", "ComboHover", "ComboSelect", "ComboEdge",
+  "KeyHi", "KeyLo", "KeyBorder", "KeyEdge",
+  "GlassTop", "GlassBottom", "GlassBorder",
+];
+const INVERT_TO_SURFACE = ["Accent", "Gray", "AccentKeyHi", "AccentKeyLo", "AquaBlue"];
+
+function invert(palette) {
+  const c = { ...palette.colours };
+  const accent  = c.Accent;
+  const surface = c.Bg;
+  if (!accent || !surface) throw new Error(`palette "${palette.name}" needs Accent and Bg to invert`);
+
+  for (const k of INVERT_TO_ACCENT)  if (c[k]) c[k] = reHue(c[k], accent);
+  for (const k of INVERT_TO_SURFACE) if (c[k]) c[k] = reHue(c[k], surface);
+
+  return { ...palette, name: palette.name + " Inverted", colours: c };
+}
+
 const slug  = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const pascal = (s) => s.replace(/[^A-Za-z0-9]+/g, " ").trim().split(/\s+/)
   .map((w) => w[0].toUpperCase() + w.slice(1)).join("");
 
-function build(paletteFile) {
-  const palette = JSON.parse(fs.readFileSync(paletteFile, "utf8"));
+function build(paletteFile, doInvert = false) {
+  let palette = JSON.parse(fs.readFileSync(paletteFile, "utf8"));
+  if (doInvert) palette = invert(palette);
   const name    = pascal(palette.name);
 
   const xamlPath = path.join(THEMES, `Tokens.${name}.xaml`);
@@ -365,8 +440,8 @@ function verify() {
 const [mode, arg] = process.argv.slice(2);
 if (mode === "extract")      extract();
 else if (mode === "verify")  verify();
-else if (mode === "build" && arg) build(arg);
+else if (mode === "build" && arg) build(arg, process.argv.includes("--invert"));
 else {
-  console.error("usage: node tools/build-theme.mjs extract | build <palette.json> | verify");
+  console.error("usage: node tools/build-theme.mjs extract | build <palette.json> [--invert] | verify");
   process.exit(2);
 }

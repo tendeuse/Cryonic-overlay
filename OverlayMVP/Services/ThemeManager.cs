@@ -51,15 +51,23 @@ namespace OverlayMVP.Services
             ("Minmatar", "Minmatar"),
         };
 
-        private static readonly (string Id, string Name, string Styles)[] Consoles =
+        /// <summary>
+        /// A console design is a styles layer AND, optionally, a palette
+        /// variant. "Console" is the Navy hardware rebuilt in the faction's
+        /// inverted colours — the accent drives the surfaces and the old
+        /// neutral becomes the accent — which is a palette transform rather
+        /// than different hardware, so it reuses the Navy layer.
+        /// </summary>
+        private static readonly (string Id, string Name, string Styles, string TokenSuffix)[] Consoles =
         {
-            ("Navy",   "Navy",        "CockpitNavy"),
-            ("Hangar", "Hangar Deck", "CockpitHangar"),
+            ("Navy",    "Navy",        "CockpitNavy",   ""),
+            ("Hangar",  "Hangar Deck", "CockpitHangar", ""),
+            ("Console", "Console",     "CockpitNavy",   "Inverted"),
         };
 
         /// <summary>
         /// The catalogue is a MATRIX: a faction palette crossed with a console
-        /// design. Four factions and two designs give eight skins from six
+        /// design. Four factions and three designs give twelve skins from ten
         /// files, which is only possible because Tokens and Styles are separate
         /// fields on a skin rather than one bundled thing.
         /// </summary>
@@ -70,7 +78,8 @@ namespace OverlayMVP.Services
             var list = new List<Skin> { new("Default", "Default", "Default", "Default", Paid: false) };
             foreach (var f in Factions)
                 foreach (var c in Consoles)
-                    list.Add(new Skin($"{f.Id}{c.Id}", $"{f.Name} · {c.Name}", f.Id, c.Styles, Paid: true));
+                    list.Add(new Skin($"{f.Id}{c.Id}", $"{f.Name} · {c.Name}",
+                                      f.Id + c.TokenSuffix, c.Styles, Paid: true));
             return list.ToArray();
         }
 
