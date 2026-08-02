@@ -25,7 +25,31 @@ const ROOT      = "OverlayMVP";
 const THEMES    = path.join(ROOT, "Themes");
 const DEFAULT   = path.join(THEMES, "Tokens.Default.xaml");
 const SKINS     = "skins";
-const PANEL_CSS = path.join("..", "cryonic-panel", "css");
+
+/**
+ * Find the control panel's css directory.
+ *
+ * Searched rather than hard-coded, because the overlay is checked out at
+ * varying depths -- a git worktree puts it three levels below the directory
+ * the panel is a sibling of, so a fixed "../cryonic-panel" silently skipped
+ * the CSS output and the skin quietly stopped being one source with two
+ * outputs.
+ *
+ * Returns null when the panel is not on disk at all, which is legitimate:
+ * someone may have only the overlay repo.
+ */
+function findPanelCss() {
+  if (process.env.PANEL_CSS_DIR) return process.env.PANEL_CSS_DIR;
+  let dir = path.resolve(".");
+  for (let i = 0; i < 6; i++) {
+    const candidate = path.join(dir, "cryonic-panel", "css");
+    if (fs.existsSync(candidate)) return candidate;
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
 
 // Bases that have no token of their own but that alpha variants derive from.
 // Gray22/Gray88 exist; "Gray" does not. Without this list the splitter cannot
@@ -267,12 +291,15 @@ function build(paletteFile) {
   fs.writeFileSync(xamlPath, buildXaml(palette));
   console.log(`build: ${xamlPath}`);
 
-  if (fs.existsSync(PANEL_CSS)) {
-    const cssPath = path.join(PANEL_CSS, `skin-${slug(palette.name)}.css`);
+  const panelCss = findPanelCss();
+  if (panelCss) {
+    const cssPath = path.join(panelCss, `skin-${slug(palette.name)}.css`);
     fs.writeFileSync(cssPath, buildCss(palette));
     console.log(`build: ${cssPath}`);
   } else {
-    console.log(`build: panel css skipped (${PANEL_CSS} not found)`);
+    // Loud, not silent. A skipped CSS output means the panel and the overlay
+    // have drifted apart, which is exactly what this generator exists to stop.
+    console.log("build: panel css SKIPPED — cryonic-panel/css not found (set PANEL_CSS_DIR)");
   }
 }
 
