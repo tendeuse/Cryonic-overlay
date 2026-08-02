@@ -170,7 +170,7 @@
         <StackPanel Grid.Row="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                 <TextBlock Text="Font Size" Opacity="0.8"/>
-                <TextBlock Text="  (restart required)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
+                <TextBlock Text="  (applies on save)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -196,6 +196,24 @@
                 <Button Content="Large (13)"  Tag="13" Click="FontPreset_Click" Margin="0,0,6,0" FontSize="13"/>
                 <Button Content="XL (15)"     Tag="15" Click="FontPreset_Click" FontSize="15"/>
             </WrapPanel>
+
+            <!-- ── Skin ──────────────────────────────────────────────────
+                 Only skins this pilot is entitled to are listed. The overlay
+                 is fully usable on the default skin and always will be:
+                 CCP's licence forbids paywalling features, so skins gate
+                 appearance and nothing else. -->
+            <StackPanel Orientation="Horizontal" Margin="0,14,0,5">
+                <TextBlock Text="Skin" Opacity="0.8"/>
+                <TextBlock Text="  (applies immediately)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
+            </StackPanel>
+            <ComboBox x:Name="SkinBox"
+                      DisplayMemberPath="Display"
+                      SelectionChanged="SkinBox_SelectionChanged"/>
+            <TextBlock x:Name="SkinHint"
+                       FontSize="11"
+                       Opacity="0.7"
+                       TextWrapping="Wrap"
+                       Margin="0,4,0,0"/>
         </StackPanel>
 
         <!-- Features -->

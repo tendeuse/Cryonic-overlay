@@ -70,13 +70,31 @@ const ATTR = new RegExp(
   'g',
 );
 
+/**
+ * Every XAML file the DEFAULT theme is built from.
+ *
+ * Skin files are excluded. This tool answers one question — "does the default
+ * theme still paint what it always painted?" — and it answers it by resolving
+ * every DynamicResource against Tokens.Default.xaml. A skin's component layer
+ * is not paired with that palette: Styles.Cockpit.xaml references KeyFace and
+ * GlassFace, which exist only in cockpit palettes, so resolving it here would
+ * report a correct skin as broken.
+ *
+ * Skins are checked by tools/skin-check.mjs, which resolves each component
+ * layer against the palettes it is actually paired with. Two tools, two
+ * questions; the overlap is what made this one wrong.
+ */
 function xamlFiles() {
   const out = [];
+  const isSkin = (name) =>
+    (/^Tokens\..+\.xaml$/.test(name) || /^Styles\..+\.xaml$/.test(name)) &&
+    name !== "Tokens.Default.xaml" && name !== "Styles.Default.xaml";
+
   (function walk(dir) {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
       const p = path.join(dir, e.name);
       if (e.isDirectory()) { if (e.name !== "obj" && e.name !== "bin") walk(p); }
-      else if (e.name.endsWith(".xaml")) out.push(p);
+      else if (e.name.endsWith(".xaml") && !isSkin(e.name)) out.push(p);
     }
   })(ROOT);
   return out.sort();

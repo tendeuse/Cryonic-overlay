@@ -76,7 +76,17 @@ namespace OverlayMVP
             // Skin before the window is constructed. Applying it afterwards
             // works too -- every colour is a DynamicResource -- but doing it
             // first avoids a visible repaint on startup.
-            ThemeManager.Apply(_skinOverride ?? SkinStore.Load(db));
+            //
+            // --skin only overrides inside --screenshot. It exists so the
+            // harness can capture a skin without touching the saved setting;
+            // honouring it during a normal run would make a paid skin a
+            // command-line flag away. Client-side cosmetics can never be fully
+            // protected -- the XAML ships in the assembly either way -- but
+            // that is no reason to build the bypass in.
+            var wanted = IsScreenshotMode && _skinOverride is not null
+                ? _skinOverride
+                : SkinEntitlements.Resolve(db, SkinStore.Load(db));
+            ThemeManager.Apply(wanted);
 
             var main = new MainWindow(db);
 

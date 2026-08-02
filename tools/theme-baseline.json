@@ -549,5 +549,8 @@
     "#CC0D1117",
     "#FF1E3148",
     "#CC111820"
+  ],
+  "SKINS: SettingsWindow skin picker hint label": [
+    "#FF00B4D4"
   ]
 }

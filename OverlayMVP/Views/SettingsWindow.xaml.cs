@@ -1,5 +1,6 @@
 // filename: Views/SettingsWindow.xaml.cs
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using OverlayMVP.Services;
@@ -82,6 +83,8 @@ namespace OverlayMVP.Views
             FontSizeSlider.Value = currentSize;
             FontSizeLabel.Text   = $"{currentSize:F0} pt";
 
+            LoadSkins();
+
             ChkMultibox.IsChecked        = cfg.ShowMultibox;
             ChkIntelAlerts.IsChecked     = cfg.ShowIntelAlerts;
             ChkPilotStatus.IsChecked     = cfg.ShowPilotStatus;
@@ -163,6 +166,41 @@ namespace OverlayMVP.Views
                 FontSizeSlider.Value = size;
         }
 
+        // ── Skin ──────────────────────────────────────────────────────────
+        //
+        // Applied live rather than on save. A skin is the one setting whose
+        // effect you cannot judge from its name, so previewing it IS the
+        // choosing. Cancel restores whatever was applied when the window
+        // opened, so browsing costs nothing.
+        private string _skinOnOpen = ThemeManager.DefaultTheme;
+        private bool   _skinBoxReady;
+
+        private void LoadSkins()
+        {
+            _skinOnOpen = ThemeManager.Current;
+
+            var entitled = SkinEntitlements.Available(_db);
+            SkinBox.ItemsSource   = entitled;
+            SkinBox.SelectedItem  = entitled.FirstOrDefault(s => s.Id == _skinOnOpen) ?? entitled[0];
+
+            var locked = ThemeManager.Available.Count - entitled.Count;
+            SkinHint.Text = locked > 0
+                ? $"{locked} more skin(s) available. Purchased skins are granted to your character and appear here automatically."
+                : "";
+
+            _skinBoxReady = true;
+        }
+
+        private void SkinBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Ignore the assignment made while populating the list.
+            if (!_skinBoxReady) return;
+            if (SkinBox.SelectedItem is not ThemeManager.Skin skin) return;
+
+            if (!ThemeManager.Apply(skin.Id))
+                SetStatus($"Could not load the {skin.Display} skin.", error: true);
+        }
+
         // ── Feature flags ─────────────────────────────────────────────────
         private void SaveFeatureFlags()
         {
@@ -191,6 +229,12 @@ namespace OverlayMVP.Views
             _cfg.Save(_db);
             SaveFontSize(_db, FontSizeSlider.Value);
             ApplyFontSize(FontSizeSlider.Value);
+
+            if (SkinBox.SelectedItem is ThemeManager.Skin skin)
+            {
+                SkinStore.Save(_db, skin.Id);
+                _skinOnOpen = skin.Id;   // saved, so Cancel no longer reverts it
+            }
         }
 
         private void SaveOnly_Click(object sender, RoutedEventArgs e)
@@ -209,7 +253,13 @@ namespace OverlayMVP.Views
             Close();
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            // Undo a live skin preview. Every other setting is only read on
+            // save, so this is the one that needs putting back.
+            ThemeManager.Apply(_skinOnOpen);
+            Close();
+        }
 
         private void SetStatus(string msg, bool error = false)
         {
