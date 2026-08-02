@@ -19,6 +19,25 @@
                     xmlns:ctl="clr-namespace:OverlayMVP.Controls">
 
         <!-- ══════════════════════════════════════════════════════════════════
+             TYPEFACES
+             Barlow, embedded in the assembly (see OverlayMVP.csproj). The
+             console legend look depends on condensed caps far more than on
+             any colour, so this is skin data, not decoration.
+
+             The "#Barlow Condensed" suffix is the font's INTERNAL family name,
+             not a filename — WPF looks the family up inside the resource
+             folder. Get it wrong and there is no error: WPF quietly renders
+             the fallback, which is why the trailing Consolas is spelled out
+             rather than left to chance.
+
+             StaticResource, not Dynamic: a skin's typeface cannot change
+             while that skin is applied, and it keeps these out of the
+             colour-token namespace that skin-check verifies.
+             ══════════════════════════════════════════════════════════════════ -->
+        <FontFamily x:Key="HeadFont">pack://application:,,,/Fonts/#Barlow Condensed, Consolas</FontFamily>
+        <FontFamily x:Key="BodyFont">pack://application:,,,/Fonts/#Barlow, Consolas</FontFamily>
+
+        <!-- ══════════════════════════════════════════════════════════════════
              CONSOLE MATERIALS
              Patterns rather than colours, so they live here and not in a
              palette: a scanline is black regardless of what colour the skin
@@ -75,7 +94,7 @@
         <Style TargetType="ComboBoxItem">
             <Setter Property="Background"  Value="{DynamicResource ComboBg}"/>
             <Setter Property="Foreground"  Value="{DynamicResource Text}"/>
-            <Setter Property="FontFamily"  Value="Consolas"/>
+            <Setter Property="FontFamily"  Value="{StaticResource BodyFont}"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSize}"/>
             <Setter Property="Padding"     Value="10,5"/>
             <Setter Property="Template">
@@ -110,7 +129,7 @@
         <!-- The collapsed box + the popup together -->
         <Style TargetType="ComboBox">
             <Setter Property="Foreground"           Value="{DynamicResource Text}"/>
-            <Setter Property="FontFamily"           Value="Consolas"/>
+            <Setter Property="FontFamily"           Value="{StaticResource BodyFont}"/>
             <Setter Property="FontSize"             Value="{DynamicResource GlobalFontSize}"/>
             <Setter Property="MinHeight"            Value="26"/>
             <Setter Property="Template">
@@ -140,7 +159,7 @@
                                                            Text="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
                                                                           Path=SelectionBoxItem}"
                                                            Foreground="{DynamicResource Text}"
-                                                           FontFamily="Consolas"
+                                                           FontFamily="{StaticResource BodyFont}"
                                                            FontSize="{DynamicResource GlobalFontSize}"
                                                            Margin="8,4,4,4"
                                                            VerticalAlignment="Center"
@@ -201,7 +220,7 @@
 
         <!-- ── Base text ──────────────────────────────────────────────────── -->
         <Style TargetType="TextBlock">
-            <Setter Property="FontFamily"  Value="Consolas"/>
+            <Setter Property="FontFamily"  Value="{StaticResource BodyFont}"/>
             <Setter Property="Foreground"  Value="{DynamicResource Text}"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSize}"/>
         </Style>
@@ -209,7 +228,7 @@
              console legends its panels. Gold rather than the accent colour
              because in this skin grey IS the accent and gold carries emphasis. -->
         <Style x:Key="SectionHeader" TargetType="TextBlock">
-            <Setter Property="FontFamily"  Value="Consolas"/>
+            <Setter Property="FontFamily"  Value="{StaticResource HeadFont}"/>
             <Setter Property="FontWeight"  Value="Bold"/>
             <Setter Property="FontSize"    Value="{DynamicResource GlobalFontSizeSm}"/>
             <Setter Property="Foreground"  Value="{DynamicResource Amber}"/>
@@ -233,7 +252,7 @@
              into the edge — the whole key visibly sinks, rather than dimming.
              ────────────────────────────────────────────────────────────────── -->
         <Style x:Key="IntelBtn" TargetType="Button">
-            <Setter Property="FontFamily"        Value="Consolas"/>
+            <Setter Property="FontFamily"        Value="{StaticResource HeadFont}"/>
             <Setter Property="FontSize"          Value="{DynamicResource GlobalFontSizeSm}"/>
             <Setter Property="FontWeight"        Value="Bold"/>
             <Setter Property="Foreground"        Value="{DynamicResource Accent}"/>
