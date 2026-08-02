@@ -143,6 +143,46 @@
       "to": "Black",
       "toAlpha": "00",
       "angle": 90
+    },
+    "GlassAqua": {
+      "kind": "radial",
+      "center": "0.5,-0.55",
+      "radiusX": 1.5,
+      "radiusY": 1.15,
+      "stops": [
+        {
+          "colour": "White",
+          "alpha": "8C",
+          "offset": 0
+        },
+        {
+          "colour": "White",
+          "alpha": "59",
+          "offset": 0.55
+        },
+        {
+          "colour": "White",
+          "alpha": "3D",
+          "offset": 0.7
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0.72
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 1
+        }
+      ]
+    },
+    "GlassBounce": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "00",
+      "to": "GlassGlowTop",
+      "toAlpha": "33",
+      "angle": 90
     }
   }
 }

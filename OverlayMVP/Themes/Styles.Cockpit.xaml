@@ -585,16 +585,38 @@
                                                 IsHitTestVisible="False"
                                                 Margin="-9,-8,-9,-8"/>
 
-                                        <!-- NO SPECULAR HERE, DELIBERATELY.
-                                             This is a CRT readout, not a
-                                             window pane. The reference carries
-                                             no highlight at all: its glassiness
-                                             comes from scanlines over a flat,
-                                             very dark surface. Every highlight
-                                             tried here read as a smudge ON the
-                                             screen rather than a reflection off
-                                             it, because a lit display does not
-                                             reflect much; it emits. -->
+                                        <!-- AQUA HIGHLIGHT.
+                                             A bright dome across the top with
+                                             a HARD curved lower edge, the
+                                             classic wet-glass look.
+
+                                             The curve comes from the brush
+                                             being radial; the crispness comes
+                                             from two stops sitting almost on
+                                             top of each other. Earlier attempts
+                                             used soft stops and produced a
+                                             blob, and a linear version produced
+                                             a paint fade. It is the SHARP ARC
+                                             that reads as a reflection.
+
+                                             Radial rather than a clipped
+                                             ellipse so it scales to any section
+                                             height without arithmetic. -->
+                                        <Border x:Name="Gloss"
+                                                Background="{DynamicResource GlassAqua}"
+                                                CornerRadius="4"
+                                                IsHitTestVisible="False"
+                                                Margin="-9,-8,-9,-8"/>
+
+                                        <!-- Light bouncing back off the lower
+                                             inside face, which is what stops
+                                             the bottom half reading as flat
+                                             paint under the shine. -->
+                                        <Border x:Name="Bounce"
+                                                Background="{DynamicResource GlassBounce}"
+                                                CornerRadius="4"
+                                                IsHitTestVisible="False"
+                                                Margin="-9,-8,-9,-8"/>
 
                                         <!-- The lit top rim: light catching the
                                              cut edge of the bezel. -->
@@ -602,7 +624,7 @@
                                                 Height="1"
                                                 VerticalAlignment="Top"
                                                 Margin="-8,-8,-8,0"
-                                                Background="{DynamicResource White22}"
+                                                Background="{DynamicResource White44}"
                                                 IsHitTestVisible="False"/>
 
                                         <!-- HUD REGISTRATION BRACKETS.
@@ -657,6 +679,8 @@
                                 <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Bezel" Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Rim"    Property="Visibility"     Value="Collapsed"/>
+                                <Setter TargetName="Gloss"  Property="Visibility"     Value="Collapsed"/>
+                                <Setter TargetName="Bounce" Property="Visibility"     Value="Collapsed"/>
                                 <Setter TargetName="Ticks" Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
