@@ -36,7 +36,19 @@ namespace OverlayMVP.Services
         /// to enumerate at runtime — and a name that is not listed could not be
         /// loaded anyway.
         /// </summary>
-        public sealed record Skin(string Id, string Display, string Tokens, string Styles, bool Paid);
+        public sealed record Skin(string Id, string Display, string Tokens, string Styles, bool Paid)
+        {
+            /// <summary>
+            /// A record's generated ToString prints every field —
+            /// "Skin { Id = GallenteNavy, Display = ... }" — and anything that
+            /// renders this object without an explicit template will show
+            /// exactly that. DisplayMemberPath covers the ComboBox's dropdown
+            /// but not reliably its collapsed box, so the type is made to
+            /// present itself correctly instead of every consumer having to
+            /// remember to.
+            /// </summary>
+            public override string ToString() => Display;
+        }
 
         // DECLARATION ORDER MATTERS. C# runs static field initialisers top to
         // bottom, so these two tables must be declared BEFORE Available, which
