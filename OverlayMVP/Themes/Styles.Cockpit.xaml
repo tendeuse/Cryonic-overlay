@@ -578,6 +578,52 @@
                                                 IsHitTestVisible="False"
                                                 Margin="-9,0,-9,-8"/>
 
+                                        <!-- GLOSS: the reflection ON the pane,
+                                             not light coming through it.
+                                             This is what was missing — a
+                                             recessed dark screen still reads
+                                             as a hole until something is
+                                             reflecting off its surface.
+
+                                             Split exactly in half, because
+                                             that hard horizontal break at the
+                                             midpoint is the single strongest
+                                             cue that a surface is glass.
+                                             Percentage rows rather than a
+                                             fixed height, so it holds at any
+                                             section size. -->
+                                        <Grid x:Name="Gloss"
+                                              IsHitTestVisible="False"
+                                              Margin="-9,-8,-9,-8">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0"
+                                                    Background="{DynamicResource GlassGloss}"
+                                                    CornerRadius="4,4,0,0"/>
+                                            <!-- The lower half is DARKENED, not
+                                                 left alone. Gloss is read from
+                                                 the contrast at the midpoint,
+                                                 so brightening the top without
+                                                 sinking the bottom just makes
+                                                 a pale panel. -->
+                                            <Border Grid.Row="1"
+                                                    Background="{DynamicResource GlassShade}"
+                                                    CornerRadius="0,0,4,4"/>
+                                        </Grid>
+
+                                        <!-- The lit top rim: light catching
+                                             the cut edge of the pane. One
+                                             pixel, and the whole thing stops
+                                             looking flat. -->
+                                        <Border x:Name="Rim"
+                                                Height="1"
+                                                VerticalAlignment="Top"
+                                                Margin="-8,-8,-8,0"
+                                                Background="{DynamicResource White33}"
+                                                IsHitTestVisible="False"/>
+
                                         <!-- HUD REGISTRATION BRACKETS.
                                              Corner ticks framing the readout,
                                              the same vocabulary the control
@@ -630,6 +676,8 @@
                                 <Setter TargetName="Glow"  Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Bezel" Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Bloom" Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Gloss" Property="Visibility"      Value="Collapsed"/>
+                                <Setter TargetName="Rim"   Property="Visibility"      Value="Collapsed"/>
                                 <Setter TargetName="Ticks" Property="Visibility"      Value="Collapsed"/>
                             </Trigger>
                         </ControlTemplate.Triggers>

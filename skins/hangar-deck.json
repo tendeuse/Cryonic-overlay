@@ -150,6 +150,20 @@
       "to": "GlassGlowTop",
       "fromAlpha": "00",
       "angle": 90
+    },
+    "GlassGloss": {
+      "from": "White",
+      "fromAlpha": "42",
+      "to": "White",
+      "toAlpha": "0A",
+      "angle": 90
+    },
+    "GlassShade": {
+      "from": "Black",
+      "fromAlpha": "1F",
+      "to": "Black",
+      "toAlpha": "00",
+      "angle": 90
     }
   }
 }

@@ -64,6 +64,27 @@ for (const skin of SKINS) {
 
   if (accept || !fs.existsSync(base)) {
     const isNew = !fs.existsSync(base);
+
+    // Only rewrite what actually differs. Touching an unchanged baseline is
+    // pure noise in a diff, and noise is where a real change hides.
+    if (!isNew && fs.readFileSync(base).equals(fs.readFileSync(shot))) {
+      console.log(`same  ${label} (baseline already current)`);
+      continue;
+    }
+
+    // THE DEFAULT SKIN IS NOT A SKIN. Its baseline is the guarantee that the
+    // free app never changed appearance, which every skin's diff is measured
+    // against. If it moved, something leaked out of a skin and into the
+    // default -- accepting that would destroy the reference silently, which
+    // has already been caught happening once.
+    if (!isNew && skin.id === null) {
+      console.error(`REFUSED Default baseline changed. That is a REGRESSION, not a redesign.`);
+      console.error(`        Find what leaked into the default theme; do not accept this.`);
+      console.error(`        Capture kept at ${shot}`);
+      bad++;
+      continue;
+    }
+
     fs.copyFileSync(shot, base);
     console.log(`${isNew ? "NEW  " : "ACCEPT"} ${label} -> ${base}`);
     continue;
