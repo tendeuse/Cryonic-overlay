@@ -54,10 +54,7 @@ namespace OverlayMVP
             }
 
             // Apply saved font size globally before opening main window
-            var fontSize = Views.SettingsWindow.LoadFontSize(db);
-            System.Windows.Application.Current.Resources["GlobalFontSize"]    = fontSize;
-            System.Windows.Application.Current.Resources["GlobalFontSizeSm"] = Math.Max(6.0, fontSize - 2.0);
-            System.Windows.Application.Current.Resources["GlobalFontSizeXs"] = Math.Max(5.0, fontSize - 3.0);
+            Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
 
             OpenMainWindow(db);
         }
@@ -66,10 +63,7 @@ namespace OverlayMVP
         public MainWindow OpenMainWindow(AppDb db)
         {
             // Apply saved font size (may have just been set in SettingsWindow)
-            var fontSize = Views.SettingsWindow.LoadFontSize(db);
-            System.Windows.Application.Current.Resources["GlobalFontSize"]    = fontSize;
-            System.Windows.Application.Current.Resources["GlobalFontSizeSm"] = Math.Max(6.0, fontSize - 2.0);
-            System.Windows.Application.Current.Resources["GlobalFontSizeXs"] = Math.Max(5.0, fontSize - 3.0);
+            Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
             var main = new MainWindow(db);
 
             if (IsScreenshotMode)

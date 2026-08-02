@@ -229,6 +229,12 @@
                     Margin="0,0,6,0"/>
             <Button Content="Save"
                     Click="SaveOnly_Click"
+                    Margin="0,0,6,0"/>
+            <!-- Primary action: the panel toggles only take effect once this
+                 window closes, so this is the sequence you actually want. -->
+            <Button Content="Save &amp; Close"
+                    Click="SaveClose_Click"
+                    IsDefault="True"
                     Background="{DynamicResource DeepTeal}"
                     BorderBrush="{DynamicResource Cyan}"
                     Foreground="{DynamicResource Cyan}"/>

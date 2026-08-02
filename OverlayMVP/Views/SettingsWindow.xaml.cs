@@ -14,6 +14,24 @@ namespace OverlayMVP.Views
         private const string FontSizeKey     = "ui_font_size";
         private const double FontSizeDefault = 11.0;
 
+        /// <summary>
+        /// Push a font size into the application resources. Every FontSize in
+        /// the app is a {DynamicResource} onto these three keys, so writing
+        /// them re-renders the running UI immediately -- no restart.
+        ///
+        /// Lives here, next to Load/SaveFontSize, because the Sm/Xs offsets are
+        /// part of what "the font size" means. Startup and the Settings window
+        /// both call it, so the two cannot drift apart.
+        /// </summary>
+        public static void ApplyFontSize(double size)
+        {
+            var res = Application.Current?.Resources;
+            if (res is null) return;
+            res["GlobalFontSize"]   = size;
+            res["GlobalFontSizeSm"] = Math.Max(6.0, size - 2.0);
+            res["GlobalFontSizeXs"] = Math.Max(5.0, size - 3.0);
+        }
+
         public static double LoadFontSize(AppDb db)
         {
             try
@@ -159,7 +177,11 @@ namespace OverlayMVP.Views
         }
 
         // ── Save ──────────────────────────────────────────────────────────
-        private void SaveOnly_Click(object sender, RoutedEventArgs e)
+        //
+        // One save path, two buttons. Both must persist exactly the same
+        // things: a second copy would silently drift the moment a setting is
+        // added to one and not the other.
+        private void SaveAll()
         {
             _cfg.FactionFocus = (FactionBox.SelectedItem as ComboBoxItem)?.Tag?.ToString()
                                 ?? _cfg.FactionFocus;
@@ -168,7 +190,23 @@ namespace OverlayMVP.Views
             SaveFeatureFlags();
             _cfg.Save(_db);
             SaveFontSize(_db, FontSizeSlider.Value);
-            SetStatus("✅  Saved. Restart to apply font size changes.");
+            ApplyFontSize(FontSizeSlider.Value);
+        }
+
+        private void SaveOnly_Click(object sender, RoutedEventArgs e)
+        {
+            SaveAll();
+            SetStatus("✅  Saved. Close this window to apply the panel toggles.");
+        }
+
+        // Save & Close. The feature toggles cannot take effect while this
+        // window is open: MainWindow calls ApplyFeatureFlags() only after
+        // ShowDialog() returns. So "save then close" was the sequence the user
+        // had to perform by hand every time -- this is that sequence, once.
+        private void SaveClose_Click(object sender, RoutedEventArgs e)
+        {
+            SaveAll();
+            Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
