@@ -204,9 +204,9 @@
     </LinearGradientBrush>
 
     <RadialGradientBrush x:Key="GlassAqua" Center="0.5,-0.55" GradientOrigin="0.5,-0.55" RadiusX="1.5" RadiusY="1.15">
-        <GradientStop Offset="0" Color="#8CFFFFFF"/>
-        <GradientStop Offset="0.55" Color="#59FFFFFF"/>
-        <GradientStop Offset="0.7" Color="#3DFFFFFF"/>
+        <GradientStop Offset="0" Color="#47FFFFFF"/>
+        <GradientStop Offset="0.55" Color="#2BFFFFFF"/>
+        <GradientStop Offset="0.7" Color="#1CFFFFFF"/>
         <GradientStop Offset="0.72" Color="#00FFFFFF"/>
         <GradientStop Offset="1" Color="#00FFFFFF"/>
     </RadialGradientBrush>

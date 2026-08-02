@@ -152,17 +152,17 @@
       "stops": [
         {
           "colour": "White",
-          "alpha": "8C",
+          "alpha": "47",
           "offset": 0
         },
         {
           "colour": "White",
-          "alpha": "59",
+          "alpha": "2B",
           "offset": 0.55
         },
         {
           "colour": "White",
-          "alpha": "3D",
+          "alpha": "1C",
           "offset": 0.7
         },
         {

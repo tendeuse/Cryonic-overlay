@@ -421,33 +421,36 @@
                             VerticalAlignment="Center"/>
                 </ctl:SectionPanel.HeaderAccessory>
 
+                <ctl:SectionPanel.Toolbar>
+                        <!-- ESI character selector -->
+                        <Border Background="{DynamicResource White11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
+                                Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="ESI: "
+                                           Foreground="{DynamicResource Accent}"
+                                           FontSize="{DynamicResource GlobalFontSizeSm}"
+                                           VerticalAlignment="Center"/>
+                                <ComboBox Grid.Column="1"
+                                          ItemsSource="{Binding LinkedCharacters}"
+                                          SelectedItem="{Binding ActiveCharacter, Mode=TwoWay}"
+                                          FontSize="{DynamicResource GlobalFontSizeSm}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CharacterName}"
+                                                       FontFamily="Consolas"
+                                                       FontSize="{DynamicResource GlobalFontSizeSm}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </Grid>
+                        </Border>
+                </ctl:SectionPanel.Toolbar>
+
                 <StackPanel>
-                    <!-- ESI character selector -->
-                    <Border Background="{DynamicResource White11}" CornerRadius="3" Padding="6,4" Margin="0,0,0,4"
-                            Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="ESI: "
-                                       Foreground="{DynamicResource Accent}"
-                                       FontSize="{DynamicResource GlobalFontSizeSm}"
-                                       VerticalAlignment="Center"/>
-                            <ComboBox Grid.Column="1"
-                                      ItemsSource="{Binding LinkedCharacters}"
-                                      SelectedItem="{Binding ActiveCharacter, Mode=TwoWay}"
-                                      FontSize="{DynamicResource GlobalFontSizeSm}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding CharacterName}"
-                                                   FontFamily="Consolas"
-                                                   FontSize="{DynamicResource GlobalFontSizeSm}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </Grid>
-                    </Border>
 
                     <!-- Connection status -->
                     <TextBlock Text="{Binding ConnectionStatus}"

@@ -308,10 +308,19 @@
                                                       Content="{TemplateBinding HeaderAccessory}"
                                                       VerticalAlignment="Center"/>
                                 </Grid>
+                                <!-- Section controls. The default draws them
+                                     inline, immediately above the content,
+                                     which is where they sat before the slot
+                                     existed. Collapsed when unset. -->
+                                <ContentPresenter x:Name="ToolbarHost"
+                                                  Content="{TemplateBinding Toolbar}"/>
                                 <ContentPresenter/>
                             </StackPanel>
                         </Border>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="Toolbar" Value="{x:Null}">
+                                <Setter TargetName="ToolbarHost" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
                             <Trigger Property="Header" Value="{x:Null}">
                                 <Setter TargetName="HeaderRow" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
