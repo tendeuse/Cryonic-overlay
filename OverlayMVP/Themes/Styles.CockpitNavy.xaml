@@ -155,15 +155,26 @@
                                                     <ColumnDefinition Width="22"/>
                                                 </Grid.ColumnDefinitions>
                                                 <!-- Selected value label -->
-                                                <TextBlock Grid.Column="0"
-                                                           Text="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
+                                                <!-- ContentPresenter, NOT a TextBlock bound to
+                                                     SelectionBoxItem. Binding the raw item to
+                                                     Text calls ToString() on it, so a ComboBox
+                                                     with DisplayMemberPath showed the object's
+                                                     debug form instead of the chosen field.
+                                                     SelectionBoxItemTemplate is what WPF
+                                                     synthesises from DisplayMemberPath, and only
+                                                     a presenter can honour it. -->
+                                                <ContentPresenter Grid.Column="0"
+                                                        Content="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
                                                                           Path=SelectionBoxItem}"
-                                                           Foreground="{DynamicResource Text}"
-                                                           FontFamily="{StaticResource BodyFont}"
-                                                           FontSize="{DynamicResource GlobalFontSize}"
-                                                           Margin="8,4,4,4"
-                                                           VerticalAlignment="Center"
-                                                           TextTrimming="CharacterEllipsis"/>
+                                                        ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
+                                                                                  Path=SelectionBoxItemTemplate}"
+                                                        ContentStringFormat="{Binding RelativeSource={RelativeSource AncestorType=ComboBox},
+                                                                                      Path=SelectionBoxItemStringFormat}"
+                                                        TextElement.Foreground="{DynamicResource Text}"
+                                                        TextElement.FontFamily="{StaticResource BodyFont}"
+                                                        TextElement.FontSize="{DynamicResource GlobalFontSize}"
+                                                        Margin="8,4,4,4"
+                                                        VerticalAlignment="Center"/>
                                                 <!-- Chevron separator + arrow -->
                                                 <Border Grid.Column="1"
                                                         BorderBrush="{DynamicResource ComboBorder}"
