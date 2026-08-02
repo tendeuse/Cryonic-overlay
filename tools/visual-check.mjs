@@ -21,14 +21,16 @@ const SCRATCH  = path.join("tools", ".shot-scratch");
 
 // id -> baseline filename. The default keeps its original name so its history
 // (and the guarantee the structure refactor rests on) is unbroken.
+const FACTIONS = ["Caldari", "Gallente", "Amarr", "Minmatar"];
+const CONSOLES = ["Navy", "Hangar"];
+
+// The default keeps its original filename so its history — and the guarantee
+// the structure refactor rests on — is unbroken.
 const SKINS = [
-  { id: null,          baseline: "MainWindow.png" },
-  { id: "CaldariNavy",    baseline: "MainWindow.CaldariNavy.png" },
-  { id: "HangarDeck",     baseline: "MainWindow.HangarDeck.png" },
-  { id: "CaldariConsole", baseline: "MainWindow.CaldariConsole.png" },
-  { id: "GallenteFederation", baseline: "MainWindow.GallenteFederation.png" },
-  { id: "AmarrEmpire",        baseline: "MainWindow.AmarrEmpire.png" },
-  { id: "MinmatarRepublic",   baseline: "MainWindow.MinmatarRepublic.png" },
+  { id: null, baseline: "MainWindow.png" },
+  ...FACTIONS.flatMap((f) => CONSOLES.map((c) => ({
+    id: `${f}${c}`, baseline: `MainWindow.${f}${c}.png`,
+  }))),
 ];
 
 const accept = process.argv.includes("--accept");

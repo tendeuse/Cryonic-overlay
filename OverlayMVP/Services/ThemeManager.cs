@@ -38,16 +38,41 @@ namespace OverlayMVP.Services
         /// </summary>
         public sealed record Skin(string Id, string Display, string Tokens, string Styles, bool Paid);
 
-        public static readonly IReadOnlyList<Skin> Available = new[]
+        // DECLARATION ORDER MATTERS. C# runs static field initialisers top to
+        // bottom, so these two tables must be declared BEFORE Available, which
+        // reads them. Declared after, they are still null when Build() runs and
+        // the type initialiser throws — which surfaces as a fatal error dialog
+        // at startup, nowhere near the real cause.
+        private static readonly (string Id, string Name)[] Factions =
         {
-            new Skin("Default",     "Default",      "Default",     "Default", Paid: false),
-            new Skin("CaldariNavy",    "Caldari Navy",    "CaldariNavy",    "Cockpit", Paid: true),
-            new Skin("HangarDeck",     "Hangar Deck",     "HangarDeck",     "Cockpit", Paid: true),
-            new Skin("CaldariConsole", "Caldari Console", "CaldariConsole", "Cockpit", Paid: true),
-            new Skin("GallenteFederation", "Gallente Federation", "GallenteFederation", "Cockpit", Paid: true),
-            new Skin("AmarrEmpire",        "Amarr Empire",        "AmarrEmpire",        "Cockpit", Paid: true),
-            new Skin("MinmatarRepublic",   "Minmatar Republic",   "MinmatarRepublic",   "Cockpit", Paid: true),
+            ("Caldari",  "Caldari"),
+            ("Gallente", "Gallente"),
+            ("Amarr",    "Amarr"),
+            ("Minmatar", "Minmatar"),
         };
+
+        private static readonly (string Id, string Name, string Styles)[] Consoles =
+        {
+            ("Navy",   "Navy",        "CockpitNavy"),
+            ("Hangar", "Hangar Deck", "CockpitHangar"),
+        };
+
+        /// <summary>
+        /// The catalogue is a MATRIX: a faction palette crossed with a console
+        /// design. Four factions and two designs give eight skins from six
+        /// files, which is only possible because Tokens and Styles are separate
+        /// fields on a skin rather than one bundled thing.
+        /// </summary>
+        public static readonly IReadOnlyList<Skin> Available = Build();
+
+        private static Skin[] Build()
+        {
+            var list = new List<Skin> { new("Default", "Default", "Default", "Default", Paid: false) };
+            foreach (var f in Factions)
+                foreach (var c in Consoles)
+                    list.Add(new Skin($"{f.Id}{c.Id}", $"{f.Name} · {c.Name}", f.Id, c.Styles, Paid: true));
+            return list.ToArray();
+        }
 
         public static Skin Find(string id) =>
             Available.FirstOrDefault(s => string.Equals(s.Id, id, StringComparison.OrdinalIgnoreCase))
