@@ -208,13 +208,18 @@
         <GradientStop Offset="1" Color="#3D5996C8"/>
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="GlassGloss" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#42FFFFFF"/>
-        <GradientStop Offset="1" Color="#0AFFFFFF"/>
-    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="GlassSpecular" Center="0.5,-0.35" GradientOrigin="0.5,-0.35" RadiusX="1.15" RadiusY="0.95">
+        <GradientStop Offset="0" Color="#3DFFFFFF"/>
+        <GradientStop Offset="0.55" Color="#1AFFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </RadialGradientBrush>
 
-    <LinearGradientBrush x:Key="GlassShade" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#1F000000"/>
-        <GradientStop Offset="1" Color="#00000000"/>
+    <LinearGradientBrush x:Key="GlassStreak" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0" Color="#00FFFFFF"/>
+        <GradientStop Offset="0.34" Color="#00FFFFFF"/>
+        <GradientStop Offset="0.4" Color="#24FFFFFF"/>
+        <GradientStop Offset="0.46" Color="#24FFFFFF"/>
+        <GradientStop Offset="0.52" Color="#00FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
     </LinearGradientBrush>
 </ResourceDictionary>

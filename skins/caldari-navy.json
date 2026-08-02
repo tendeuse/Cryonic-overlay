@@ -151,19 +151,63 @@
       "fromAlpha": "00",
       "angle": 90
     },
-    "GlassGloss": {
-      "from": "White",
-      "fromAlpha": "42",
-      "to": "White",
-      "toAlpha": "0A",
-      "angle": 90
+    "GlassSpecular": {
+      "kind": "radial",
+      "center": "0.5,-0.35",
+      "radiusX": 1.15,
+      "radiusY": 0.95,
+      "stops": [
+        {
+          "colour": "White",
+          "alpha": "3D",
+          "offset": 0
+        },
+        {
+          "colour": "White",
+          "alpha": "1A",
+          "offset": 0.55
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 1
+        }
+      ]
     },
-    "GlassShade": {
-      "from": "Black",
-      "fromAlpha": "1F",
-      "to": "Black",
-      "toAlpha": "00",
-      "angle": 90
+    "GlassStreak": {
+      "angle": 45,
+      "stops": [
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0.34
+        },
+        {
+          "colour": "White",
+          "alpha": "24",
+          "offset": 0.4
+        },
+        {
+          "colour": "White",
+          "alpha": "24",
+          "offset": 0.46
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0.52
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 1
+        }
+      ]
     }
   }
 }

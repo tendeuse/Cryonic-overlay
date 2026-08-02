@@ -204,15 +204,41 @@ function buildXaml(palette) {
       if (!rgb) throw new Error(`gradient "${key}" references unknown colour "${name}"`);
       return `#${(alpha ?? "FF").toUpperCase()}${rgb.toUpperCase()}`;
     };
-    // angle 90 = top-to-bottom, the only direction the cockpit reference uses.
-    const [x2, y2] = g.angle === 0 ? [1, 0] : [0, 1];
-    block.push(
-      "",
-      `    <LinearGradientBrush x:Key="${key}" StartPoint="0,0" EndPoint="${x2},${y2}">`,
-      `        <GradientStop Offset="0" Color="${stop(g.from, g.fromAlpha)}"/>`,
-      `        <GradientStop Offset="1" Color="${stop(g.to, g.toAlpha)}"/>`,
-      `    </LinearGradientBrush>`
+
+    // Two forms. `from`/`to` is the common two-stop case; `stops` is the
+    // general one, needed because a specular highlight is not a fade -- it
+    // needs a tight band that arrives and leaves quickly, which two stops
+    // spread across the whole surface cannot express.
+    const stops = g.stops ?? [
+      { colour: g.from, alpha: g.fromAlpha, offset: 0 },
+      { colour: g.to,   alpha: g.toAlpha,   offset: 1 },
+    ];
+    const stopXml = stops.map(
+      (s) => `        <GradientStop Offset="${s.offset}" Color="${stop(s.colour, s.alpha)}"/>`
     );
+
+    if (g.kind === "radial") {
+      // A RADIAL brush is what makes a highlight read as a REFLECTION rather
+      // than paint: its falloff is a curve, and a curved edge is the thing the
+      // eye uses to tell a glossy surface from a printed gradient.
+      const c = g.center ?? "0.5,0";
+      block.push(
+        "",
+        `    <RadialGradientBrush x:Key="${key}" Center="${c}" GradientOrigin="${g.origin ?? c}"` +
+        ` RadiusX="${g.radiusX ?? 0.9}" RadiusY="${g.radiusY ?? 0.7}">`,
+        ...stopXml,
+        `    </RadialGradientBrush>`
+      );
+    } else {
+      // angle 45 gives the diagonal a reflected light source actually makes.
+      const [x2, y2] = g.angle === 0 ? [1, 0] : g.angle === 45 ? [1, 1] : [0, 1];
+      block.push(
+        "",
+        `    <LinearGradientBrush x:Key="${key}" StartPoint="0,0" EndPoint="${x2},${y2}">`,
+        ...stopXml,
+        `    </LinearGradientBrush>`
+      );
+    }
   }
 
   if (block.length) {
