@@ -8,6 +8,21 @@
 //
 // This is what makes ~310 mechanical edits safe: pixel-identity becomes a
 // machine check instead of an eyeball check.
+//
+// ⚠ `snapshot` IS A ONE-TIME HISTORICAL OPERATION. DO NOT RE-RUN IT.
+//
+// It was run once, against the pre-refactor tree, where the literal colours
+// still lived in App.xaml. `verify` resolves through Tokens.Default.xaml
+// instead. The two are only symmetric in that original state -- re-running
+// snapshot today records token NAMES ("{Bg}") against verify's resolved hex
+// ("#CC0D1117") and every colour reports as both missing and new. It looks
+// like catastrophic drift and is pure artefact.
+//
+// If verify legitimately fails because new colour DECLARATIONS were added
+// (e.g. a new control's default Style names a brush in a Setter), account for
+// every delta first, confirm tools/shot-diff.mjs still reports identical, then
+// hand-add just those entries to theme-baseline.json under their own key.
+// Never regenerate the file.
 import fs from "node:fs";
 import path from "node:path";
 
