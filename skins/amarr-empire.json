@@ -1,0 +1,202 @@
+{
+  "name": "Amarr Empire",
+  "description": "Imperial gold over dark warm brown. Gilt hardware, amber readouts, the most ornate of the empire skins.",
+  "colours": {
+    "Bg": "161009",
+    "Panel": "241B10",
+    "Well": "120D07",
+    "Surface": "1E160C",
+    "Border": "4A3A1E",
+    "BorderStrong": "5E4A28",
+    "SteelBlue": "5E4A28",
+    "Text": "F0E6D2",
+    "TextDim": "BCA982",
+    "TextFaint": "8A7A5A",
+    "PaleLavender": "F0E6D2",
+    "PaleCyan": "D8C08A",
+    "SkyBlue": "F0D68A",
+    "IceBlue": "F0D68A",
+    "SteelGrey": "BCA982",
+    "SlateGray": "8A7A5A",
+    "SlateNavy": "6E6047",
+    "Ivory": "F5E6B0",
+    "White": "FFFFFF",
+    "Black": "000000",
+    "Accent": "C9A227",
+    "Amber": "E8C974",
+    "Red": "C9402E",
+    "Green": "6E9A4A",
+    "Orange": "D0812C",
+    "Cyan": "F0D68A",
+    "AquaBlue": "E0B840",
+    "Gray": "C9A227",
+    "Emerald": "6E8A3E",
+    "Indigo": "5E4A28",
+    "MintGreen": "A8C98A",
+    "DuskBlue": "5E4A28",
+    "TwilightBlue": "2A2013",
+    "DeepTeal": "3A2E18",
+    "Onyx": "1E160C",
+    "DeepInk": "14100A",
+    "DeepNavy": "1E160C",
+    "GunMetal": "120D07",
+    "Charcoal": "241B10",
+    "Graphite": "1A1309",
+    "Obsidian": "120D07",
+    "InkBlue": "181108",
+    "Abyss": "0C0805",
+    "ComboBg": "1A1309",
+    "ComboBorder": "5E4A28",
+    "ComboItemBg": "241B10",
+    "ComboHover": "32260F",
+    "ComboSelect": "4A3A1E",
+    "ComboEdge": "5E4A28",
+    "KeyHi": "3A2E1A",
+    "KeyLo": "2A2013",
+    "KeyBorder": "5E4A28",
+    "KeyEdge": "140E07",
+    "AccentKeyHi": "C9A227",
+    "AccentKeyLo": "96781C",
+    "AmberKeyHi": "4A3D1F",
+    "AmberKeyLo": "382E15",
+    "RedKeyHi": "442426",
+    "RedKeyLo": "33191B",
+    "GreenKeyHi": "1E3A34",
+    "GreenKeyLo": "152A26",
+    "GlassTop": "1A1206",
+    "GlassBottom": "0E0903",
+    "GlassBorder": "0F0A04",
+    "GlassText": "C4A96E",
+    "GlassTextHi": "F0D68A",
+    "GlassGlowTop": "E0B840",
+    "KeyLip": "B39A6A",
+    "HazardA": "E8C974",
+    "HazardB": "161009"
+  },
+  "gradients": {
+    "KeyFace": {
+      "from": "KeyHi",
+      "to": "KeyLo",
+      "angle": 90
+    },
+    "AccentKeyFace": {
+      "from": "AccentKeyHi",
+      "to": "AccentKeyLo",
+      "angle": 90
+    },
+    "AmberKeyFace": {
+      "from": "AmberKeyHi",
+      "to": "AmberKeyLo",
+      "angle": 90
+    },
+    "RedKeyFace": {
+      "from": "RedKeyHi",
+      "to": "RedKeyLo",
+      "angle": 90
+    },
+    "GreenKeyFace": {
+      "from": "GreenKeyHi",
+      "to": "GreenKeyLo",
+      "angle": 90
+    },
+    "GlassFace": {
+      "from": "GlassTop",
+      "to": "GlassBottom",
+      "angle": 90
+    },
+    "PlateFace": {
+      "from": "Panel",
+      "to": "Bg",
+      "angle": 90
+    },
+    "KeySheen": {
+      "from": "White",
+      "fromAlpha": "26",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "KeySheenLit": {
+      "from": "White",
+      "fromAlpha": "40",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "PlateSheen": {
+      "from": "White",
+      "fromAlpha": "0D",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassGlow": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "1F",
+      "to": "GlassGlowTop",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassBezel": {
+      "from": "Black",
+      "fromAlpha": "80",
+      "to": "Black",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassAqua": {
+      "kind": "radial",
+      "center": "0.5,-0.55",
+      "radiusX": 1.5,
+      "radiusY": 1.15,
+      "stops": [
+        {
+          "colour": "White",
+          "alpha": "47",
+          "offset": 0
+        },
+        {
+          "colour": "White",
+          "alpha": "2B",
+          "offset": 0.55
+        },
+        {
+          "colour": "White",
+          "alpha": "1C",
+          "offset": 0.7
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0.72
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 1
+        }
+      ]
+    },
+    "GlassBounce": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "00",
+      "to": "GlassGlowTop",
+      "toAlpha": "33",
+      "angle": 90
+    },
+    "GlassField": {
+      "from": "Black",
+      "fromAlpha": "4D",
+      "to": "Black",
+      "toAlpha": "4D",
+      "angle": 90
+    },
+    "GlassFieldEdge": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "40",
+      "to": "GlassGlowTop",
+      "toAlpha": "26",
+      "angle": 90
+    }
+  }
+}

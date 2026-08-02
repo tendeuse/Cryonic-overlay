@@ -1,0 +1,228 @@
+<!-- filename: Themes/Tokens.Default.xaml -->
+<!--
+  The default theme's colours. This is the file a skin replaces.
+
+  Names come from Themes/design-reference/*.css so the CSS skins and this XAML
+  share one vocabulary (cx-text-dim -> TextDim). VALUES are today's overlay
+  colours, not the reference's — this theme must look exactly like the app
+  always has.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="Bg"      Color="#CC16100D"/>   <!-- was BgPanel -->
+    <SolidColorBrush x:Key="Panel"   Color="#88241A15"/>   <!-- was BgCard -->
+    <SolidColorBrush x:Key="Well"    Color="#EE120C0A"/>   <!-- was BgMultibox -->
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="Border"  Color="#FF4A3226"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="Text"    Color="#FFEDE2DA"/>   <!-- was TextPrimary -->
+    <SolidColorBrush x:Key="TextDim" Color="#FFB49C8E"/>   <!-- was TextSecondary -->
+
+    <!-- Accents -->
+    <SolidColorBrush x:Key="Accent"  Color="#FFB5563A"/>   <!-- was AccentBlue -->
+    <SolidColorBrush x:Key="Amber"   Color="#FFD9902E"/>   <!-- was AccentGold -->
+    <SolidColorBrush x:Key="Red"     Color="#FFC9402E"/>   <!-- was AccentRed -->
+    <SolidColorBrush x:Key="Green"   Color="#FF5E9A4A"/>   <!-- was AccentGreen -->
+
+    <!-- Task 3: five smallest windows -->
+    <SolidColorBrush x:Key="Surface"      Color="#FF1D1511"/>   <!-- FirstRunWindow background -->
+    <SolidColorBrush x:Key="PaleCyan"     Color="#FFC99080"/>   <!-- FirstRunWindow status text -->
+    <SolidColorBrush x:Key="BgEE"         Color="#EE16100D"/>   <!-- Bg, alpha EE -->
+    <SolidColorBrush x:Key="Border44"     Color="#444A3226"/>   <!-- Border, alpha 44 -->
+    <SolidColorBrush x:Key="DeepNavy"     Color="#CC1D1511"/>   <!-- ShipFitWindow title bar -->
+    <SolidColorBrush x:Key="TextFaint"    Color="#FF85705F"/>   <!-- ShipFitWindow close button -->
+    <SolidColorBrush x:Key="Onyx"         Color="#CC1D1511"/>   <!-- NotePrompt/MissionProgress title bar -->
+    <SolidColorBrush x:Key="Border22"     Color="#224A3226"/>   <!-- Border, alpha 22 -->
+    <SolidColorBrush x:Key="White33"      Color="#33FFFFFF"/>   <!-- NotePromptWindow Cancel button -->
+    <SolidColorBrush x:Key="Green33"      Color="#335E9A4A"/>   <!-- Green, alpha 33 -->
+    <SolidColorBrush x:Key="Red33"        Color="#33C9402E"/>   <!-- Red, alpha 33 -->
+    <SolidColorBrush x:Key="Abyss"        Color="#FF0C0806"/>   <!-- ThumbnailWindow thumbnail host -->
+    <SolidColorBrush x:Key="BorderStrong" Color="#FF5E4032"/>   <!-- ThumbnailWindow BorderClr (hoisted) -->
+
+    <!-- Task 4: mid-size windows -->
+    <SolidColorBrush x:Key="GunMetal"     Color="#120C0A"/>     <!-- BriefingWindow window background -->
+    <SolidColorBrush x:Key="Charcoal"     Color="#241A15"/>     <!-- BriefingWindow title bar / transport bar -->
+    <SolidColorBrush x:Key="Accent22"     Color="#22B5563A"/>   <!-- Accent, alpha 22 -->
+    <SolidColorBrush x:Key="Accent88"     Color="#88B5563A"/>   <!-- Accent, alpha 88 -->
+    <SolidColorBrush x:Key="Green22"      Color="#225E9A4A"/>   <!-- Green, alpha 22 -->
+    <SolidColorBrush x:Key="Green88"      Color="#885E9A4A"/>   <!-- Green, alpha 88 -->
+    <SolidColorBrush x:Key="Gray22"       Color="#22B5563A"/>   <!-- Gray, alpha 22 -->
+    <SolidColorBrush x:Key="Gray88"       Color="#88B5563A"/>   <!-- Gray, alpha 88 -->
+    <SolidColorBrush x:Key="SteelGrey"    Color="#FFB49C8E"/>   <!-- BriefingWindow Close button text -->
+    <SolidColorBrush x:Key="White11"      Color="#11FFFFFF"/>   <!-- White, alpha 11 -->
+    <SolidColorBrush x:Key="Amber33"      Color="#33D9902E"/>   <!-- Amber, alpha 33 -->
+    <SolidColorBrush x:Key="Emerald33"    Color="#335E8A4A"/>   <!-- Emerald, alpha 33 -->
+    <SolidColorBrush x:Key="Accent33"     Color="#33B5563A"/>   <!-- Accent, alpha 33 -->
+    <SolidColorBrush x:Key="White22"      Color="#22FFFFFF"/>   <!-- White, alpha 22 -->
+    <SolidColorBrush x:Key="DeepInk"      Color="#FF15100C"/>   <!-- IntelWindow search box background -->
+    <SolidColorBrush x:Key="PaleLavender" Color="#FFEDE2DA"/>   <!-- IntelWindow search box text -->
+
+    <!-- Task 5: SkillPlan, MainWindow, Settings -->
+    <SolidColorBrush x:Key="BgFF"         Color="#FF16100D"/>   <!-- Bg, alpha FF -->
+    <SolidColorBrush x:Key="Bg11"         Color="#1116100D"/>   <!-- Bg, alpha 11 -->
+    <SolidColorBrush x:Key="BgDD"         Color="#DD16100D"/>   <!-- Bg, alpha DD -->
+    <SolidColorBrush x:Key="BorderCC"     Color="#CC4A3226"/>   <!-- Border, alpha CC -->
+    <SolidColorBrush x:Key="SteelBlue"    Color="#FF5E4032"/>   <!-- MainWindow/SettingsWindow border colour -->
+    <SolidColorBrush x:Key="White"        Color="#FFFFFFFF"/>   <!-- base white -->
+    <SolidColorBrush x:Key="Black"        Color="#FF000000"/>   <!-- base black -->
+    <SolidColorBrush x:Key="White0D"      Color="#0DFFFFFF"/>   <!-- White, alpha 0D -->
+    <SolidColorBrush x:Key="White44"      Color="#44FFFFFF"/>   <!-- White, alpha 44 -->
+    <SolidColorBrush x:Key="Accent1A"     Color="#1AB5563A"/>   <!-- Accent, alpha 1A -->
+    <SolidColorBrush x:Key="Accent66"     Color="#66B5563A"/>   <!-- Accent, alpha 66 -->
+    <SolidColorBrush x:Key="Amber22"      Color="#22D9902E"/>   <!-- Amber, alpha 22 -->
+    <SolidColorBrush x:Key="Orange"       Color="#FFD06A2C"/>   <!-- MainWindow PIRATES report button -->
+    <SolidColorBrush x:Key="Orange33"     Color="#33D06A2C"/>   <!-- Orange, alpha 33 -->
+    <SolidColorBrush x:Key="SlateGray"    Color="#FF85705F"/>   <!-- SkillPlanWindow tooltip note text -->
+    <SolidColorBrush x:Key="AquaBlue"     Color="#22C96A46"/>   <!-- MainWindow multibox card hover highlight -->
+    <SolidColorBrush x:Key="Graphite"     Color="#CC1A120E"/>   <!-- MainWindow panel launcher background -->
+    <SolidColorBrush x:Key="Obsidian"     Color="#CC120C0A"/>   <!-- MainWindow footer background -->
+    <SolidColorBrush x:Key="InkBlue"      Color="#CC18100C"/>   <!-- MainWindow sponsor banner background -->
+    <SolidColorBrush x:Key="Black01"      Color="#01000000"/>   <!-- MainWindow resize-strip hit-test regions -->
+    <SolidColorBrush x:Key="TwilightBlue" Color="#FF2A1C16"/>   <!-- SettingsWindow default button background -->
+    <SolidColorBrush x:Key="Cyan"         Color="#FFE09A7A"/>   <!-- SettingsWindow accent cyan -->
+    <SolidColorBrush x:Key="DeepTeal"     Color="#FF3A2A1E"/>   <!-- SettingsWindow primary button background -->
+    <SolidColorBrush x:Key="MintGreen"    Color="#FF8FBF8A"/>   <!-- SettingsWindow linked-character bullet -->
+    <SolidColorBrush x:Key="SlateNavy"    Color="#FF6B5A4C"/>   <!-- SettingsWindow faint hint text -->
+
+    <!-- Task 7: StandingGuideWindow -->
+    <SolidColorBrush x:Key="Bg0A"         Color="#0A16100D"/>   <!-- Bg, alpha 0A -->
+    <SolidColorBrush x:Key="Accent0A"     Color="#0AB5563A"/>   <!-- Accent, alpha 0A -->
+    <SolidColorBrush x:Key="DuskBlue"     Color="#335E4032"/>   <!-- StandingGuideWindow faction ListBoxItem selected background -->
+    <SolidColorBrush x:Key="Border33"     Color="#334A3226"/>   <!-- Border, alpha 33 -->
+    <SolidColorBrush x:Key="Green0A"      Color="#0A5E9A4A"/>   <!-- Green, alpha 0A -->
+    <SolidColorBrush x:Key="SkyBlue"      Color="#FFE09A7A"/>   <!-- StandingGuideWindow TIP text -->
+    <SolidColorBrush x:Key="Amber1A"      Color="#1AD9902E"/>   <!-- Amber, alpha 1A -->
+    <SolidColorBrush x:Key="Green15"      Color="#155E9A4A"/>   <!-- Green, alpha 15 -->
+    <SolidColorBrush x:Key="Accent15"     Color="#15B5563A"/>   <!-- Accent, alpha 15 -->
+    <SolidColorBrush x:Key="Amber15"      Color="#15D9902E"/>   <!-- Amber, alpha 15 -->
+    <SolidColorBrush x:Key="Red1A"        Color="#1AC9402E"/>   <!-- Red, alpha 1A -->
+    <SolidColorBrush x:Key="Ivory"        Color="#22E8C9A0"/>   <!-- StandingGuideWindow Order button background -->
+
+    <!-- Shared control styles (Styles.Default.xaml) -->
+    <SolidColorBrush x:Key="ComboBg" Color="#FF1A120E"/>   <!-- ComboBox face -->
+    <SolidColorBrush x:Key="ComboBorder" Color="#FF5E4032"/>   <!-- ComboBox / ToolTip border -->
+    <SolidColorBrush x:Key="ComboItemBg" Color="#FF241A15"/>   <!-- ComboBox item background -->
+    <SolidColorBrush x:Key="ComboHover" Color="#FF32211A"/>   <!-- ComboBox item hover -->
+    <SolidColorBrush x:Key="ComboSelect" Color="#FF4A3226"/>   <!-- ComboBox item selected -->
+    <SolidColorBrush x:Key="IceBlue" Color="#FFE09A7A"/>   <!-- ComboBox selected text -->
+    <SolidColorBrush x:Key="ComboEdge" Color="#FF5E4032"/>   <!-- ComboBox drop-down edge -->
+    <SolidColorBrush x:Key="Indigo44" Color="#445E4032"/>   <!-- ComboBox popup shadow -->
+
+
+    <!-- Role marker. ThemeManager swaps dictionaries by this, not by
+         guessing from the keys they contain. -->
+    <sys:String x:Key="__SkinDictionaryRole"
+                xmlns:sys="clr-namespace:System;assembly=mscorlib">Tokens</sys:String>
+
+    <!-- Skin-specific tokens. No counterpart in the default theme: these
+         exist only for skins whose component layer draws things the
+         default one does not (key bevels, glass, hazard striping). -->
+    <SolidColorBrush x:Key="AccentKeyHi"  Color="#FFB5563A"/>
+    <SolidColorBrush x:Key="AccentKeyLo"  Color="#FF8A3F29"/>
+    <SolidColorBrush x:Key="AmberKeyHi"   Color="#FF4A3D1F"/>
+    <SolidColorBrush x:Key="AmberKeyLo"   Color="#FF382E15"/>
+    <SolidColorBrush x:Key="GlassBorder"  Color="#FF0F0806"/>
+    <SolidColorBrush x:Key="GlassBottom"  Color="#FF0E0705"/>
+    <SolidColorBrush x:Key="GlassGlowTop" Color="#FFC96A46"/>
+    <SolidColorBrush x:Key="GlassText"    Color="#FFC29280"/>
+    <SolidColorBrush x:Key="GlassTextHi"  Color="#FFE09A7A"/>
+    <SolidColorBrush x:Key="GlassTop"     Color="#FF1A0F0A"/>
+    <SolidColorBrush x:Key="GreenKeyHi"   Color="#FF1E3A34"/>
+    <SolidColorBrush x:Key="GreenKeyLo"   Color="#FF152A26"/>
+    <SolidColorBrush x:Key="HazardA"      Color="#FFD9902E"/>
+    <SolidColorBrush x:Key="HazardB"      Color="#FF16100D"/>
+    <SolidColorBrush x:Key="KeyBorder"    Color="#FF5E4032"/>
+    <SolidColorBrush x:Key="KeyEdge"      Color="#FF140D0A"/>
+    <SolidColorBrush x:Key="KeyHi"        Color="#FF3A2A22"/>
+    <SolidColorBrush x:Key="KeyLip"       Color="#FFAD9080"/>
+    <SolidColorBrush x:Key="KeyLo"        Color="#FF2A1E18"/>
+    <SolidColorBrush x:Key="RedKeyHi"     Color="#FF442426"/>
+    <SolidColorBrush x:Key="RedKeyLo"     Color="#FF33191B"/>
+
+    <LinearGradientBrush x:Key="KeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF3A2A22"/>
+        <GradientStop Offset="1" Color="#FF2A1E18"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AccentKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FFB5563A"/>
+        <GradientStop Offset="1" Color="#FF8A3F29"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AmberKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF4A3D1F"/>
+        <GradientStop Offset="1" Color="#FF382E15"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="RedKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF442426"/>
+        <GradientStop Offset="1" Color="#FF33191B"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GreenKeyFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF1E3A34"/>
+        <GradientStop Offset="1" Color="#FF152A26"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF1A0F0A"/>
+        <GradientStop Offset="1" Color="#FF0E0705"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlateFace" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#FF241A15"/>
+        <GradientStop Offset="1" Color="#FF16100D"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="KeySheen" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#26FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="KeySheenLit" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#40FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PlateSheen" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#0DFFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassGlow" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#1FC96A46"/>
+        <GradientStop Offset="1" Color="#00C96A46"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassBezel" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#80000000"/>
+        <GradientStop Offset="1" Color="#00000000"/>
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="GlassAqua" Center="0.5,-0.55" GradientOrigin="0.5,-0.55" RadiusX="1.5" RadiusY="1.15">
+        <GradientStop Offset="0" Color="#47FFFFFF"/>
+        <GradientStop Offset="0.55" Color="#2BFFFFFF"/>
+        <GradientStop Offset="0.7" Color="#1CFFFFFF"/>
+        <GradientStop Offset="0.72" Color="#00FFFFFF"/>
+        <GradientStop Offset="1" Color="#00FFFFFF"/>
+    </RadialGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassBounce" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#00C96A46"/>
+        <GradientStop Offset="1" Color="#33C96A46"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassField" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#4D000000"/>
+        <GradientStop Offset="1" Color="#4D000000"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassFieldEdge" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#40C96A46"/>
+        <GradientStop Offset="1" Color="#26C96A46"/>
+    </LinearGradientBrush>
+</ResourceDictionary>

@@ -44,6 +44,9 @@ namespace OverlayMVP.Services
             new Skin("CaldariNavy",    "Caldari Navy",    "CaldariNavy",    "Cockpit", Paid: true),
             new Skin("HangarDeck",     "Hangar Deck",     "HangarDeck",     "Cockpit", Paid: true),
             new Skin("CaldariConsole", "Caldari Console", "CaldariConsole", "Cockpit", Paid: true),
+            new Skin("GallenteFederation", "Gallente Federation", "GallenteFederation", "Cockpit", Paid: true),
+            new Skin("AmarrEmpire",        "Amarr Empire",        "AmarrEmpire",        "Cockpit", Paid: true),
+            new Skin("MinmatarRepublic",   "Minmatar Republic",   "MinmatarRepublic",   "Cockpit", Paid: true),
         };
 
         public static Skin Find(string id) =>

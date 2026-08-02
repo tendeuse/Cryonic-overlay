@@ -26,6 +26,9 @@ const SKINS = [
   { id: "CaldariNavy",    baseline: "MainWindow.CaldariNavy.png" },
   { id: "HangarDeck",     baseline: "MainWindow.HangarDeck.png" },
   { id: "CaldariConsole", baseline: "MainWindow.CaldariConsole.png" },
+  { id: "GallenteFederation", baseline: "MainWindow.GallenteFederation.png" },
+  { id: "AmarrEmpire",        baseline: "MainWindow.AmarrEmpire.png" },
+  { id: "MinmatarRepublic",   baseline: "MainWindow.MinmatarRepublic.png" },
 ];
 
 const accept = process.argv.includes("--accept");

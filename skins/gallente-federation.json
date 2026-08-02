@@ -1,0 +1,202 @@
+{
+  "name": "Gallente Federation",
+  "description": "Federation green over dark olive plating with brass trim. Warmer and more organic than the State skins.",
+  "colours": {
+    "Bg": "0E1714",
+    "Panel": "18251F",
+    "Well": "0A120F",
+    "Surface": "142019",
+    "Border": "2C4438",
+    "BorderStrong": "3A5646",
+    "SteelBlue": "3A5646",
+    "Text": "E4EDE6",
+    "TextDim": "9DB3A5",
+    "TextFaint": "6C8177",
+    "PaleLavender": "E4EDE6",
+    "PaleCyan": "8FC79B",
+    "SkyBlue": "7FD8AE",
+    "IceBlue": "7FD8AE",
+    "SteelGrey": "9DB3A5",
+    "SlateGray": "6C8177",
+    "SlateNavy": "56675E",
+    "Ivory": "E8D08A",
+    "White": "FFFFFF",
+    "Black": "000000",
+    "Accent": "4FA37A",
+    "Amber": "C9A23E",
+    "Red": "C9402E",
+    "Green": "3E9A5D",
+    "Orange": "D08A3C",
+    "Cyan": "7FD8AE",
+    "AquaBlue": "46B98A",
+    "Gray": "4FA37A",
+    "Emerald": "3E8A5D",
+    "Indigo": "3A5646",
+    "MintGreen": "8FC79B",
+    "DuskBlue": "3A5646",
+    "TwilightBlue": "1B2A22",
+    "DeepTeal": "1E3A2E",
+    "Onyx": "142019",
+    "DeepInk": "101A15",
+    "DeepNavy": "142019",
+    "GunMetal": "0A120F",
+    "Charcoal": "18251F",
+    "Graphite": "121C17",
+    "Obsidian": "0A120F",
+    "InkBlue": "0F1913",
+    "Abyss": "060D0A",
+    "ComboBg": "121C17",
+    "ComboBorder": "3A5646",
+    "ComboItemBg": "1B2A22",
+    "ComboHover": "22362B",
+    "ComboSelect": "2C4438",
+    "ComboEdge": "3A5646",
+    "KeyHi": "2A3A31",
+    "KeyLo": "1F2B25",
+    "KeyBorder": "3A5646",
+    "KeyEdge": "101A15",
+    "AccentKeyHi": "4FA37A",
+    "AccentKeyLo": "357A59",
+    "AmberKeyHi": "4A3D1F",
+    "AmberKeyLo": "382E15",
+    "RedKeyHi": "442426",
+    "RedKeyLo": "33191B",
+    "GreenKeyHi": "1E3A2C",
+    "GreenKeyLo": "152A20",
+    "GlassTop": "0A1A14",
+    "GlassBottom": "04100B",
+    "GlassBorder": "06100C",
+    "GlassText": "7FB39A",
+    "GlassTextHi": "7FD8AE",
+    "GlassGlowTop": "46B98A",
+    "KeyLip": "7E9A88",
+    "HazardA": "C9A23E",
+    "HazardB": "0E1714"
+  },
+  "gradients": {
+    "KeyFace": {
+      "from": "KeyHi",
+      "to": "KeyLo",
+      "angle": 90
+    },
+    "AccentKeyFace": {
+      "from": "AccentKeyHi",
+      "to": "AccentKeyLo",
+      "angle": 90
+    },
+    "AmberKeyFace": {
+      "from": "AmberKeyHi",
+      "to": "AmberKeyLo",
+      "angle": 90
+    },
+    "RedKeyFace": {
+      "from": "RedKeyHi",
+      "to": "RedKeyLo",
+      "angle": 90
+    },
+    "GreenKeyFace": {
+      "from": "GreenKeyHi",
+      "to": "GreenKeyLo",
+      "angle": 90
+    },
+    "GlassFace": {
+      "from": "GlassTop",
+      "to": "GlassBottom",
+      "angle": 90
+    },
+    "PlateFace": {
+      "from": "Panel",
+      "to": "Bg",
+      "angle": 90
+    },
+    "KeySheen": {
+      "from": "White",
+      "fromAlpha": "26",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "KeySheenLit": {
+      "from": "White",
+      "fromAlpha": "40",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "PlateSheen": {
+      "from": "White",
+      "fromAlpha": "0D",
+      "to": "White",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassGlow": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "1F",
+      "to": "GlassGlowTop",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassBezel": {
+      "from": "Black",
+      "fromAlpha": "80",
+      "to": "Black",
+      "toAlpha": "00",
+      "angle": 90
+    },
+    "GlassAqua": {
+      "kind": "radial",
+      "center": "0.5,-0.55",
+      "radiusX": 1.5,
+      "radiusY": 1.15,
+      "stops": [
+        {
+          "colour": "White",
+          "alpha": "47",
+          "offset": 0
+        },
+        {
+          "colour": "White",
+          "alpha": "2B",
+          "offset": 0.55
+        },
+        {
+          "colour": "White",
+          "alpha": "1C",
+          "offset": 0.7
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 0.72
+        },
+        {
+          "colour": "White",
+          "alpha": "00",
+          "offset": 1
+        }
+      ]
+    },
+    "GlassBounce": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "00",
+      "to": "GlassGlowTop",
+      "toAlpha": "33",
+      "angle": 90
+    },
+    "GlassField": {
+      "from": "Black",
+      "fromAlpha": "4D",
+      "to": "Black",
+      "toAlpha": "4D",
+      "angle": 90
+    },
+    "GlassFieldEdge": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "40",
+      "to": "GlassGlowTop",
+      "toAlpha": "26",
+      "angle": 90
+    }
+  }
+}
