@@ -67,6 +67,28 @@
             </DrawingBrush.Drawing>
         </DrawingBrush>
 
+        <!-- DECK PLATE texture: a shallow diagonal hatch. Deck plating is not
+             smooth, and this is most of what separates "rugged" from merely
+             "square". Kept very low contrast so it never competes with text. -->
+        <DrawingBrush x:Key="PlateTexture" TileMode="Tile"
+                      Viewport="0,0,8,8" ViewportUnits="Absolute"
+                      Opacity="0.5">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#14FFFFFF">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry Figures="M0,8 L8,0 L8,1 L1,8 Z"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#18000000">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry Figures="M0,7 L7,0 L8,0 L0,8 Z"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
         <!-- Hazard striping: 45° brass and dark, the way a real panel marks a
              caution strip. -->
         <DrawingBrush x:Key="HazardStripe" TileMode="Tile"
@@ -471,6 +493,20 @@
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 Padding="{TemplateBinding Padding}">
                           <Grid>
+                            <!-- LOAD-BEARING STRIPE down the left edge. A deck
+                                 marks its bays on the side where a walking
+                                 crew reads them, not with a hairline on top. -->
+                            <Border Width="3"
+                                    HorizontalAlignment="Left"
+                                    Margin="-8,-6,0,-6"
+                                    Background="{DynamicResource Amber}"
+                                    Opacity="0.8"
+                                    IsHitTestVisible="False"/>
+
+                            <!-- Plate texture on the section face too. -->
+                            <Border Background="{StaticResource PlateTexture}"
+                                    Margin="-8,-6,-8,-6"
+                                    IsHitTestVisible="False"/>
                             <!-- Plate lighting. A panel is a sheet of metal lit
                                  from above, so the top edge catches and the rest
                                  falls away. Behind the content, never over it. -->
@@ -496,7 +532,7 @@
                                      that use it standalone. Inside a SectionPanel that
                                      must be overridden with Margin="0", or it stacks with
                                      this one and doubles the gap to 8px. -->
-                                <Grid x:Name="HeaderRow" Margin="0,0,0,4">
+                                <Grid x:Name="HeaderRow" Margin="4,0,0,4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
@@ -532,7 +568,7 @@
                                      sit on the console. -->
                                 <ContentPresenter x:Name="ToolbarHost"
                                                   Content="{TemplateBinding Toolbar}"
-                                                  Margin="0,0,0,6"/>
+                                                  Margin="4,0,0,6"/>
 
                                 <!-- THE GLASS READOUT.
                                      A headed section is an instrument that
@@ -729,8 +765,24 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     CornerRadius="{TemplateBinding CornerRadius}"
                                     Padding="{TemplateBinding Padding}">
-                                <ContentPresenter/>
+                                <Grid>
+                                    <Border Background="{StaticResource PlateTexture}"
+                                            IsHitTestVisible="False"/>
+                                    <ContentPresenter/>
+                                </Grid>
                             </Border>
+
+                            <!-- CAUTION BORDER on the whole unit, top and
+                                 bottom. On a hangar deck the equipment itself
+                                 is marked, not just one strip inside it — this
+                                 is the loudest single difference from the Navy
+                                 design, which trims in brass instead. -->
+                            <Border Height="9" VerticalAlignment="Top"
+                                    Background="{StaticResource HazardStripe}"
+                                    IsHitTestVisible="False"/>
+                            <Border Height="9" VerticalAlignment="Bottom"
+                                    Background="{StaticResource HazardStripe}"
+                                    IsHitTestVisible="False"/>
 
                             <!-- CORNER BOLTS.
                                  The panel is fastened to the hull at four
