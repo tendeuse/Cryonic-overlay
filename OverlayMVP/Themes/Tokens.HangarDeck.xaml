@@ -215,4 +215,14 @@
         <GradientStop Offset="0" Color="#005996C8"/>
         <GradientStop Offset="1" Color="#335996C8"/>
     </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassField" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#4D000000"/>
+        <GradientStop Offset="1" Color="#4D000000"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlassFieldEdge" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#405996C8"/>
+        <GradientStop Offset="1" Color="#265996C8"/>
+    </LinearGradientBrush>
 </ResourceDictionary>

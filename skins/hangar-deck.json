@@ -183,6 +183,20 @@
       "to": "GlassGlowTop",
       "toAlpha": "33",
       "angle": 90
+    },
+    "GlassField": {
+      "from": "Black",
+      "fromAlpha": "4D",
+      "to": "Black",
+      "toAlpha": "4D",
+      "angle": 90
+    },
+    "GlassFieldEdge": {
+      "from": "GlassGlowTop",
+      "fromAlpha": "40",
+      "to": "GlassGlowTop",
+      "toAlpha": "26",
+      "angle": 90
     }
   }
 }
