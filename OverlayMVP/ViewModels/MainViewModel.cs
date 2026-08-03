@@ -39,7 +39,18 @@ namespace OverlayMVP.ViewModels
         public LocalizationManager Loc => LocalizationManager.Instance;
 
         // ── App version (shown in the footer) ───────────────────────────────
-        public string AppVersion => "Alpha · v" + (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "?");
+        /// <summary>
+        /// Release channel, shown beside the version in the footer.
+        ///
+        /// Kept OUT of the assembly version on purpose: the update check parses
+        /// that with Version.TryParse, and a suffix like "0.7.0-beta" fails to
+        /// parse, which would silently disable update notifications for
+        /// everyone rather than erroring anywhere visible.
+        /// </summary>
+        private const string Channel = "Beta";
+
+        public string AppVersion => Channel + " · v" +
+            (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "?");
 
         // ── Connection / Status ───────────────────────────────────────────
         [ObservableProperty] private string connectionStatus  = "";
