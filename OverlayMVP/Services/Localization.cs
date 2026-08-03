@@ -138,5 +138,55 @@ namespace OverlayMVP.Services
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        // ================================================================
+        // HELP
+        //
+        // Written as prose pairs like everything else rather than pulled from
+        // a resource file, so a French pilot never meets an English wall on
+        // the one screen they open BECAUSE they are stuck.
+        // ================================================================
+        public string HelpTitle        => T("❔  HELP",  "❔  AIDE");
+        public string HelpClose        => T("Close",     "Fermer");
+
+        public string HelpHotkeysHead  => T("GLOBAL HOTKEYS",
+                                            "RACCOURCIS GLOBAUX");
+        public string HelpHotkeysIntro => T("These work anywhere, including while EVE has focus.",
+                                            "Ils fonctionnent partout, même quand EVE a le focus.");
+        public string HelpHotkeyShow   => T("Show or hide the overlay",
+                                            "Afficher ou masquer l'overlay");
+        public string HelpHotkeyClick  => T("Click-through — let clicks pass to the game",
+                                            "Clic traversant — laisse passer les clics vers le jeu");
+        public string HelpHotkeyIntel  => T("Report a roaming gang in your system",
+                                            "Signaler une bande itinérante dans votre système");
+
+        public string HelpPanelsHead   => T("PANELS",
+                                            "PANNEAUX");
+        public string HelpPanelStanding=> T("Standing — faction standing guide, and which agents to run.",
+                                            "Standing — guide des standings de faction, et quels agents faire.");
+        public string HelpPanelSession => T("Session — what you have earned this session.",
+                                            "Session — ce que vous avez gagné durant cette session.");
+        public string HelpPanelSkills  => T("Skills — the skill plan for your chosen faction.",
+                                            "Compétences — le plan de compétences pour votre faction.");
+        public string HelpPanelOrders  => T("Orders — tasks from your corp or coalition. A ⚠ marks a new one.",
+                                            "Ordres — tâches de votre corpo ou coalition. Un ⚠ signale un nouvel ordre.");
+
+        public string HelpSetupHead    => T("GETTING STARTED",
+                                            "PREMIERS PAS");
+        public string HelpSetupLink    => T("Open ⚙ Settings and add a character to link EVE. Standings, skills and your ship only appear once a character is linked.",
+                                            "Ouvrez ⚙ Paramètres et ajoutez un personnage pour lier EVE. Standings, compétences et vaisseau n'apparaissent qu'une fois un personnage lié.");
+        public string HelpSetupMulti   => T("Link several characters and switch between them with the ESI selector in Pilot Status.",
+                                            "Liez plusieurs personnages et basculez entre eux avec le sélecteur ESI dans Statut Pilote.");
+        public string HelpSetupPanels  => T("Settings also chooses which sections are shown. Hide what you do not use — the overlay shrinks to fit.",
+                                            "Les paramètres choisissent aussi les sections affichées. Masquez ce que vous n'utilisez pas — l'overlay se réduit en conséquence.");
+        public string HelpSetupSkins   => T("Skins change how the overlay looks, never what it does. Every feature works on the free default skin.",
+                                            "Les skins changent l'apparence de l'overlay, jamais ses fonctions. Toutes les fonctionnalités marchent avec le skin gratuit par défaut.");
+
+        public string HelpMoveHead     => T("MOVING AND RESIZING",
+                                            "DÉPLACER ET REDIMENSIONNER");
+        public string HelpMoveDrag     => T("Drag the title bar to move. Drag the right or bottom edge to resize.",
+                                            "Glissez la barre de titre pour déplacer. Glissez le bord droit ou inférieur pour redimensionner.");
+        public string HelpMoveClick    => T("In click-through mode the overlay stays visible but ignores the mouse, so you can fly through it.",
+                                            "En mode clic traversant, l'overlay reste visible mais ignore la souris : vous pouvez voler à travers.");
     }
 }

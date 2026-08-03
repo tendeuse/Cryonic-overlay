@@ -552,5 +552,27 @@
   ],
   "SKINS: SettingsWindow skin picker hint label": [
     "#FF00B4D4"
+  ],
+  "HELP: Views/HelpWindow.xaml colour declarations": [
+    "#FF4FC3F7",
+    "#FF4FC3F7",
+    "#FF4FC3F7",
+    "#FF1E3148",
+    "#FF1E3148",
+    "#FF1E3148",
+    "#FF1E3148",
+    "#FF1E3148",
+    "#881A2030",
+    "#881A2030",
+    "#881A2030",
+    "#881A2030",
+    "#FFEF5350",
+    "#FFEF5350",
+    "#CC0D1117",
+    "#CC111820",
+    "#33EF5350",
+    "#FF8A99AA",
+    "#FFFFD54F",
+    "#CC080C10"
   ]
 }

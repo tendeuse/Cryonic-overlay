@@ -35,6 +35,13 @@ const SKINS = [
 
 const accept = process.argv.includes("--accept");
 
+// Accepting a changed DEFAULT baseline needs its own flag, not the same one
+// used for skins. The guard exists to stop an accidental accept destroying the
+// reference that every skin diff is measured against — but a deliberate change
+// to the free app's appearance is legitimate and must be possible. A separate,
+// louder flag makes it a decision rather than muscle memory.
+const acceptDefault = process.argv.includes("--accept-default");
+
 if (!fs.existsSync(EXE)) {
   console.error(`visual-check: ${EXE} not found — build first`);
   process.exit(2);
@@ -82,12 +89,16 @@ for (const skin of SKINS) {
     // against. If it moved, something leaked out of a skin and into the
     // default -- accepting that would destroy the reference silently, which
     // has already been caught happening once.
-    if (!isNew && skin.id === null) {
+    if (!isNew && skin.id === null && !acceptDefault) {
       console.error(`REFUSED Default baseline changed. That is a REGRESSION, not a redesign.`);
       console.error(`        Find what leaked into the default theme; do not accept this.`);
+      console.error(`        If the free app's appearance changed ON PURPOSE, pass --accept-default.`);
       console.error(`        Capture kept at ${shot}`);
       bad++;
       continue;
+    }
+    if (!isNew && skin.id === null) {
+      console.log(`DEFAULT changed and accepted deliberately (--accept-default).`);
     }
 
     fs.copyFileSync(shot, base);

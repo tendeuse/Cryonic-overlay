@@ -539,6 +539,15 @@
                             Click="PanelBtn_Click" Tag="skills"
                             ToolTip="Faction Skill Plan"
                             Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Help. Always visible: it has no Settings toggle on
+                         purpose, because the toggle that hides it lives in the
+                         very screen a lost user cannot find. -->
+                    <Button x:Name="BtnHelp"
+                            Content="❔  Help"
+                            Style="{StaticResource LauncherBtn}"
+                            Click="HelpBtn_Click"
+                            ToolTip="Hotkeys, panels and getting started"/>
+
                     <Grid>
                         <Button x:Name="BtnOrders"
                                 Content="📢  Orders"

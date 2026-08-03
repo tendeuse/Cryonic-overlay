@@ -198,6 +198,14 @@ namespace OverlayMVP
                 _ = _systemWindow.LoadSystemByNameAsync(systemName);
         }
 
+        private void HelpBtn_Click(object sender, RoutedEventArgs e)
+        {
+            // Passes the view-model so the help text follows the language
+            // toggle, exactly like the rest of the UI.
+            var win = new Views.HelpWindow(_vm) { Owner = this };
+            win.ShowDialog();
+        }
+
         private void SettingsBtn_Click(object sender, RoutedEventArgs e)
         {
             var win = new Views.SettingsWindow(_vm.Db, _vm.Config);
