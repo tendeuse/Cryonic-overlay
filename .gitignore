@@ -5,3 +5,7 @@ OverlayMVP/obj/
 
 OverlayMVP/bin/
 OverlayMVP/obj/
+
+# Release artifacts. A 70MB self-contained exe does not belong in git —
+# GitHub Releases hosts the binaries; this repo holds the source that makes them.
+dist/
