@@ -1,5 +1,5 @@
 // filename: Services/Localization.cs
-// Bilingual EN/FR support for the ARC Overlay.
+// Bilingual EN/FR support for the Cryonic Overlay.
 // All UI strings live here — add new keys in both languages.
 // Toggle with LocalizationManager.Toggle() or set Language directly.
 
@@ -57,7 +57,7 @@ namespace OverlayMVP.Services
         // ================================================================
 
         // Title bar
-        public string AppTitle          => T("🛸  ARC MISSION OVERLAY",      "🛸  OVERLAY MISSIONS ARC");
+        public string AppTitle          => T("◈  CRYONIC OVERLAY",          "◈  OVERLAY CRYONIC");
         public string StatusConnecting  => T("Connecting…",                  "Connexion…");
         public string StatusOnline      => T("✅ Online",                    "✅ En ligne");
         public string StatusOffline     => T("❌ Offline",                   "❌ Hors ligne");
@@ -112,7 +112,7 @@ namespace OverlayMVP.Services
         public string FactionFocus      => PanelFaction;
 
         // First Run Wizard
-        public string WizardTitle       => T("ARC Mission Overlay — First Run", "ARC Overlay Missions — Premier Lancement");
+        public string WizardTitle       => T("Cryonic Overlay — First Run",  "Cryonic Overlay — Premier lancement");
         public string WizardApiUrl      => T("API Base URL (Railway domain)",   "URL de l'API (domaine Railway)");
         public string WizardPairCode    => T("Pair Code (from Discord: /overlay pair)", "Code de Jumelage (Discord: /overlay pair)");
         public string WizardAccountType => T("Account Type",                    "Type de Compte");
