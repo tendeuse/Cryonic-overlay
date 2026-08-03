@@ -14,9 +14,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ctl="clr-namespace:OverlayMVP.Controls"
         Title="Help"
-        Width="460"
-        Height="620"
+        Width="520"
+        Height="640"
+        MinWidth="380"
+        MinHeight="300"
         WindowStyle="None"
+        ResizeMode="CanResize"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
@@ -81,31 +84,46 @@
                                        Margin="0,0,0,6"/>
                             <Grid Margin="0,0,0,3">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
+                                    <!-- Auto, never a fixed width: the user
+                                         chooses the font size, and at anything
+                                         above the default a fixed column clips
+                                         "Ctrl + Shift + O" mid-word. -->
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Ctrl + Shift + O"
-                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"
+                                           Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Loc.HelpHotkeyShow}"
                                            TextWrapping="Wrap"/>
                             </Grid>
                             <Grid Margin="0,0,0,3">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
+                                    <!-- Auto, never a fixed width: the user
+                                         chooses the font size, and at anything
+                                         above the default a fixed column clips
+                                         "Ctrl + Shift + O" mid-word. -->
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Ctrl + Shift + C"
-                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"
+                                           Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Loc.HelpHotkeyClick}"
                                            TextWrapping="Wrap"/>
                             </Grid>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120"/>
+                                    <!-- Auto, never a fixed width: the user
+                                         chooses the font size, and at anything
+                                         above the default a fixed column clips
+                                         "Ctrl + Shift + O" mid-word. -->
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Ctrl + Shift + I"
-                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
+                                           FontWeight="Bold" Foreground="{DynamicResource Accent}"
+                                           Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Loc.HelpHotkeyIntel}"
                                            TextWrapping="Wrap"/>
                             </Grid>
