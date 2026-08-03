@@ -124,7 +124,27 @@ namespace OverlayMVP.Services
                 : raw.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
-        private static bool DevUnlocked(AppDb db) => Read(db, OverrideKey) == "1";
+        /// <summary>
+        /// Local developer unlock. COMPILED OUT OF RELEASE BUILDS.
+        ///
+        /// It exists so paid skins can be exercised before a real entitlement
+        /// can be granted. In a shipped build it would be a backdoor: the value
+        /// lives in the user's own SQLite file, so anyone willing to open it
+        /// could unlock every paid skin by typing "1" into a row. That is fine
+        /// for a dev convenience and not fine for something people pay for.
+        ///
+        /// #if DEBUG rather than a config flag on purpose — a flag can be
+        /// turned on in the field, and the compiler removing the code is the
+        /// only version that cannot.
+        /// </summary>
+        private static bool DevUnlocked(AppDb db)
+        {
+#if DEBUG
+            return Read(db, OverrideKey) == "1";
+#else
+            return false;
+#endif
+        }
 
         private static string? Read(AppDb db, string key)
         {
