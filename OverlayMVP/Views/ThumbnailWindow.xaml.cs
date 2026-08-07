@@ -173,7 +173,12 @@ namespace OverlayMVP.Views
         private const int HTRIGHT       = 11;
         private const int HTBOTTOM      = 15;
         private const int HTBOTTOMRIGHT = 17;
-        private const int ResizeBorder  = 8;
+        // 14px, not 8. These windows are small (280x185 by default) and get
+        // dragged around a busy screen mid-fight; an 8px band is a pixel hunt.
+        // The cost is that the outer 14px of the right and bottom edges resize
+        // rather than pass a click through to the thumbnail, which is a good
+        // trade for a preview you rarely click at its very edge.
+        private const int ResizeBorder  = 14;
 
         // ── Click thumbnail → switch EVE focus (without activating this window) ──
         // WM_MOUSEACTIVATE returns MA_NOACTIVATE so we never steal focus.

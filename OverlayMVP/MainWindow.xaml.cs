@@ -50,6 +50,7 @@ namespace OverlayMVP
             _hotkeys.SetHandler(HotkeyManager.ID_TOGGLE_VISIBILITY,   ToggleVisibility);
             _hotkeys.SetHandler(HotkeyManager.ID_TOGGLE_CLICKTHROUGH, ToggleClickThrough);
             _hotkeys.SetHandler(HotkeyManager.ID_REPORT_INTEL,  () => _vm.ReportRoamingCommand.Execute(null));
+            _hotkeys.SetHandler(HotkeyManager.ID_HIDE_ALL,      ToggleAll);
 
             _multibox.SetDestinationWindow(_hwnd);
 
@@ -219,6 +220,37 @@ namespace OverlayMVP
         {
             _visible = !_visible;
             Dispatcher.Invoke(() => Opacity = _visible ? 1.0 : 0.0);
+        }
+
+        private bool _allVisible = true;
+
+        /// <summary>
+        /// Hide or show EVERYTHING — the overlay and every detached instance
+        /// window.
+        ///
+        /// The detached windows are HIDDEN, not faded. Their thumbnails are
+        /// composited by DWM, outside WPF's visual tree, so Opacity = 0 leaves
+        /// the live preview of the game still painted on screen. Only removing
+        /// the window actually removes the thumbnail.
+        ///
+        /// The main window keeps using Opacity, matching Ctrl+Shift+O: hiding
+        /// it outright would drop its always-on-top position and it would come
+        /// back behind the game.
+        /// </summary>
+        private void ToggleAll()
+        {
+            _allVisible = !_allVisible;
+            Dispatcher.Invoke(() =>
+            {
+                Opacity  = _allVisible ? 1.0 : 0.0;
+                _visible = _allVisible;   // keep Ctrl+Shift+O in step
+
+                foreach (var kv in _detached)
+                {
+                    if (_allVisible) kv.Value.Show();
+                    else             kv.Value.Hide();
+                }
+            });
         }
         private void ToggleClickThrough()
         {

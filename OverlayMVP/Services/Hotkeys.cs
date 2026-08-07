@@ -34,6 +34,10 @@ namespace OverlayMVP.Services
         public const int ID_TOGGLE_VISIBILITY  = 9001;  // Ctrl+Shift+O
         public const int ID_TOGGLE_CLICKTHROUGH = 9002;  // Ctrl+Shift+C
         public const int ID_REPORT_INTEL        = 9003;  // Ctrl+Shift+I
+        // Hides the overlay AND every detached instance window. Ctrl+Shift+O
+        // only affects the main window, which leaves the thumbnails floating
+        // over the game -- not what "hide the overlay" means to anyone.
+        public const int ID_HIDE_ALL            = 9004;  // Ctrl+Shift+H
 
         private readonly IntPtr _hwnd;
         private readonly HwndSource _source;
@@ -49,6 +53,7 @@ namespace OverlayMVP.Services
             Register(ID_TOGGLE_VISIBILITY,   MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.O));
             Register(ID_TOGGLE_CLICKTHROUGH, MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.C));
             Register(ID_REPORT_INTEL,        MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.I));
+            Register(ID_HIDE_ALL,            MOD_CONTROL | MOD_SHIFT | MOD_NOREPEAT, (uint)KeyInterop.VirtualKeyFromKey(Key.H));
         }
 
         public void SetHandler(int id, Action handler)

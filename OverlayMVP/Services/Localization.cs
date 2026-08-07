@@ -160,6 +160,9 @@ namespace OverlayMVP.Services
         public string HelpHotkeyIntel  => T("Report a roaming gang in your system",
                                             "Signaler une bande itinérante dans votre système");
 
+        public string HelpHotkeyHideAll=> T("Hide everything, including the instance windows",
+                                            "Tout masquer, y compris les fenêtres d'instance");
+
         public string HelpPanelsHead   => T("PANELS",
                                             "PANNEAUX");
         public string HelpPanelStanding=> T("Standing — faction standing guide, and which agents to run.",
