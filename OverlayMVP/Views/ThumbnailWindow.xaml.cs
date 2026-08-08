@@ -49,6 +49,23 @@ namespace OverlayMVP.Views
             NativeMethods.SetWindowLong(_hwnd, GWL_EXSTYLE,
                 style | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW);
 
+            // WS_THICKFRAME — WITHOUT THIS THE WINDOW CANNOT BE RESIZED AT ALL.
+            //
+            // Returning HTRIGHT/HTBOTTOM from WM_NCHITTEST only means something
+            // to a window that has a sizing border. This window is
+            // ResizeMode="NoResize", so it had none, so the hit-test below was
+            // answering a question nobody acted on -- while still taking those
+            // pixels away from WPF input. That is how widening the band to 14px
+            // killed resizing outright: the 12x12 grip thumb sits in the
+            // bottom-right corner and vanished inside the band.
+            //
+            // MainWindow and HelpWindow already do exactly this, with the same
+            // WindowStyle=None + AllowsTransparency=True combination.
+            const int GWL_STYLE     = -16;
+            const int WS_THICKFRAME = 0x00040000;
+            NativeMethods.SetWindowLong(_hwnd, GWL_STYLE,
+                NativeMethods.GetWindowLong(_hwnd, GWL_STYLE) | WS_THICKFRAME);
+
             System.Windows.Interop.HwndSource.FromHwnd(_hwnd)
                 ?.AddHook(WndProc);
             RegisterThumbnail();

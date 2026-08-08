@@ -247,9 +247,29 @@ namespace OverlayMVP
 
                 foreach (var kv in _detached)
                 {
-                    if (_allVisible) kv.Value.Show();
-                    else             kv.Value.Hide();
+                    if (_allVisible)
+                    {
+                        kv.Value.Show();
+                        // Re-apply the DWM destination rect. Show() does not
+                        // necessarily raise SizeChanged or LocationChanged, and
+                        // those are the only things that normally refresh it --
+                        // so without this a restored window can come back as an
+                        // empty frame with no live preview in it.
+                        kv.Value.UpdateThumbnail();
+                    }
+                    else kv.Value.Hide();
                 }
+
+                // The ATTACHED thumbnails need hiding too, and Opacity above
+                // does not touch them: DWM composites them onto this window's
+                // HWND, outside WPF's visual tree, so a fully transparent
+                // window still has live EVE frames painted on it. That is the
+                // whole reason this hotkey exists, and missing it here left
+                // the Active Instances previews sitting on screen.
+                //
+                // UpdateAllThumbnailRects re-applies fVisible from _allVisible,
+                // so the 5s multibox timer cannot quietly turn them back on.
+                UpdateAllThumbnailRects();
             });
         }
         private void ToggleClickThrough()
@@ -277,6 +297,16 @@ namespace OverlayMVP
 
         private void UpdateAllThumbnailRectsCore()
         {
+            // Ctrl+Shift+H wins over the refresh timer. This method is the only
+            // thing that sets fVisible = true, and it runs every 5 seconds, so
+            // without this guard a hidden overlay would light its previews back
+            // up on the next tick.
+            if (!_allVisible)
+            {
+                foreach (var inst in _multibox.Instances) _multibox.HideThumbnail(inst);
+                return;
+            }
+
             if (FindName("MultiboxItemsControl") is not ItemsControl ic) return;
             for (int i = 0; i < _multibox.Instances.Count; i++)
             {
