@@ -66,6 +66,14 @@
                                Foreground="{DynamicResource Amber}"
                                VerticalAlignment="Center"/>
 
+                    <!-- Re-attach and close.
+                         Background="Transparent" is REQUIRED, not decoration: a
+                         TextBlock with a null background hit-tests only the ink
+                         of the glyph itself, so the padding around these would
+                         not be clickable and the target would stay as small as
+                         the character. Transparent is a brush, so the whole
+                         padded box responds. -->
+
                     <!-- Re-attach button -->
                     <TextBlock Grid.Column="1"
                                Text="⤡"
@@ -73,7 +81,9 @@
                                Foreground="{DynamicResource Accent}"
                                ToolTip="Re-attach to overlay"
                                Cursor="Hand"
-                               Margin="0,0,6,0"
+                               Background="Transparent"
+                               Padding="5,3"
+                               Margin="0,0,2,0"
                                VerticalAlignment="Center"
                                MouseLeftButtonDown="ReAttach_Click"/>
 
@@ -82,7 +92,10 @@
                                Text="✕"
                                FontSize="9"
                                Foreground="{DynamicResource Red}"
+                               ToolTip="Close and re-attach to the overlay"
                                Cursor="Hand"
+                               Background="Transparent"
+                               Padding="5,3"
                                VerticalAlignment="Center"
                                MouseLeftButtonDown="Close_Click"/>
                 </Grid>

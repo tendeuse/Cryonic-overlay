@@ -90,7 +90,18 @@ namespace OverlayMVP.Views
                 int screenX = unchecked((short)(lParam.ToInt32() & 0xFFFF));
                 int screenY = unchecked((short)((lParam.ToInt32() >> 16) & 0xFFFF));
                 var pos = PointFromScreen(new Point(screenX, screenY));
-                bool atR = pos.X >= ActualWidth  - ResizeBorder;
+
+                // THE TITLE BAR IS NEVER A RESIZE EDGE.
+                //
+                // The ✕ and the re-attach arrow live at the top RIGHT, inside
+                // the right-hand band. Claiming those pixels as non-client
+                // makes them unclickable -- Windows handles the hit-test and
+                // WPF never sees the click, which is the same way the wider
+                // band swallowed the corner grip. Nobody resizes a window by
+                // its title bar anyway; that row is for dragging and buttons.
+                bool inTitleBar = pos.Y < TitleBarHeight;
+
+                bool atR = !inTitleBar && pos.X >= ActualWidth  - ResizeBorder;
                 bool atB = pos.Y >= ActualHeight - ResizeBorder;
                 if (atR && atB) { handled = true; return (IntPtr)HTBOTTOMRIGHT; }
                 if (atR)        { handled = true; return (IntPtr)HTRIGHT; }
@@ -196,6 +207,9 @@ namespace OverlayMVP.Views
         // rather than pass a click through to the thumbnail, which is a good
         // trade for a preview you rarely click at its very edge.
         private const int ResizeBorder  = 14;
+        // Must match the title bar's RowDefinition Height in the XAML. The
+        // buttons sit in this row, so it is excluded from the resize band.
+        private const int TitleBarHeight = 22;
 
         // ── Click thumbnail → switch EVE focus (without activating this window) ──
         // WM_MOUSEACTIVATE returns MA_NOACTIVATE so we never steal focus.

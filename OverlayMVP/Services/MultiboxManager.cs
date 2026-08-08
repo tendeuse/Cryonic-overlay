@@ -155,6 +155,20 @@ namespace OverlayMVP.Services
             NativeMethods.DwmUpdateThumbnailProperties(inst.ThumbnailId, ref props);
         }
 
+        /// <summary>
+        /// Throw the DWM registration away and make a fresh one.
+        ///
+        /// Needed when a detached window is re-attached. Un-hiding the existing
+        /// registration is not enough on its own -- the card comes back with a
+        /// dead black rectangle where the live preview should be -- so the only
+        /// dependable way back to a running preview is to register again.
+        /// </summary>
+        public void ReRegisterThumbnail(EveInstance inst)
+        {
+            UnregisterThumbnail(inst);
+            RegisterThumbnail(inst);
+        }
+
         /// <summary>Hides a thumbnail without unregistering it.</summary>
         public void HideThumbnail(EveInstance inst)
         {

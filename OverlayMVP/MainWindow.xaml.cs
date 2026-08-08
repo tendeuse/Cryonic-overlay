@@ -395,6 +395,14 @@ namespace OverlayMVP
         private void ReAttachThumbnail(EveInstance inst)
         {
             _detached.Remove(inst.Hwnd);
+
+            // Register the thumbnail again rather than merely un-hiding it.
+            // Making the old registration visible leaves the card showing a
+            // dead black rectangle: the preview is gone and never comes back,
+            // not even on the next refresh tick. Re-registering is the only
+            // thing that reliably brings the live frame back.
+            _multibox.ReRegisterThumbnail(inst);
+
             Dispatcher.BeginInvoke(UpdateAllThumbnailRects,
                 System.Windows.Threading.DispatcherPriority.Background);
         }
