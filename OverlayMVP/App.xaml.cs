@@ -124,6 +124,21 @@ namespace OverlayMVP
 
             if (IsScreenshotMode)
             {
+                // THE MOUSE POINTER MUST NOT REACH THE WINDOW.
+                //
+                // If the pointer happens to rest where a button lands, that
+                // button renders in its MouseOver state and the capture differs
+                // from every other capture by one lightened control. Worse, it
+                // is a RACE: whether WPF has processed the hit-test before the
+                // snapshot decides it, so the harness failed roughly one run in
+                // twelve, on whichever skin happened to lose -- the kind of
+                // flake that gets waved through as noise.
+                //
+                // Nothing interacts with this window; it exists to be rendered
+                // once. Taking it out of hit-testing makes hover unreachable
+                // rather than merely unlikely.
+                main.IsHitTestVisible = false;
+
                 // Subscribe BEFORE Show() -- Show() can raise Loaded synchronously
                 // for the first window, so attaching after Show() risks missing it
                 // and hanging forever with no window to capture.

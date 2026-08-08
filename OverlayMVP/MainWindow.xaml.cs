@@ -352,7 +352,14 @@ namespace OverlayMVP
 
             _detached[inst.Hwnd] = floater;
             floater.Closed += (_, _) => _detached.Remove(inst.Hwnd);
-            floater.Show();
+
+            // Respect an active Ctrl+Shift+H. "Everything is hidden" has to mean
+            // everything, including windows created while it is in force -- the
+            // point of the hotkey is a clean screen for a screenshot or a
+            // stream, and one thumbnail appearing anyway defeats it. ToggleAll
+            // shows every detached window when it unhides, so this one appears
+            // then along with the rest.
+            if (_allVisible) floater.Show();
         }
 
         private void ReAttachThumbnail(EveInstance inst)
