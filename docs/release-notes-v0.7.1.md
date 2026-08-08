@@ -57,6 +57,28 @@ Check it in PowerShell:
 Get-FileHash .\CryonicOverlay-v0.7.1-win-x64.exe -Algorithm SHA256
 ```
 
+## Linux — experimental, testing only
+
+**Not supported. There is no Linux build and no Mac build.** This section exists
+because a tester offered to try it, and the results decide whether Linux is worth
+pursuing at all.
+
+There is nothing extra to download — it is the same `.exe`, run inside EVE's
+Proton prefix:
+
+```bash
+protontricks-launch --appid 8500 ./CryonicOverlay-v0.7.1-win-x64.exe
+```
+
+It has to be the **same** prefix as EVE, or the overlay sees no clients.
+
+Expect the Active Instances previews to be **empty dark boxes** — Wine does not
+implement the Windows API they are built on. The rest may or may not work; that
+is what is being measured.
+
+Full steps, fallbacks, and what to report:
+<https://github.com/tendeuse/Cryonic-overlay/blob/main/docs/proton-test-plan.md>
+
 ## Notes for testers
 
 This is a beta. If something breaks, the most useful report is what you were
