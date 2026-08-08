@@ -237,10 +237,21 @@ namespace OverlayMVP.ViewModels
         // NEVER be empty — it defaults to (and falls back to) a "house" ad for
         // this project itself when the server sponsor is disabled/unset, both at
         // startup (before the first fetch) and whenever the fetch comes back empty.
+        /// <summary>
+        /// The project's Discord invite. MUST BE A PERMANENT ("never expire")
+        /// invite — the previous one was a default 7-day link, and by the time
+        /// anyone clicked it in the house ad it was dead.
+        ///
+        /// One constant because this appears in two places: the startup default
+        /// and the fallback when the server sponsor is unset. Two copies of a
+        /// URL is how one of them gets left behind on the next change.
+        /// </summary>
+        private const string DiscordInvite = "https://discord.gg/rqmgxmzBTy";
+
         [ObservableProperty] private bool   showSponsorBanner = true;
         [ObservableProperty] private string sponsorHeadline   = "Sponsor this slot";
         [ObservableProperty] private string sponsorSubtext    = "Contact tendeuse on Discord";
-        [ObservableProperty] private string sponsorUrl        = "https://discord.gg/KndrZYnWP";
+        [ObservableProperty] private string sponsorUrl        = DiscordInvite;
         [ObservableProperty] private string supportUrl        = "https://github.com/sponsors/tendeuse";
 
         // ── Update notice (server-driven; dismissible, non-blocking) ──────
@@ -457,7 +468,7 @@ namespace OverlayMVP.ViewModels
                     ShowSponsorBanner = true;
                     SponsorHeadline   = "Sponsor this slot";
                     SponsorSubtext    = "Contact tendeuse on Discord";
-                    SponsorUrl        = "https://discord.gg/KndrZYnWP";
+                    SponsorUrl        = DiscordInvite;
                 }
             });
         }
