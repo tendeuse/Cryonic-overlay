@@ -23,7 +23,8 @@ pixel hunt.
 closing a popped-out window now returns it to the overlay with its live preview
 intact instead of an empty black box.
 
-**Help now covers all four hotkeys**, in English and French.
+**Help now covers all four hotkeys**, in English and French, and spells out the
+difference between the two hide keys.
 
 ## Hotkeys
 
@@ -47,7 +48,7 @@ If you are replacing an older build, close it first, then run the new file.
 *More info → Run anyway*, or verify the hash below first.
 
 ```
-SHA-256: FA2CB371C4AEF23826C0E8F7D651AB4CD2AEE81F242BB3B1C4F71033036B7521
+SHA-256: 00F10584AE18CE78B587D29EA8A4A65F304A7F860676075C7A112CD15C3C7C61
 ```
 
 Check it in PowerShell:
