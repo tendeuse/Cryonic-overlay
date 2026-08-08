@@ -34,9 +34,10 @@ namespace OverlayMVP.Services
         public const int ID_TOGGLE_VISIBILITY  = 9001;  // Ctrl+Shift+O
         public const int ID_TOGGLE_CLICKTHROUGH = 9002;  // Ctrl+Shift+C
         public const int ID_REPORT_INTEL        = 9003;  // Ctrl+Shift+I
-        // Hides the overlay AND every detached instance window. Ctrl+Shift+O
-        // only affects the main window, which leaves the thumbnails floating
-        // over the game -- not what "hide the overlay" means to anyone.
+        // Hides the overlay AND the instance previews AND every detached
+        // window. This is the deliberate counterpart to Ctrl+Shift+O, which
+        // hides only the panel and leaves the previews on screen -- see
+        // MainWindow.ToggleVisibility. Two hotkeys, two jobs.
         public const int ID_HIDE_ALL            = 9004;  // Ctrl+Shift+H
 
         private readonly IntPtr _hwnd;

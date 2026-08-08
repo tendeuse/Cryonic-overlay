@@ -153,15 +153,15 @@ namespace OverlayMVP.Services
                                             "RACCOURCIS GLOBAUX");
         public string HelpHotkeysIntro => T("These work anywhere, including while EVE has focus.",
                                             "Ils fonctionnent partout, même quand EVE a le focus.");
-        public string HelpHotkeyShow   => T("Show or hide the overlay",
-                                            "Afficher ou masquer l'overlay");
+        public string HelpHotkeyShow   => T("Hide the overlay panel — instance previews stay visible",
+                                            "Masquer le panneau — les aperçus d'instance restent visibles");
         public string HelpHotkeyClick  => T("Click-through — let clicks pass to the game",
                                             "Clic traversant — laisse passer les clics vers le jeu");
         public string HelpHotkeyIntel  => T("Report a roaming gang in your system",
                                             "Signaler une bande itinérante dans votre système");
 
-        public string HelpHotkeyHideAll=> T("Hide everything, including the instance windows",
-                                            "Tout masquer, y compris les fenêtres d'instance");
+        public string HelpHotkeyHideAll=> T("Hide everything — previews and pop-out windows included",
+                                            "Tout masquer — aperçus et fenêtres détachées compris");
 
         public string HelpPanelsHead   => T("PANELS",
                                             "PANNEAUX");

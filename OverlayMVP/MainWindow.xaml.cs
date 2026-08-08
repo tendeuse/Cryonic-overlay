@@ -216,6 +216,18 @@ namespace OverlayMVP
         }
 
         // ── Hotkeys ───────────────────────────────────────────────────────
+        /// <summary>
+        /// Ctrl+Shift+O — hide the PANEL, keep the instance previews.
+        ///
+        /// LEAVING THE PREVIEWS UP IS THE POINT, not a limitation. Opacity does
+        /// not affect them because DWM composites them onto this HWND outside
+        /// WPF's visual tree, and that happens to give exactly the behaviour
+        /// wanted here: the overlay's own chrome gets out of the way while you
+        /// can still watch your other clients.
+        ///
+        /// Do not "fix" this to hide the thumbnails. Ctrl+Shift+H already
+        /// exists for hiding everything; see ToggleAll.
+        /// </summary>
         private void ToggleVisibility()
         {
             _visible = !_visible;
