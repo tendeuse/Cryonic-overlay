@@ -16,6 +16,13 @@ namespace OverlayMVP.Views
         private const double FontSizeDefault = 11.0;
 
         /// <summary>
+        /// The font size a fresh install uses. Exposed so the screenshot
+        /// harness can pin to it: a visual baseline must not depend on what
+        /// this machine's user happens to have chosen.
+        /// </summary>
+        public static double DefaultFontSize => FontSizeDefault;
+
+        /// <summary>
         /// Push a font size into the application resources. Every FontSize in
         /// the app is a {DynamicResource} onto these three keys, so writing
         /// them re-renders the running UI immediately -- no restart.

@@ -61,17 +61,33 @@ namespace OverlayMVP
                 return;
             }
 
-            // Apply saved font size globally before opening main window
-            Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
-
+            // Font size is applied inside OpenMainWindow, which is the only way
+            // the main window is ever built. Applying it here as well was a
+            // second copy of the same line with the same argument -- the kind
+            // of duplicate that survives right up until someone changes one.
             OpenMainWindow(db);
         }
 
         // Called by FirstRunWindow after a successful pair exchange.
         public MainWindow OpenMainWindow(AppDb db)
         {
-            // Apply saved font size (may have just been set in SettingsWindow)
-            Views.SettingsWindow.ApplyFontSize(Views.SettingsWindow.LoadFontSize(db));
+            // Apply saved font size (may have just been set in SettingsWindow).
+            //
+            // SCREENSHOT MODE PINS THE DEFAULT SIZE, exactly as it pins the
+            // default skin below, and for the same reason: a visual baseline
+            // must not depend on machine state. Font size changes the metrics
+            // of every glyph in the window, so a capture taken on a machine set
+            // to 18pt does not match one taken at 11pt -- and the diff surfaces
+            // as hundreds of subtly shifted text rows with no structural cause,
+            // which is close to unreadable.
+            //
+            // This was the THIRD machine-state dependency found in this
+            // harness, after the live EVE client and the saved skin. The rule
+            // the first two should have established: a capture depends on the
+            // code under test and on nothing else present on this machine.
+            Views.SettingsWindow.ApplyFontSize(
+                IsScreenshotMode ? Views.SettingsWindow.DefaultFontSize
+                                 : Views.SettingsWindow.LoadFontSize(db));
 
             // Skin before the window is constructed. Applying it afterwards
             // works too -- every colour is a DynamicResource -- but doing it

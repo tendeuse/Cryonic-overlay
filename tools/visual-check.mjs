@@ -116,6 +116,10 @@ for (const skin of SKINS) {
   }
 }
 
-fs.rmSync(SCRATCH, { recursive: true, force: true, maxRetries: 2 });
+// Only clean up on success. Every failure above tells the reader the capture
+// was "kept for inspection", and deleting it unconditionally made that a lie --
+// the one moment you need the evidence is the one moment it was thrown away.
+if (bad === 0) fs.rmSync(SCRATCH, { recursive: true, force: true, maxRetries: 2 });
+
 console.log(bad === 0 ? `visual-check: OK (${SKINS.length} skins)` : `visual-check: ${bad} problem(s)`);
 process.exit(bad === 0 ? 0 : 1);
