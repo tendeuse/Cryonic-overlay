@@ -158,7 +158,7 @@
                                 Style="{StaticResource SmallBtn}"
                                 Background="{DynamicResource White33}"
                                 BorderBrush="{DynamicResource Border}"
-                                ToolTip="Paramètres"
+                                ToolTip="{Binding Loc.TipSettings}"
                                 Margin="0,0,6,0"/>
                     </Grid>
                 </StackPanel>

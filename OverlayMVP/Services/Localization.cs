@@ -26,6 +26,29 @@ namespace OverlayMVP.Services
 
         private OverlayLanguage _lang = OverlayLanguage.EN;
 
+        // Where the choice is remembered. Null until UseDatabase() is called,
+        // and deliberately null in screenshot mode -- see UseDatabase.
+        private static AppDb? _db;
+        private const string LangKey = "ui_language";
+
+        /// <summary>
+        /// Restore the saved language, and keep saving it from now on.
+        ///
+        /// Without this the toggle lasted exactly one session: _lang starts at
+        /// EN every launch, so a French pilot had to press FR every single time
+        /// they opened the overlay. A preference you must re-set on every start
+        /// is not a preference.
+        ///
+        /// NOT called in screenshot mode. The visual baseline must not depend
+        /// on the language this machine last chose -- the same rule that
+        /// already pins the skin and the font size.
+        /// </summary>
+        public static void UseDatabase(AppDb db)
+        {
+            _db = db;
+            if (Read(db) is OverlayLanguage saved) Instance.Language = saved;
+        }
+
         public OverlayLanguage Language
         {
             get => _lang;
@@ -33,9 +56,44 @@ namespace OverlayMVP.Services
             {
                 if (_lang == value) return;
                 _lang = value;
+                Save(value);
                 // Notify ALL properties so every bound string refreshes
                 OnPropertyChanged(string.Empty);
             }
+        }
+
+        private static OverlayLanguage? Read(AppDb db)
+        {
+            try
+            {
+                using var con = db.Open();
+                using var cmd = con.CreateCommand();
+                cmd.CommandText = "SELECT v FROM meta WHERE k=$k";
+                cmd.Parameters.AddWithValue("$k", LangKey);
+                return (cmd.ExecuteScalar() as string) switch
+                {
+                    "FR" => OverlayLanguage.FR,
+                    "EN" => OverlayLanguage.EN,
+                    _    => null,
+                };
+            }
+            catch { return null; }
+        }
+
+        private static void Save(OverlayLanguage lang)
+        {
+            if (_db is null) return;
+            try
+            {
+                using var con = _db.Open();
+                using var cmd = con.CreateCommand();
+                cmd.CommandText = "INSERT INTO meta(k,v) VALUES($k,$v) " +
+                                  "ON CONFLICT(k) DO UPDATE SET v=excluded.v";
+                cmd.Parameters.AddWithValue("$k", LangKey);
+                cmd.Parameters.AddWithValue("$v", lang.ToString());
+                cmd.ExecuteNonQuery();
+            }
+            catch { }
         }
 
         public void Toggle()
@@ -55,6 +113,21 @@ namespace OverlayMVP.Services
         // ================================================================
         // UI STRINGS
         // ================================================================
+
+        // Tooltips on the title-bar buttons.
+        //
+        // These were hardcoded in MainWindow.xaml, and one of them
+        // ("Paramètres") was hardcoded in FRENCH -- so an English pilot got a
+        // French tooltip on the gear, which is exactly the "wrong language"
+        // report. A literal in the XAML cannot follow the language toggle by
+        // definition; it can only ever be right for one audience.
+        public string TipSettings       => T("Settings",                     "Paramètres");
+        public string TipControlPanel   => T("Open Control Panel",           "Ouvrir le panneau de contrôle");
+        public string TipPilotSearch    => T("Pilot Intel Search",           "Recherche de renseignements pilote");
+        public string TipSystemInfo     => T("System Info (Dotlan)",         "Infos système (Dotlan)");
+        public string TipRefreshEsi     => T("Refresh ESI standings",        "Actualiser les standings ESI");
+        public string TipHelp           => T("Hotkeys, panels and getting started",
+                                             "Raccourcis, panneaux et premiers pas");
 
         // Title bar
         public string AppTitle          => T("◈  CRYONIC OVERLAY",          "◈  OVERLAY CRYONIC");

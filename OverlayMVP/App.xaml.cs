@@ -89,6 +89,11 @@ namespace OverlayMVP
                 IsScreenshotMode ? Views.SettingsWindow.DefaultFontSize
                                  : Views.SettingsWindow.LoadFontSize(db));
 
+            // Restore the saved language, outside screenshot mode only. Same
+            // rule as the two lines above: a capture depends on the code under
+            // test and on nothing else this machine happens to have chosen.
+            if (!IsScreenshotMode) LocalizationManager.UseDatabase(db);
+
             // Skin before the window is constructed. Applying it afterwards
             // works too -- every colour is a DynamicResource -- but doing it
             // first avoids a visible repaint on startup.
