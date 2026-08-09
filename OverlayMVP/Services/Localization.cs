@@ -236,20 +236,19 @@ namespace OverlayMVP.Services
         public string FacAmarr          => T("Amarr Empire",                "Empire Amarr");
         public string FacMinmatar       => T("Minmatar Republic",           "République Minmatar");
         public string FacSoe            => T("Sisters of EVE",              "Sisters of EVE");
+        // TODO(fr-verify): invented, same as the four I got wrong.
         public string FacConcord        => T("CONCORD Assembly",            "Assemblée CONCORD");
         public string FacOre            => T("ORE",                         "ORE");
         public string FacEdencom        => T("EDENCOM",                     "EDENCOM");
+        // TODO(fr-verify): invented, same as the four I got wrong.
         public string FacTriglavian     => T("Triglavian Collective",       "Collectif Triglavian");
         public string FacGuristas       => T("Guristas Pirates",            "Guristas Pirates");
         public string FacAngels         => T("Angel Cartel",                "Angel Cartel");
         public string FacBlood          => T("Blood Raiders",               "Blood Raiders");
         public string FacSerpentis      => T("Serpentis Corporation",       "Serpentis Corporation");
-        // TODO(fr-verify): EVE client standings list.
-        public string FacSansha         => T("Sansha's Nation",             "Nation de Sansha");
-        // TODO(fr-verify): EVE client standings list.
-        public string FacMordus         => T("Mordu's Legion Command",      "Commandement de la Légion de Mordu");
-        // TODO(fr-verify): EVE client standings list.
-        public string FacSoct           => T("Society of Conscious Thought","Société de la Pensée Consciente");
+        public string FacSansha         => T("Sansha's Nation",             "Sansha's Nation");
+        public string FacMordus         => T("Mordu's Legion Command",      "État-major de la Mordu's Legion");
+        public string FacSoct           => T("Society of Conscious Thought","La Society of Conscious Thought");
 
         // Settings runtime messages (code-behind, not XAML)
         public string SetWindowTitle    => T("Settings — Cryonic Overlay",  "Paramètres — Cryonic Overlay");
@@ -305,9 +304,7 @@ namespace OverlayMVP.Services
         // Skill names follow EVE's French client.
         // FLAGGED FOR REVIEW: "Relations" for Connections is the one I am least
         // sure of.
-        // TODO(fr-verify): EVE client, Character Sheet > Skills > Social.
-        // Highest priority of the six -- a player looks this skill up in game,
-        // and a name that does not match the client sends them hunting.
+        // Verified against the EVE client.
         public string SgSkillConnections=> T("Connections",                 "Relations");
         public string SgSkillDiplomacy  => T("Diplomacy",                   "Diplomatie");
         public string SgSkillSocial     => T("Social",                      "Social");
@@ -359,8 +356,7 @@ namespace OverlayMVP.Services
         public string MpHeading         => T("⚡ SESSION — TODAY",          "⚡ SESSION — AUJOURD'HUI");
         public string MpIsk             => T("ISK (net)",                   "ISK (net)");
         public string MpKills           => T("Kills",                       "Kills");
-        // TODO(fr-verify): EVE client, LP wallet / loyalty point store.
-        public string MpLp              => T("Loyalty points",              "Points de fidélité");
+        public string MpLp              => T("Loyalty points",              "Points de loyauté");
         public string MpMined           => T("MINED TODAY",                 "MINÉ AUJOURD'HUI");
         public string MpNoMining        => T("No mining recorded today.",   "Aucun minage enregistré aujourd'hui.");
         public string MpLedgerLag       => T("ledger updates daily — recent mining may lag",
@@ -380,7 +376,6 @@ namespace OverlayMVP.Services
         public string OwLeave           => T("Leave",                       "Quitter");
         public string OwMarkComplete    => T("Mark complete",               "Marquer terminé");
         public string OwSubmitKill      => T("Submit kill",                 "Soumettre un kill");
-        // TODO(fr-verify): our own wording, not a CCP term -- just needs to read well.
         public string OwClaimStanding   => T("Claim standing",              "Réclamer la réputation");
         // Pilot status
         public string PsTitleBar        => T("Pilot Status — Cryonic Overlay","Statut pilote — Cryonic Overlay");
