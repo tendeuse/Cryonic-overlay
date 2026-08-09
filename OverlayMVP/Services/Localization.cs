@@ -224,6 +224,11 @@ namespace OverlayMVP.Services
         public string SetFeatPilotIntel => T("🔍 Pilot Intel",        "🔍 Renseignements pilote");
         public string SetFeatDotlan     => T("🌍 Dotlan / System Info", "🌍 Dotlan / Infos système");
 
+        // Faction names. ALL VERIFIED AGAINST THE EVE CLIENT (Raphael,
+        // 2026-08-09) -- do not "improve" these. Note the house style CCP
+        // uses: the proper noun stays in ENGLISH and only the structure
+        // around it is translated, e.g. "État-major de la Mordu's Legion".
+        // Four of my six invented forms were wrong for exactly that reason.
         // Faction names.
         //
         // The four empires and CONCORD follow EVE's own French client. Pirate
@@ -236,11 +241,9 @@ namespace OverlayMVP.Services
         public string FacAmarr          => T("Amarr Empire",                "Empire Amarr");
         public string FacMinmatar       => T("Minmatar Republic",           "République Minmatar");
         public string FacSoe            => T("Sisters of EVE",              "Sisters of EVE");
-        // TODO(fr-verify): invented, same as the four I got wrong.
         public string FacConcord        => T("CONCORD Assembly",            "Assemblée CONCORD");
         public string FacOre            => T("ORE",                         "ORE");
         public string FacEdencom        => T("EDENCOM",                     "EDENCOM");
-        // TODO(fr-verify): invented, same as the four I got wrong.
         public string FacTriglavian     => T("Triglavian Collective",       "Collectif Triglavian");
         public string FacGuristas       => T("Guristas Pirates",            "Guristas Pirates");
         public string FacAngels         => T("Angel Cartel",                "Angel Cartel");
