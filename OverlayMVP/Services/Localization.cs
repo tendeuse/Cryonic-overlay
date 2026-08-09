@@ -125,7 +125,7 @@ namespace OverlayMVP.Services
         public string TipControlPanel   => T("Open Control Panel",           "Ouvrir le panneau de contrôle");
         public string TipPilotSearch    => T("Pilot Intel Search",           "Recherche de renseignements pilote");
         public string TipSystemInfo     => T("System Info (Dotlan)",         "Infos système (Dotlan)");
-        public string TipRefreshEsi     => T("Refresh ESI standings",        "Actualiser les standings ESI");
+        public string TipRefreshEsi     => T("Refresh ESI standings",        "Actualiser la réputation ESI");
         public string TipHelp           => T("Hotkeys, panels and getting started",
                                              "Raccourcis, panneaux et premiers pas");
 
@@ -145,12 +145,12 @@ namespace OverlayMVP.Services
         // Intel buttons. Note these are NOT the BtnGateCamp/BtnPirates/
         // BtnRoaming above: those were written long ago with different glyphs
         // and casing, and were never bound to anything. These match the UI.
-        public string BtnIntelGateCamp  => T("⚠ GATE CAMP",                 "⚠ CAMP DE GATE");
+        public string BtnIntelGateCamp  => T("⚠ GATE CAMP",                 "⚠ GATE CAMP");
         public string BtnIntelPirates   => T("☠ PIRATES",                   "☠ PIRATES");
-        public string BtnIntelRoaming   => T("⟳ ROAMING",                   "⟳ MARAUDE");
+        public string BtnIntelRoaming   => T("⟳ ROAMING",                   "⟳ FLOTTE ERRANTE");
 
         // Panel launcher buttons
-        public string BtnStanding       => T("📋  Standing",                "📋  Standings");
+        public string BtnStanding       => T("📋  Standing",                "📋  Réputation");
         public string BtnSession        => T("📊  Session",                 "📊  Session");
         public string BtnSkills         => T("🎓  Skills",                  "🎓  Compétences");
         public string BtnHelp           => T("❔  Help",                    "❔  Aide");
@@ -171,7 +171,7 @@ namespace OverlayMVP.Services
         public string TipResize         => T("Drag to resize",              "Glisser pour redimensionner");
         public string TipInstanceCard   => T("Click to focus · Double-click to detach",
                                              "Cliquer pour activer · Double-cliquer pour détacher");
-        public string TipStandingGuide  => T("Faction Standing Guide",      "Guide des standings de faction");
+        public string TipStandingGuide  => T("Faction Standing Guide",      "Guide de réputation de faction");
         public string TipSkillPlan      => T("Faction Skill Plan",          "Plan de compétences de faction");
         public string TipMissionProgress=> T("Mission Progress tracker",    "Suivi de progression des missions");
         public string TipOrders         => T("Orders from your corp / coalition",
@@ -196,16 +196,16 @@ namespace OverlayMVP.Services
 
         // Intel panel
         public string PanelIntel        => T("⚠️  INTEL & ALERTS",          "⚠️  INTEL ET ALERTES");
-        public string BtnGateCamp       => T("⛔  Gate Camp",                "⛔  Camp de Gate");
+        public string BtnGateCamp       => T("⛔  Gate Camp",                "⛔  Gate Camp");
         public string BtnPirates        => T("💀  Pirates",                  "💀  Pirates");
-        public string BtnRoaming        => T("⚠️  Roaming Gang",            "⚠️  Gang en Maraude");
+        public string BtnRoaming        => T("⚠️  Roaming Gang",            "⚠️  Flotte errante");
         public string BtnClear          => T("✅  System Clear",             "✅  Système Libre");
         public string IntelNone         => T("No recent intel.",             "Aucun intel récent.");
 
         // Intel type labels
-        public string IntelGateCamp     => T("GATE CAMP",                   "CAMP DE GATE");
+        public string IntelGateCamp     => T("GATE CAMP",                   "GATE CAMP");
         public string IntelPirates      => T("PIRATES",                     "PIRATES");
-        public string IntelRoaming      => T("ROAMING",                     "MARAUDE");
+        public string IntelRoaming      => T("ROAMING",                     "FLOTTE ERRANTE");
         public string IntelClear        => T("CLEAR",                       "LIBRE");
         public string IntelNeutral      => T("NEUTRAL",                     "NEUTRE");
 
@@ -290,7 +290,7 @@ namespace OverlayMVP.Services
         public string HelpPanelsHead   => T("PANELS",
                                             "PANNEAUX");
         public string HelpPanelStanding=> T("Standing — faction standing guide, and which agents to run.",
-                                            "Standing — guide des standings de faction, et quels agents faire.");
+                                            "Réputation — guide de réputation de faction, et quels agents faire.");
         public string HelpPanelSession => T("Session — what you have earned this session.",
                                             "Session — ce que vous avez gagné durant cette session.");
         public string HelpPanelSkills  => T("Skills — the skill plan for your chosen faction.",
@@ -301,7 +301,7 @@ namespace OverlayMVP.Services
         public string HelpSetupHead    => T("GETTING STARTED",
                                             "PREMIERS PAS");
         public string HelpSetupLink    => T("Open ⚙ Settings and add a character to link EVE. Standings, skills and your ship only appear once a character is linked.",
-                                            "Ouvrez ⚙ Paramètres et ajoutez un personnage pour lier EVE. Standings, compétences et vaisseau n'apparaissent qu'une fois un personnage lié.");
+                                            "Ouvrez ⚙ Paramètres et ajoutez un personnage pour lier EVE. Réputation, compétences et vaisseau n'apparaissent qu'une fois un personnage lié.");
         public string HelpSetupMulti   => T("Link several characters and switch between them with the ESI selector in Pilot Status.",
                                             "Liez plusieurs personnages et basculez entre eux avec le sélecteur ESI dans Statut Pilote.");
         public string HelpSetupPanels  => T("Settings also chooses which sections are shown. Hide what you do not use — the overlay shrinks to fit.",
