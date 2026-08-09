@@ -129,6 +129,57 @@ namespace OverlayMVP.Services
         public string TipHelp           => T("Hotkeys, panels and getting started",
                                              "Raccourcis, panneaux et premiers pas");
 
+        // ── MainWindow ────────────────────────────────────────────────────
+        //
+        // EVERY ENGLISH VALUE BELOW IS BYTE-IDENTICAL to the literal it
+        // replaced in MainWindow.xaml, spacing and glyphs included. The
+        // screenshot baseline captures the English UI, so if one character
+        // drifts, visual-check fails -- which is exactly the safety net wanted
+        // while moving 40-odd strings. The work here is the French side.
+        public string BarTitle          => T("◈ CRYONIC OVERLAY",           "◈ OVERLAY CRYONIC");
+        public string PanelInstances    => T("◈ ACTIVE INSTANCES",          "◈ INSTANCES ACTIVES");
+        public string NoInstances       => T("No EVE instances detected",   "Aucune instance EVE détectée");
+        public string LabelSystemPrefix => T("System: ",                    "Système : ");
+        public string LabelEsiPrefix    => T("ESI: ",                       "ESI : ");
+
+        // Intel buttons. Note these are NOT the BtnGateCamp/BtnPirates/
+        // BtnRoaming above: those were written long ago with different glyphs
+        // and casing, and were never bound to anything. These match the UI.
+        public string BtnIntelGateCamp  => T("⚠ GATE CAMP",                 "⚠ CAMP DE GATE");
+        public string BtnIntelPirates   => T("☠ PIRATES",                   "☠ PIRATES");
+        public string BtnIntelRoaming   => T("⟳ ROAMING",                   "⟳ MARAUDE");
+
+        // Panel launcher buttons
+        public string BtnStanding       => T("📋  Standing",                "📋  Standings");
+        public string BtnSession        => T("📊  Session",                 "📊  Session");
+        public string BtnSkills         => T("🎓  Skills",                  "🎓  Compétences");
+        public string BtnHelp           => T("❔  Help",                    "❔  Aide");
+        public string BtnOrders         => T("📢  Orders",                  "📢  Ordres");
+
+        // Footer / banner
+        public string BtnSupport        => T("♥ Support",                   "♥ Soutenir");
+        public string BtnDownload       => T("Download",                    "Télécharger");
+        public string LabelAd           => T("AD",                          "PUB");
+        public string UpdateAvailable   => T("⬆ Update available — v",      "⬆ Mise à jour disponible — v");
+        public string SponsorHouseHead  => T("Sponsor this slot",           "Sponsorisez cet espace");
+        public string SponsorHouseSub   => T("Contact tendeuse on Discord", "Contactez tendeuse sur Discord");
+        public string ClickThroughOff   => T("🖱️ Interactive",              "🖱️ Interactif");
+        public string ClickThroughOn    => T("👁️ Click-Through ON",         "👁️ Clic traversant activé");
+
+        // MainWindow tooltips
+        public string TipDismiss        => T("Dismiss",                     "Ignorer");
+        public string TipResize         => T("Drag to resize",              "Glisser pour redimensionner");
+        public string TipInstanceCard   => T("Click to focus · Double-click to detach",
+                                             "Cliquer pour activer · Double-cliquer pour détacher");
+        public string TipStandingGuide  => T("Faction Standing Guide",      "Guide des standings de faction");
+        public string TipSkillPlan      => T("Faction Skill Plan",          "Plan de compétences de faction");
+        public string TipMissionProgress=> T("Mission Progress tracker",    "Suivi de progression des missions");
+        public string TipOrders         => T("Orders from your corp / coalition",
+                                             "Ordres de votre corpo / coalition");
+        public string TipNewOrder       => T("New order received",          "Nouvel ordre reçu");
+        public string TipSupport        => T("Support development on GitHub Sponsors — a voluntary donation. It does not unlock features or remove ads.",
+                                             "Soutenez le développement via GitHub Sponsors — un don volontaire. Cela ne débloque aucune fonctionnalité et ne retire pas les publicités.");
+
         // Title bar
         public string AppTitle          => T("◈  CRYONIC OVERLAY",          "◈  OVERLAY CRYONIC");
         public string StatusConnecting  => T("Connecting…",                  "Connexion…");

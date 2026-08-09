@@ -56,7 +56,7 @@ namespace OverlayMVP.ViewModels
         [ObservableProperty] private string connectionStatus  = "";
         [ObservableProperty] private bool   isConnected       = false;
         [ObservableProperty] private bool   isClickThrough    = false;
-        [ObservableProperty] private string clickThroughLabel = "🖱️ Interactive";
+        [ObservableProperty] private string clickThroughLabel = LocalizationManager.Instance.ClickThroughOff;
 
         // ── Pilot / ESI ───────────────────────────────────────────────────
         [ObservableProperty] private string characterName   = "—";
@@ -249,8 +249,8 @@ namespace OverlayMVP.ViewModels
         private const string DiscordInvite = "https://discord.gg/rqmgxmzBTy";
 
         [ObservableProperty] private bool   showSponsorBanner = true;
-        [ObservableProperty] private string sponsorHeadline   = "Sponsor this slot";
-        [ObservableProperty] private string sponsorSubtext    = "Contact tendeuse on Discord";
+        [ObservableProperty] private string sponsorHeadline   = LocalizationManager.Instance.SponsorHouseHead;
+        [ObservableProperty] private string sponsorSubtext    = LocalizationManager.Instance.SponsorHouseSub;
         [ObservableProperty] private string sponsorUrl        = DiscordInvite;
         [ObservableProperty] private string supportUrl        = "https://github.com/sponsors/tendeuse";
 
@@ -466,8 +466,8 @@ namespace OverlayMVP.ViewModels
                     // Server sponsor disabled/unset — fall back to the house ad so the
                     // slot is never blank.
                     ShowSponsorBanner = true;
-                    SponsorHeadline   = "Sponsor this slot";
-                    SponsorSubtext    = "Contact tendeuse on Discord";
+                    SponsorHeadline   = Loc.SponsorHouseHead;
+                    SponsorSubtext    = Loc.SponsorHouseSub;
                     SponsorUrl        = DiscordInvite;
                 }
             });
@@ -1399,7 +1399,7 @@ namespace OverlayMVP.ViewModels
         public void ToggleClickThrough(bool isNowClickThrough)
         {
             IsClickThrough    = isNowClickThrough;
-            ClickThroughLabel = isNowClickThrough ? "👁️ Click-Through ON" : "🖱️ Interactive";
+            ClickThroughLabel = isNowClickThrough ? Loc.ClickThroughOn : Loc.ClickThroughOff;
         }
 
         // ── Refresh (intel feed) ────────────────────────────────────────────

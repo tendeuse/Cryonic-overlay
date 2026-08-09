@@ -74,7 +74,7 @@
 
                         <!-- Title -->
                         <TextBlock Grid.Column="0"
-                                   Text="◈ CRYONIC OVERLAY"
+                                   Text="{Binding Loc.BarTitle}"
                                    FontWeight="Bold"
                                    FontSize="{DynamicResource GlobalFontSize}"
                                    Foreground="{DynamicResource Accent}"
@@ -125,7 +125,7 @@
                                 Style="{StaticResource SmallBtn}"
                                 Background="{DynamicResource Red33}"
                                 BorderBrush="{DynamicResource Red}"
-                                ToolTip="Pilot Intel Search"
+                                ToolTip="{Binding Loc.TipPilotSearch}"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding ShowPilotIntelBtn, Converter={StaticResource BoolToVis}}"/>
 
@@ -136,7 +136,7 @@
                                 Style="{StaticResource SmallBtn}"
                                 Background="{DynamicResource Accent33}"
                                 BorderBrush="{DynamicResource Accent}"
-                                ToolTip="System Info (Dotlan)"
+                                ToolTip="{Binding Loc.TipSystemInfo}"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding ShowSystemInfoBtn, Converter={StaticResource BoolToVis}}"/>
 
@@ -147,7 +147,7 @@
                                 Style="{StaticResource SmallBtn}"
                                 Background="{DynamicResource Accent33}"
                                 BorderBrush="{DynamicResource Accent}"
-                                ToolTip="Open Control Panel"
+                                ToolTip="{Binding Loc.TipControlPanel}"
                                 Margin="0,0,4,0"
                                 Visibility="{Binding IsSuperUser, Converter={StaticResource BoolToVis}}"/>
 
@@ -184,7 +184,7 @@
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
                             <TextBlock FontSize="{DynamicResource GlobalFontSizeXs}" FontWeight="Bold"
                                        Foreground="{DynamicResource Accent}" TextWrapping="Wrap">
-                                <Run Text="⬆ Update available — v"/><Run Text="{Binding UpdateVersion, Mode=OneWay}"/>
+                                <Run Text="{Binding Loc.UpdateAvailable, Mode=OneWay}"/><Run Text="{Binding UpdateVersion, Mode=OneWay}"/>
                             </TextBlock>
                             <TextBlock Text="{Binding UpdateNotes}"
                                        FontSize="{DynamicResource GlobalFontSizeXs}"
@@ -192,7 +192,7 @@
                                        TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1"
-                                Content="Download"
+                                Content="{Binding Loc.BtnDownload}"
                                 Click="UpdateBtn_Click"
                                 Style="{StaticResource SmallBtn}"
                                 Margin="0,0,4,0"/>
@@ -200,7 +200,7 @@
                                 Content="✕"
                                 Command="{Binding DismissUpdateCommand}"
                                 Style="{StaticResource SmallBtn}"
-                                ToolTip="Dismiss"/>
+                                ToolTip="{Binding Loc.TipDismiss}"/>
                     </Grid>
                 </Border>
             </StackPanel>
@@ -215,7 +215,7 @@
                               Padding="8,6"
                               Visibility="{Binding ShowMultibox, Converter={StaticResource BoolToVis}}">
                 <ctl:SectionPanel.Header>
-                    <TextBlock Text="◈ ACTIVE INSTANCES"
+                    <TextBlock Text="{Binding Loc.PanelInstances}"
                                Style="{StaticResource SectionHeader}"
                                Foreground="{DynamicResource Amber}"
                                Margin="0"/>
@@ -245,7 +245,7 @@
                                             BorderThickness="1"
                                             Cursor="Hand"
                                             MouseLeftButtonDown="MultiboxCard_Click"
-                                            ToolTip="Click to focus · Double-click to detach">
+                                            ToolTip="{Binding DataContext.Loc.TipInstanceCard, RelativeSource={RelativeSource AncestorType=Window}}">
                                         <Grid>
                                             <!-- DWM thumbnail destination area -->
                                             <Border x:Name="ThumbnailHost"
@@ -295,7 +295,7 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate>
-                                                        <TextBlock Text="No EVE instances detected"
+                                                        <TextBlock Text="{Binding Loc.NoInstances}"
                                                                    Foreground="{DynamicResource TextDim}"
                                                                    FontStyle="Italic"
                                                                    Padding="4,8"/>
@@ -343,7 +343,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="System: "
+                        <TextBlock Grid.Column="0" Text="{Binding Loc.LabelSystemPrefix}"
                                    Foreground="{DynamicResource TextDim}"
                                    FontSize="{DynamicResource GlobalFontSizeSm}"
                                    VerticalAlignment="Center"/>
@@ -361,19 +361,19 @@
 
                     <!-- Report buttons -->
                     <WrapPanel Margin="0,0,0,4">
-                        <Button Content="⚠ GATE CAMP"
+                        <Button Content="{Binding Loc.BtnIntelGateCamp}"
                                 Command="{Binding ReportGateCampCommand}"
                                 Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Red33}"
                                 BorderBrush="{DynamicResource Red}"
                                 Margin="0,0,4,0"/>
-                        <Button Content="☠ PIRATES"
+                        <Button Content="{Binding Loc.BtnIntelPirates}"
                                 Command="{Binding ReportPiratesCommand}"
                                 Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Orange33}"
                                 BorderBrush="{DynamicResource Orange}"
                                 Margin="0,0,4,0"/>
-                        <Button Content="⟳ ROAMING"
+                        <Button Content="{Binding Loc.BtnIntelRoaming}"
                                 Command="{Binding ReportRoamingCommand}"
                                 Style="{StaticResource StatusKey}"
                                 Background="{DynamicResource Amber33}"
@@ -416,7 +416,7 @@
                     <Button Content="⟳"
                             Command="{Binding RefreshStandingsCommand}"
                             Style="{StaticResource SmallBtn}"
-                            ToolTip="Refresh ESI standings"
+                            ToolTip="{Binding Loc.TipRefreshEsi}"
                             Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"
                             VerticalAlignment="Center"/>
                 </ctl:SectionPanel.HeaderAccessory>
@@ -430,7 +430,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="ESI: "
+                                <TextBlock Grid.Column="0" Text="{Binding Loc.LabelEsiPrefix}"
                                            Foreground="{DynamicResource Accent}"
                                            FontSize="{DynamicResource GlobalFontSizeSm}"
                                            VerticalAlignment="Center"/>
@@ -522,38 +522,38 @@
                               Padding="8,6">
                 <StackPanel>
                     <Button x:Name="BtnStanding"
-                            Content="📋  Standing"
+                            Content="{Binding Loc.BtnStanding}"
                             Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="standing"
-                            ToolTip="Faction Standing Guide"
+                            ToolTip="{Binding Loc.TipStandingGuide}"
                             Visibility="{Binding ShowStandingGuide, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnProgress"
-                            Content="📊  Session"
+                            Content="{Binding Loc.BtnSession}"
                             Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="progress"
-                            ToolTip="Mission Progress tracker"
+                            ToolTip="{Binding Loc.TipMissionProgress}"
                             Visibility="{Binding ShowMissionProgress, Converter={StaticResource BoolToVis}}"/>
                     <Button x:Name="BtnSkills"
-                            Content="🎓  Skills"
+                            Content="{Binding Loc.BtnSkills}"
                             Style="{StaticResource LauncherBtn}"
                             Click="PanelBtn_Click" Tag="skills"
-                            ToolTip="Faction Skill Plan"
+                            ToolTip="{Binding Loc.TipSkillPlan}"
                             Visibility="{Binding ShowSkillPlan, Converter={StaticResource BoolToVis}}"/>
                     <!-- Help. Always visible: it has no Settings toggle on
                          purpose, because the toggle that hides it lives in the
                          very screen a lost user cannot find. -->
                     <Button x:Name="BtnHelp"
-                            Content="❔  Help"
+                            Content="{Binding Loc.BtnHelp}"
                             Style="{StaticResource LauncherBtn}"
                             Click="HelpBtn_Click"
-                            ToolTip="Hotkeys, panels and getting started"/>
+                            ToolTip="{Binding Loc.TipHelp}"/>
 
                     <Grid>
                         <Button x:Name="BtnOrders"
-                                Content="📢  Orders"
+                                Content="{Binding Loc.BtnOrders}"
                                 Style="{StaticResource LauncherBtn}"
                                 Click="PanelBtn_Click" Tag="orders"
-                                ToolTip="Orders from your corp / coalition"/>
+                                ToolTip="{Binding Loc.TipOrders}"/>
                         <TextBlock Text="⚠"
                                    Foreground="{DynamicResource Amber}"
                                    FontWeight="Bold"
@@ -562,7 +562,7 @@
                                    VerticalAlignment="Center"
                                    Margin="0,0,10,0"
                                    IsHitTestVisible="False"
-                                   ToolTip="New order received"
+                                   ToolTip="{Binding Loc.TipNewOrder}"
                                    Visibility="{Binding HasNewOrders, Converter={StaticResource BoolToVis}}"/>
                     </Grid>
                 </StackPanel>
@@ -604,7 +604,7 @@
                                     Padding="4,1"
                                     Margin="0,0,6,0"
                                     VerticalAlignment="Center">
-                                <TextBlock Text="AD"
+                                <TextBlock Text="{Binding Loc.LabelAd}"
                                            FontSize="{DynamicResource GlobalFontSizeXs}"
                                            FontWeight="Bold"
                                            Foreground="{DynamicResource Amber}"/>
@@ -652,14 +652,14 @@
 
                             <!-- Voluntary donation link — decoupled from ads/features (§4.4b) -->
                             <Button Grid.Column="2"
-                                    Content="♥ Support"
+                                    Content="{Binding Loc.BtnSupport}"
                                     Click="SupportBtn_Click"
                                     Style="{StaticResource SmallBtn}"
                                     Background="{DynamicResource Red33}"
                                     BorderBrush="{DynamicResource Red}"
                                     Foreground="{DynamicResource Red}"
                                     Margin="8,0,0,0"
-                                    ToolTip="Support development on GitHub Sponsors — a voluntary donation. It does not unlock features or remove ads."/>
+                                    ToolTip="{Binding Loc.TipSupport}"/>
 
                             <!-- Resize grip ◢ -->
                             <TextBlock Grid.Column="3"
@@ -670,7 +670,7 @@
                                        VerticalAlignment="Bottom"
                                        Margin="8,0,0,0"
                                        MouseLeftButtonDown="ResizeGrip_MouseDown"
-                                       ToolTip="Drag to resize"/>
+                                       ToolTip="{Binding Loc.TipResize}"/>
                         </Grid>
                     </Border>
 
