@@ -1,6 +1,8 @@
 // filename: Views/NotePromptWindow.xaml.cs
 using System.Windows;
 
+using OverlayMVP.Services;
+
 namespace OverlayMVP.Views
 {
     /// <summary>
@@ -9,6 +11,10 @@ namespace OverlayMVP.Views
     /// </summary>
     public partial class NotePromptWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         public string OrderTitle { get; }
         public string Note { get; private set; } = "";
 
@@ -16,6 +22,7 @@ namespace OverlayMVP.Views
         {
             OrderTitle = orderTitle;
             InitializeComponent();
+            DataContext = this;
             Loaded += (_, _) => NoteBox.Focus();
         }
 

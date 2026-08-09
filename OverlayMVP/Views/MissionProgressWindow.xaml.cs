@@ -8,7 +8,15 @@ namespace OverlayMVP.Views
 {
     public partial class MissionProgressWindow : Window
     {
-        public MissionProgressWindow() => InitializeComponent();
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
+        public MissionProgressWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+        }
 
         protected override void OnSourceInitialized(EventArgs e)
         {

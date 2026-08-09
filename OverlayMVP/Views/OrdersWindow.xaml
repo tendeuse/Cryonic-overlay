@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.OrdersWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Orders — Cryonic Overlay"
+        Title="{Binding Loc.OwTitleBar}"
         Width="420" Height="400"
         MinWidth="300" MinHeight="250"
         WindowStyle="None"
@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               Text="📢  ORDERS"
+                               Text="{Binding Loc.OwHeading}"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                Foreground="{DynamicResource Amber}"
@@ -134,7 +134,7 @@
                                                        Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        Opacity="0.8" TextWrapping="Wrap"/>
-                                            <Button Content="Submit kill"
+                                            <Button Content="{Binding Loc.OwSubmitKill}"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="{DynamicResource Amber33}"
                                                     BorderBrush="{DynamicResource Amber}"
@@ -160,7 +160,7 @@
                                                        Foreground="{DynamicResource TextDim}"
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        Opacity="0.8" TextWrapping="Wrap"/>
-                                            <Button Content="Claim standing"
+                                            <Button Content="{Binding Loc.OwClaimStanding}"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="{DynamicResource Emerald33}"
                                                     BorderBrush="{DynamicResource Amber}"
@@ -179,7 +179,7 @@
                                                        FontSize="{DynamicResource GlobalFontSizeXs}"
                                                        VerticalAlignment="Center"
                                                        Margin="0,0,10,0"/>
-                                            <Button Content="Join"
+                                            <Button Content="{Binding Loc.OwJoin}"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="{DynamicResource Accent33}"
                                                     BorderBrush="{DynamicResource Accent}"
@@ -188,7 +188,7 @@
                                                         RelativeSource={RelativeSource AncestorType=Window}}"
                                                     CommandParameter="{Binding}"
                                                     Visibility="{Binding CanJoin, Converter={StaticResource BoolToVis}}"/>
-                                            <Button Content="Mark complete"
+                                            <Button Content="{Binding Loc.OwMarkComplete}"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="{DynamicResource Green33}"
                                                     BorderBrush="{DynamicResource Green}"
@@ -197,7 +197,7 @@
                                                         RelativeSource={RelativeSource AncestorType=Window}}"
                                                     CommandParameter="{Binding}"
                                                     Visibility="{Binding CanComplete, Converter={StaticResource BoolToVis}}"/>
-                                            <Button Content="Leave"
+                                            <Button Content="{Binding Loc.OwLeave}"
                                                     Style="{StaticResource SmallBtn}"
                                                     Background="{DynamicResource Red33}"
                                                     BorderBrush="{DynamicResource Red}"

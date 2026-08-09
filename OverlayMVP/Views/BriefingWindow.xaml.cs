@@ -6,6 +6,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
 
+using OverlayMVP.Services;
+
 namespace OverlayMVP.Views
 {
     /// <summary>
@@ -15,6 +17,10 @@ namespace OverlayMVP.Views
     /// </summary>
     public partial class BriefingWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         private static BriefingWindow? _current;
         private readonly DispatcherTimer _timer;
         private bool _isPlaying;
@@ -24,6 +30,7 @@ namespace OverlayMVP.Views
         public BriefingWindow(string clipPath, string title)
         {
             InitializeComponent();
+            DataContext = this;
 
             // Only one briefing at a time
             _current?.Close();

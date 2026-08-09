@@ -2,11 +2,21 @@
 using System.Windows;
 using System.Windows.Input;
 
+using OverlayMVP.Services;
+
 namespace OverlayMVP.Views
 {
     public partial class PilotStatusWindow : Window
     {
-        public PilotStatusWindow() => InitializeComponent();
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
+        public PilotStatusWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+        }
 
         private void TitleBar_MouseDown(object s, MouseButtonEventArgs e)
         {

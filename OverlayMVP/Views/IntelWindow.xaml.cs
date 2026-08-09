@@ -14,6 +14,10 @@ namespace OverlayMVP.Views
 {
     public partial class IntelWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         private readonly IntelSearchService _intel = new();
         private CancellationTokenSource    _cts    = new();
         private Point _dragOffset;
@@ -33,6 +37,7 @@ namespace OverlayMVP.Views
         public IntelWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
         protected override void OnSourceInitialized(EventArgs e)

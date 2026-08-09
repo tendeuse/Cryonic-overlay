@@ -276,6 +276,147 @@ namespace OverlayMVP.Services
             ? $"{n} more skin(s) available to sponsors. They appear here automatically once linked."
             : $"{n} skin(s) supplémentaire(s) pour les sponsors. Ils apparaissent ici automatiquement une fois liés.";
 
+        // ── StandingGuideWindow ───────────────────────────────────────────
+        public string SgTitleBar        => T("Faction Standing Guide — Cryonic Overlay",
+                                             "Guide de réputation — Cryonic Overlay");
+        public string SgTitle           => T("📋  FACTION STANDING GUIDE",  "📋  GUIDE DE RÉPUTATION");
+        public string SgSelectFaction   => T("SELECT FACTION",              "CHOISIR UNE FACTION");
+        public string SgAgentAccess     => T("AGENT ACCESS PROGRESS",       "PROGRESSION D'ACCÈS AUX AGENTS");
+        public string SgSteps           => T("PROGRESSION STEPS",           "ÉTAPES DE PROGRESSION");
+        public string SgYourStanding    => T("Your standing:",              "Votre réputation :");
+        public string SgStandingPrefix  => T("Standing: ",                  "Réputation : ");
+        public string SgCorpStanding    => T("Corp standing: ",             "Réputation corpo : ");
+        public string SgAgentPrefix     => T("Agent: ",                     "Agent : ");
+        public string SgRegionPrefix    => T("Region: ",                    "Région : ");
+        public string SgLevelPrefix     => T("Level ",                      "Niveau ");
+        public string SgRequires        => T("Requires ",                   "Requiert ");
+        public string SgGoalArrow       => T("  →  goal ",                  "  →  objectif ");
+        public string SgRunFor          => T("🏢 Run for: ",                "🏢 À faire pour : ");
+        public string SgTank            => T("🔥 Tank: ",                   "🔥 Tank : ");
+        public string SgBtnSet          => T("Set",                         "Définir");
+        public string SgBtnCopy         => T("📋 Copy",                     "📋 Copier");
+        public string SgBtnOrder        => T("📢 Order",                    "📢 Ordre");
+        public string SgAutoplay        => T("▶ Auto-play briefing when standing advances",
+                                             "▶ Lire le briefing quand la réputation progresse");
+
+        // Skill names follow EVE's French client.
+        // FLAGGED FOR REVIEW: "Relations" for Connections is the one I am least
+        // sure of.
+        public string SgSkillConnections=> T("Connections",                 "Relations");
+        public string SgSkillDiplomacy  => T("Diplomacy",                   "Diplomatie");
+        public string SgSkillSocial     => T("Social",                      "Social");
+
+        public string SgTipConnections  => T("+4% per level on positive standing (access only)",
+                                             "+4 % par niveau sur réputation positive (accès uniquement)");
+        public string SgTipDiplomacy    => T("+4% per level on negative standing (access only)",
+                                             "+4 % par niveau sur réputation négative (accès uniquement)");
+        public string SgTipSocial       => T("+5% per level to standing GAINS from missions",
+                                             "+5 % par niveau sur les GAINS de réputation des missions");
+        public string SgTipOrder        => T("Broadcast this step to your corporation as an Order",
+                                             "Diffuser cette étape à votre corporation comme un Ordre");
+        public string SgTipFit          => T("Click to view basic fit and skill requirements",
+                                             "Cliquer pour voir le fit de base et les compétences requises");
+        public string SgTipCopy         => T("Copy agent, location, corporation and region to clipboard",
+                                             "Copier agent, lieu, corporation et région dans le presse-papiers");
+        public string SgTipBriefing     => T("Play the officer's mission briefing",
+                                             "Lire le briefing de mission de l'officier");
+        public string SgTipRefreshEsi   => T("Refresh standings from ESI API",
+                                             "Actualiser la réputation depuis l'API ESI");
+        public string SgTipAutoplay     => T("When a standing update pushes you into the next step, its officer briefing plays automatically",
+                                             "Quand une mise à jour de réputation vous fait passer à l'étape suivante, son briefing se lance automatiquement");
+
+        // -- Remaining windows ---------------------------------------------
+        // Briefing
+        public string BrTitleBar        => T("Incoming Transmission",       "Transmission entrante");
+        public string BrIncoming        => T("INCOMING TRANSMISSION",       "TRANSMISSION ENTRANTE");
+        public string BrPause           => T("⏸ Pause",                     "⏸ Pause");
+        public string BrRestart         => T("⟳ Restart",                   "⟳ Recommencer");
+        public string BrClose           => T("Close",                       "Fermer");
+        // First run
+        public string FrTitleBar        => T("First Run Setup",             "Configuration initiale");
+        public string FrHeading         => T("Cryonic Overlay — First Run", "Cryonic Overlay — Premier lancement");
+        public string FrAccountType     => T("Account Type",                "Type de compte");
+        public string FrFaction         => T("Faction Focus (can be changed later)",
+                                             "Faction ciblée (modifiable plus tard)");
+        public string FrLogin           => T("Log in with EVE",             "Se connecter avec EVE");
+        public string FrAlpha           => T("Alpha",                       "Alpha");
+        public string FrOmega           => T("Omega",                       "Omega");
+        // Pilot intel
+        public string IwTitleBar        => T("Pilot Intel — Cryonic Overlay","Renseignements pilote — Cryonic Overlay");
+        public string IwHeading         => T("🔍  PILOT INTEL",             "🔍  RENSEIGNEMENTS PILOTE");
+        public string IwSearch          => T("Search",                      "Rechercher");
+        public string IwClear           => T("Clear",                       "Effacer");
+        public string IwLookback        => T("Lookback: ",                  "Historique : ");
+        public string IwDays90          => T("90 days",                     "90 jours");
+        // Session
+        public string MpTitleBar        => T("Session — Cryonic Overlay",   "Session — Cryonic Overlay");
+        public string MpHeading         => T("⚡ SESSION — TODAY",          "⚡ SESSION — AUJOURD'HUI");
+        public string MpIsk             => T("ISK (net)",                   "ISK (net)");
+        public string MpKills           => T("Kills",                       "Kills");
+        public string MpLp              => T("Loyalty points",              "Points de fidélité");
+        public string MpMined           => T("MINED TODAY",                 "MINÉ AUJOURD'HUI");
+        public string MpNoMining        => T("No mining recorded today.",   "Aucun minage enregistré aujourd'hui.");
+        public string MpLedgerLag       => T("ledger updates daily — recent mining may lag",
+                                             "le registre est quotidien — le minage récent peut être en retard");
+        public string MpPlayed          => T("played ",                     "joué ");
+        // Order note prompt
+        public string NpTitleBar        => T("Mark order complete",         "Marquer l'ordre comme terminé");
+        public string NpHeading         => T("📢  MARK ORDER COMPLETE",     "📢  MARQUER L'ORDRE TERMINÉ");
+        public string NpHint            => T("Optional note for your CEO — e.g. a killmail link or what you did.",
+                                             "Note facultative pour votre CEO — par ex. un lien de killmail ou ce que vous avez fait.");
+        public string NpConfirm         => T("✔ Mark complete",             "✔ Marquer terminé");
+        public string NpCancel          => T("Cancel",                      "Annuler");
+        // Orders
+        public string OwTitleBar        => T("Orders — Cryonic Overlay",    "Ordres — Cryonic Overlay");
+        public string OwHeading         => T("📢  ORDERS",                  "📢  ORDRES");
+        public string OwJoin            => T("Join",                        "Rejoindre");
+        public string OwLeave           => T("Leave",                       "Quitter");
+        public string OwMarkComplete    => T("Mark complete",               "Marquer terminé");
+        public string OwSubmitKill      => T("Submit kill",                 "Soumettre un kill");
+        public string OwClaimStanding   => T("Claim standing",              "Réclamer la réputation");
+        // Pilot status
+        public string PsTitleBar        => T("Pilot Status — Cryonic Overlay","Statut pilote — Cryonic Overlay");
+        public string PsHeading         => T("👤  PILOT STATUS",            "👤  STATUT PILOTE");
+        // Ship fit
+        public string SfTitleBar        => T("Ship Fit",                    "Fit du vaisseau");
+        public string SfHeading         => T("Ship Fit",                    "Fit du vaisseau");
+        // Skill plan
+        public string SpTitleBar        => T("Faction Skill Plan — Cryonic Overlay",
+                                             "Plan de compétences — Cryonic Overlay");
+        public string SpHeading         => T("🎓  FACTION SKILL PLAN",      "🎓  PLAN DE COMPÉTENCES");
+        public string SpHeadingAlt      => T("📋 FACTION SKILL PLAN",       "📋 PLAN DE COMPÉTENCES");
+        public string SpActiveLevel     => T("Active level: ",              "Niveau actuel : ");
+        public string SpTarget          => T("Target:    ",                 "Objectif : ");
+        public string SpSkillId         => T("Skill ID: ",                  "ID compétence : ");
+        public string SpMatchesSheet    => T(" (matches in-game sheet)",    " (correspond à la fiche en jeu)");
+        public string SpTipCopy         => T("Copy skill plan to clipboard — paste into EVE skill queue import",
+                                             "Copier le plan — à coller dans l'import de file de compétences d'EVE");
+        public string SpTipReload       => T("Reload skills from ESI",      "Recharger les compétences depuis ESI");
+        // System info
+        public string SyTitleBar        => T("System Info — Cryonic Overlay","Infos système — Cryonic Overlay");
+        public string SyHeading         => T("🌐  SYSTEM INFO",             "🌐  INFOS SYSTÈME");
+        public string SySystem          => T("📍 System",                   "📍 Système");
+        public string SySov             => T("🏴 Sovereignty",              "🏴 Souveraineté");
+        public string SyRoute           => T("🗺 Route",                    "🗺 Itinéraire");
+        public string SyFrom            => T("From: ",                      "De : ");
+        public string SyTo              => T("To:   ",                      "À :   ");
+        public string SyGo              => T("Go",                          "Aller");
+        public string SyLoad            => T("Load",                        "Charger");
+        public string SySearch          => T("Search",                      "Rechercher");
+        public string SySecure          => T("Secure",                      "Sécurisé");
+        public string SyInsecure        => T("Insecure",                    "Non sécurisé");
+        public string SyShortest        => T("Shortest",                    "Le plus court");
+        // Detached instance window
+        public string TwTitleBar        => T("Thumbnail",                   "Aperçu");
+        public string TwDefaultLabel    => T("EVE Instance",                "Instance EVE");
+        public string TwTipSwitch       => T("Click to switch to this EVE client",
+                                             "Cliquer pour basculer vers ce client EVE");
+        public string TwTipReattach     => T("Re-attach to overlay",        "Rattacher à l'overlay");
+        public string TwTipClose        => T("Close and re-attach to the overlay",
+                                             "Fermer et rattacher à l'overlay");
+        // Help window OS title
+        public string HelpTitleBar      => T("Help",                        "Aide");
+
         // Title bar
         public string AppTitle          => T("◈  CRYONIC OVERLAY",          "◈  OVERLAY CRYONIC");
         public string StatusConnecting  => T("Connecting…",                  "Connexion…");

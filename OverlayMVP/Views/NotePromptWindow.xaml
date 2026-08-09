@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.NotePromptWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Mark order complete"
+        Title="{Binding Loc.NpTitleBar}"
         Width="420" SizeToContent="Height"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -23,7 +23,7 @@
                     Padding="10,6"
                     MouseLeftButtonDown="TitleBar_MouseDown"
                     Cursor="SizeAll">
-                <TextBlock Text="📢  MARK ORDER COMPLETE"
+                <TextBlock Text="{Binding Loc.NpHeading}"
                            FontWeight="Bold"
                            FontSize="{DynamicResource GlobalFontSize}"
                            Foreground="{DynamicResource Amber}"/>
@@ -36,7 +36,7 @@
                            TextWrapping="Wrap"
                            Margin="0,0,0,8"/>
 
-                <TextBlock Text="Optional note for your CEO — e.g. a killmail link or what you did."
+                <TextBlock Text="{Binding Loc.NpHint}"
                            Foreground="{DynamicResource TextDim}"
                            FontSize="{DynamicResource GlobalFontSizeXs}"
                            TextWrapping="Wrap"
@@ -60,13 +60,13 @@
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             Margin="0,12,0,0">
-                    <Button Content="Cancel"
+                    <Button Content="{Binding Loc.NpCancel}"
                             Click="Cancel_Click"
                             Style="{StaticResource SmallBtn}"
                             Background="{DynamicResource White33}"
                             BorderBrush="{DynamicResource Border}"
                             Margin="0,0,8,0"/>
-                    <Button Content="✔ Mark complete"
+                    <Button Content="{Binding Loc.NpConfirm}"
                             Click="Ok_Click"
                             IsDefault="True"
                             Style="{StaticResource SmallBtn}"

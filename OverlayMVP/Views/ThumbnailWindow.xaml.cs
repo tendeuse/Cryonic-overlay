@@ -14,6 +14,10 @@ namespace OverlayMVP.Views
 {
     public partial class ThumbnailWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         public EveInstance Instance    { get; }
         public event Action<EveInstance>? ReAttachRequested;
 
@@ -24,8 +28,9 @@ namespace OverlayMVP.Views
         public ThumbnailWindow(EveInstance instance)
         {
             InitializeComponent();
+            DataContext = this;
             Instance        = instance;
-            TitleLabel.Text = instance.Title.Length > 0 ? instance.Title : "EVE Instance";
+            TitleLabel.Text = instance.Title.Length > 0 ? instance.Title : Loc.TwDefaultLabel;
 
             Loaded  += OnLoaded;
             Closed  += OnClosed;

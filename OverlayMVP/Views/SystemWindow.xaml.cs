@@ -15,6 +15,10 @@ namespace OverlayMVP.Views
 {
     public partial class SystemWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         private readonly SystemInfoService _svc = new();
         private CancellationTokenSource   _cts  = new();
         private Point  _dragOffset;
@@ -51,6 +55,7 @@ namespace OverlayMVP.Views
         public SystemWindow()
         {
             InitializeComponent();
+            DataContext = this;
             SystemSearchBox.KeyDown += (s, e) => { if (e.Key == Key.Return) _ = DoSystemSearchAsync(); };
             RouteDestBox.KeyDown    += (s, e) => { if (e.Key == Key.Return) _ = DoRouteSearchAsync(); };
             SovFilterBox.KeyDown    += (s, e) => { if (e.Key == Key.Return) RenderSov(SovFilterBox.Text); };

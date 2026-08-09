@@ -3,7 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:OverlayMVP.Converters"
-        Title="Session — Cryonic Overlay"
+        Title="{Binding Loc.MpTitleBar}"
         Width="420" Height="500"
         MinWidth="300" MinHeight="300"
         WindowStyle="None"
@@ -40,7 +40,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               Text="⚡ SESSION — TODAY"
+                               Text="{Binding Loc.MpHeading}"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                Foreground="{DynamicResource Green}"
@@ -66,7 +66,7 @@
                     <TextBlock Margin="0,0,0,10"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Foreground="{DynamicResource TextDim}">
-                        <Run Text="played "/>
+                        <Run Text="{Binding Loc.MpPlayed, Mode=OneWay}"/>
                         <Run Text="{Binding Session.PlayedLabel, Mode=OneWay}"
                              Foreground="{DynamicResource Accent}"/>
                         <Run Text="  ·  "/>
@@ -89,7 +89,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="ISK (net)" FontSize="{DynamicResource GlobalFontSizeXs}"
+                            <TextBlock Text="{Binding Loc.MpIsk}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                        Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.IskTodayLabel, Mode=OneWay}"
                                        FontWeight="Bold" Foreground="{DynamicResource Amber}"/>
@@ -107,7 +107,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Loyalty points" FontSize="{DynamicResource GlobalFontSizeXs}"
+                            <TextBlock Text="{Binding Loc.MpLp}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                        Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.LpTodayLabel, Mode=OneWay}"
                                        FontWeight="Bold" Foreground="{DynamicResource Accent}"/>
@@ -125,7 +125,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Kills" FontSize="{DynamicResource GlobalFontSizeXs}"
+                            <TextBlock Text="{Binding Loc.MpKills}" FontSize="{DynamicResource GlobalFontSizeXs}"
                                        Foreground="{DynamicResource TextDim}"/>
                             <TextBlock Text="{Binding Session.KillsToday, Mode=OneWay}"
                                        FontWeight="Bold" Foreground="{DynamicResource Red}"/>
@@ -137,8 +137,8 @@
                     </Grid>
 
                     <!-- Mining -->
-                    <TextBlock Text="MINED TODAY" Style="{StaticResource SectionHeader}" Margin="0,0,0,2"/>
-                    <TextBlock Text="ledger updates daily — recent mining may lag"
+                    <TextBlock Text="{Binding Loc.MpMined}" Style="{StaticResource SectionHeader}" Margin="0,0,0,2"/>
+                    <TextBlock Text="{Binding Loc.MpLedgerLag}"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Foreground="{DynamicResource TextDim}"
                                Opacity="0.7" Margin="0,0,0,6"/>
@@ -167,7 +167,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <TextBlock Text="No mining recorded today."
+                    <TextBlock Text="{Binding Loc.MpNoMining}"
                                FontStyle="Italic"
                                FontSize="{DynamicResource GlobalFontSizeXs}"
                                Foreground="{DynamicResource TextDim}"

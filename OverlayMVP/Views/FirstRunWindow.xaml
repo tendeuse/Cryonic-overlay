@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.FirstRunWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="First Run Setup"
+        Title="{Binding Loc.FrTitleBar}"
         Width="520" Height="420"
         MinWidth="400" MinHeight="320"
         WindowStartupLocation="CenterScreen"
@@ -17,47 +17,47 @@
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <TextBlock Text="Cryonic Overlay — First Run"
+    <TextBlock Text="{Binding Loc.FrHeading}"
                FontSize="20"
                FontWeight="Bold"
                Margin="0,0,0,12"/>
 
     <StackPanel Grid.Row="1" Margin="0,6,0,6">
-      <TextBlock Text="Account Type" Opacity="0.85"/>
+      <TextBlock Text="{Binding Loc.FrAccountType}" Opacity="0.85"/>
       <ComboBox SelectedValue="{Binding AlphaOmega}" SelectedValuePath="Tag" Margin="0,6,0,12">
-        <ComboBoxItem Content="Alpha" Tag="ALPHA"/>
-        <ComboBoxItem Content="Omega" Tag="OMEGA"/>
+        <ComboBoxItem Content="{Binding Loc.FrAlpha}" Tag="ALPHA"/>
+        <ComboBoxItem Content="{Binding Loc.FrOmega}" Tag="OMEGA"/>
       </ComboBox>
 
-      <TextBlock Text="Faction Focus (can be changed later)" Opacity="0.85"/>
+      <TextBlock Text="{Binding Loc.FrFaction}" Opacity="0.85"/>
       <ComboBox SelectedValue="{Binding FactionFocus}" SelectedValuePath="Tag" Margin="0,6,0,12">
         <!-- Empire -->
-        <ComboBoxItem Content="Caldari State"                Tag="CALDARI"/>
-        <ComboBoxItem Content="Gallente Federation"          Tag="GALLENTE"/>
-        <ComboBoxItem Content="Amarr Empire"                 Tag="AMARR"/>
-        <ComboBoxItem Content="Minmatar Republic"            Tag="MINMATAR"/>
+        <ComboBoxItem Content="{Binding Loc.FacCaldari}"                Tag="CALDARI"/>
+        <ComboBoxItem Content="{Binding Loc.FacGallente}"          Tag="GALLENTE"/>
+        <ComboBoxItem Content="{Binding Loc.FacAmarr}"                 Tag="AMARR"/>
+        <ComboBoxItem Content="{Binding Loc.FacMinmatar}"            Tag="MINMATAR"/>
         <!-- Neutral / special -->
-        <ComboBoxItem Content="Sisters of EVE"               Tag="SOE"/>
-        <ComboBoxItem Content="CONCORD Assembly"             Tag="CONCORD"/>
-        <ComboBoxItem Content="ORE"                          Tag="ORE"/>
-        <ComboBoxItem Content="EDENCOM"                      Tag="EDENCOM"/>
-        <ComboBoxItem Content="Triglavian Collective"        Tag="TRIGLAVIAN"/>
+        <ComboBoxItem Content="{Binding Loc.FacSoe}"               Tag="SOE"/>
+        <ComboBoxItem Content="{Binding Loc.FacConcord}"             Tag="CONCORD"/>
+        <ComboBoxItem Content="{Binding Loc.FacOre}"                          Tag="ORE"/>
+        <ComboBoxItem Content="{Binding Loc.FacEdencom}"                      Tag="EDENCOM"/>
+        <ComboBoxItem Content="{Binding Loc.FacTriglavian}"        Tag="TRIGLAVIAN"/>
         <!-- Pirate factions -->
-        <ComboBoxItem Content="Guristas Pirates"             Tag="GURISTAS"/>
-        <ComboBoxItem Content="Angel Cartel"                 Tag="ANGELS"/>
-        <ComboBoxItem Content="Blood Raiders"                Tag="BLOOD"/>
-        <ComboBoxItem Content="Serpentis Corporation"        Tag="SERPENTIS"/>
-        <ComboBoxItem Content="Sansha's Nation"              Tag="SANSHA"/>
-        <ComboBoxItem Content="Mordu's Legion Command"       Tag="MORDUS"/>
+        <ComboBoxItem Content="{Binding Loc.FacGuristas}"             Tag="GURISTAS"/>
+        <ComboBoxItem Content="{Binding Loc.FacAngels}"                 Tag="ANGELS"/>
+        <ComboBoxItem Content="{Binding Loc.FacBlood}"                Tag="BLOOD"/>
+        <ComboBoxItem Content="{Binding Loc.FacSerpentis}"        Tag="SERPENTIS"/>
+        <ComboBoxItem Content="{Binding Loc.FacSansha}"              Tag="SANSHA"/>
+        <ComboBoxItem Content="{Binding Loc.FacMordus}"       Tag="MORDUS"/>
         <!-- Other (unique ships open to all) -->
-        <ComboBoxItem Content="Society of Conscious Thought" Tag="SOCT"/>
+        <ComboBoxItem Content="{Binding Loc.FacSoct}" Tag="SOCT"/>
       </ComboBox>
 
       <TextBlock Text="{Binding Status}" Foreground="{DynamicResource PaleCyan}" Margin="0,8,0,0" TextWrapping="Wrap"/>
     </StackPanel>
 
     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-      <Button Content="Log in with EVE"
+      <Button Content="{Binding Loc.FrLogin}"
               Width="160"
               Click="LoginWithEve_Click"/>
     </StackPanel>

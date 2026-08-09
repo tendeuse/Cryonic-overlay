@@ -8,7 +8,15 @@ namespace OverlayMVP.Views
 {
     public partial class SkillPlanWindow : Window
     {
-        public SkillPlanWindow() => InitializeComponent();
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
+        public SkillPlanWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+        }
 
         protected override void OnSourceInitialized(EventArgs e)
         {

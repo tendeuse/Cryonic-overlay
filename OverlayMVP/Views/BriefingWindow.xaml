@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.BriefingWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Incoming Transmission"
+        Title="{Binding Loc.BrTitleBar}"
         Width="470" Height="640"
         WindowStyle="None"
         AllowsTransparency="False"
@@ -32,7 +32,7 @@
                     <TextBlock Text="◈" FontSize="13" Foreground="{DynamicResource Accent}"
                                VerticalAlignment="Center" Margin="0,0,7,0"/>
                     <TextBlock x:Name="HeaderText"
-                               Text="INCOMING TRANSMISSION"
+                               Text="{Binding Loc.BrIncoming}"
                                Foreground="{DynamicResource Text}" FontSize="12" FontWeight="Bold"
                                VerticalAlignment="Center"/>
                 </StackPanel>
@@ -96,17 +96,17 @@
 
                 <!-- Buttons -->
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button x:Name="PlayPauseBtn" Content="⏸ Pause"
+                    <Button x:Name="PlayPauseBtn" Content="{Binding Loc.BrPause}"
                             Click="PlayPause_Click"
                             Width="90" Padding="0,4" Margin="0,0,8,0"
                             Background="{DynamicResource Accent22}" BorderBrush="{DynamicResource Accent88}"
                             Foreground="{DynamicResource Accent}" Cursor="Hand" FontSize="12"/>
-                    <Button Content="⟳ Restart"
+                    <Button Content="{Binding Loc.BrRestart}"
                             Click="ReplayButton_Click"
                             Padding="12,4" Margin="0,0,8,0"
                             Background="{DynamicResource Green22}" BorderBrush="{DynamicResource Green88}"
                             Foreground="{DynamicResource Green}" Cursor="Hand" FontSize="12"/>
-                    <Button Content="Close"
+                    <Button Content="{Binding Loc.BrClose}"
                             Click="CloseButton_Click"
                             Padding="12,4"
                             Background="{DynamicResource Gray22}" BorderBrush="{DynamicResource Gray88}"

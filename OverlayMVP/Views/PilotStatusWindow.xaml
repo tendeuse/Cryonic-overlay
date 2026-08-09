@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.PilotStatusWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Pilot Status — Cryonic Overlay"
+        Title="{Binding Loc.PsTitleBar}"
         Width="420" Height="500"
         MinWidth="300" MinHeight="300"
         WindowStyle="None"
@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               Text="👤  PILOT STATUS"
+                               Text="{Binding Loc.PsHeading}"
                                FontFamily="Consolas" FontWeight="Bold"
                                FontSize="{DynamicResource GlobalFontSizeSm}"
                                Foreground="{DynamicResource Accent}"
@@ -69,7 +69,7 @@
                                 Content="⟳"
                                 Command="{Binding RefreshStandingsCommand}"
                                 Style="{StaticResource SmallBtn}"
-                                ToolTip="Refresh ESI standings"
+                                ToolTip="{Binding Loc.TipRefreshEsi}"
                                 Visibility="{Binding EveLinked, Converter={StaticResource BoolToVis}}"/>
                     </Grid>
 
@@ -81,7 +81,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="ESI: "
+                            <TextBlock Grid.Column="0" Text="{Binding Loc.LabelEsiPrefix}"
                                        Foreground="{DynamicResource Accent}"
                                        FontSize="{DynamicResource GlobalFontSizeSm}"
                                        VerticalAlignment="Center"/>

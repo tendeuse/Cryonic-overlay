@@ -11,11 +11,16 @@ namespace OverlayMVP.Views
 {
     public partial class ShipFitWindow : Window
     {
+        /// <summary>Translations for {Binding Loc.X}. This window had no
+        /// DataContext, so every string in it was a hardcoded literal.</summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         private static ShipFitWindow? _current;
 
         public ShipFitWindow(string hullName, ShipSpec? spec = null)
         {
             InitializeComponent();
+            DataContext = this;
 
             // Only one fit window at a time
             _current?.Close();
