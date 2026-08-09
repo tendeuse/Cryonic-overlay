@@ -70,9 +70,22 @@ namespace OverlayMVP.Views
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Translations, for {Binding Loc.X} in the XAML.
+        ///
+        /// This window never had a DataContext -- it drives its controls by
+        /// name from code-behind -- so every string in it was a hardcoded
+        /// literal and the language toggle did nothing here at all. The only
+        /// other binding in the file is {Binding CharacterName} inside the
+        /// character list's item template, which resolves against the list
+        /// item rather than the window, so setting one now is safe.
+        /// </summary>
+        public LocalizationManager Loc => LocalizationManager.Instance;
+
         public SettingsWindow(AppDb db, OverlayConfig cfg)
         {
             InitializeComponent();
+            DataContext = this;
             _db  = db;
             _cfg = cfg;
 
@@ -111,26 +124,26 @@ namespace OverlayMVP.Views
             CharacterList.ItemsSource = tokens;
             if (tokens.Count == 0)
             {
-                EveStatusLabel.Text      = "No characters linked.";
+                EveStatusLabel.Text      = Loc.SetNoChars;
                 EveStatusLabel.Foreground= System.Windows.Media.Brushes.Gray;
             }
             else
             {
-                EveStatusLabel.Text      = $"{tokens.Count} character(s) linked.";
+                EveStatusLabel.Text      = Loc.SetCharsLinked(tokens.Count);
                 EveStatusLabel.Foreground= System.Windows.Media.Brushes.LightGreen;
             }
         }
 
         private async void LinkEve_Click(object sender, RoutedEventArgs e)
         {
-            SetStatus("⏳  Opening browser — log in as the character you want to add…");
+            SetStatus(Loc.SetOpeningBrowser);
             LinkEveBtn.IsEnabled = false;
             try
             {
                 using var esi = new EsiClient(_db);
                 string charName = await esi.AuthorizeAsync();
                 RefreshCharacterList();
-                SetStatus($"✅  {charName} linked successfully!");
+                SetStatus(Loc.SetLinkedOk(charName));
             }
             catch (Exception ex)
             {
@@ -142,8 +155,7 @@ namespace OverlayMVP.Views
         private void SetActive_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.Tag is EsiToken token)
-                SetStatus($"✅  {token.CharacterName} set as active character. " +
-                          "Changes take effect on the next 30s refresh.");
+                SetStatus(Loc.SetActiveOk(token.CharacterName));
             // The overlay VM will pick this up via ActiveCharacter binding in settings
         }
 
@@ -151,12 +163,12 @@ namespace OverlayMVP.Views
         {
             if (sender is not Button btn || btn.Tag is not EsiToken token) return;
             var result = MessageBox.Show(
-                $"Unlink {token.CharacterName}?",
-                "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Loc.SetUnlinkAsk(token.CharacterName),
+                Loc.SetConfirm, MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result != MessageBoxResult.Yes) return;
             EsiClient.DeleteToken(_db, token.CharacterId);
             RefreshCharacterList();
-            SetStatus($"{token.CharacterName} unlinked.");
+            SetStatus(Loc.SetUnlinkedOk(token.CharacterName));
         }
 
         // ── Font size ─────────────────────────────────────────────────────
@@ -202,8 +214,7 @@ namespace OverlayMVP.Views
                 {
                     SkinBox.SelectedItem = skin;
                     SkinBox.IsEnabled    = false;
-                    SkinHint.Text        = "Your corporation sets the skin for its members. " +
-                                           "Sponsor personally to choose your own.";
+                    SkinHint.Text        = Loc.SetCorpSkinLock;
                     _skinBoxReady = true;
                     return;
                 }
@@ -213,7 +224,7 @@ namespace OverlayMVP.Views
 
             var missing = ThemeManager.Available.Count - entitled.Count;
             SkinHint.Text = missing > 0
-                ? $"{missing} more skin(s) available to sponsors. They appear here automatically once linked."
+                ? Loc.SetMoreSkins(missing)
                 : "";
 
             _skinBoxReady = true;
@@ -226,7 +237,7 @@ namespace OverlayMVP.Views
             if (SkinBox.SelectedItem is not ThemeManager.Skin skin) return;
 
             if (!ThemeManager.Apply(skin.Id))
-                SetStatus($"Could not load the {skin.Display} skin.", error: true);
+                SetStatus(Loc.SetSkinFailed(skin.Display), error: true);
         }
 
         // ── Feature flags ─────────────────────────────────────────────────
@@ -268,7 +279,7 @@ namespace OverlayMVP.Views
         private void SaveOnly_Click(object sender, RoutedEventArgs e)
         {
             SaveAll();
-            SetStatus("✅  Saved. Close this window to apply the panel toggles.");
+            SetStatus(Loc.SetSavedMsg);
         }
 
         // Save & Close. The feature toggles cannot take effect while this

@@ -180,6 +180,102 @@ namespace OverlayMVP.Services
         public string TipSupport        => T("Support development on GitHub Sponsors — a voluntary donation. It does not unlock features or remove ads.",
                                              "Soutenez le développement via GitHub Sponsors — un don volontaire. Cela ne débloque aucune fonctionnalité et ne retire pas les publicités.");
 
+        // ── SettingsWindow ────────────────────────────────────────────────
+        //
+        // Same rule as MainWindow: English byte-identical to the literal it
+        // replaced. Settings is not in the screenshot baseline, so there is no
+        // automated net here -- these were transcribed and re-checked by hand.
+        public string SetTitle          => T("⚙  Settings",                 "⚙  Paramètres");
+        public string SetAccountType    => T("Account Type",                "Type de compte");
+        public string SetAlpha          => T("Alpha clone  (skill caps apply)",
+                                             "Clone Alpha  (plafonds de compétences)");
+        public string SetOmega          => T("Omega clone  (no skill caps)",
+                                             "Clone Omega  (aucun plafond)");
+        public string SetFactionFocus   => T("Faction Focus",               "Faction ciblée");
+        public string SetFontSize       => T("Font Size",                   "Taille du texte");
+        public string SetFontSmall      => T("Small (9)",                   "Petite (9)");
+        public string SetFontNormal     => T("Normal (11)",                 "Normale (11)");
+        public string SetFontLarge      => T("Large (13)",                  "Grande (13)");
+        public string SetFontXl         => T("XL (15)",                     "TG (15)");
+        public string SetSkin           => T("Skin",                        "Skin");
+        public string SetAppliesNow     => T("  (applies immediately)",     "  (effet immédiat)");
+        public string SetAppliesOnSave  => T("  (applies on save)",         "  (effet à l'enregistrement)");
+        public string SetFeatures       => T("FEATURES",                    "FONCTIONNALITÉS");
+        public string SetEveChars       => T("EVE Characters (ESI)",        "Personnages EVE (ESI)");
+        public string SetNoChars        => T("No characters linked.",       "Aucun personnage lié.");
+        public string SetTokensLocal    => T("Tokens stored locally — never sent to the server.",
+                                             "Jetons stockés localement — jamais envoyés au serveur.");
+        public string SetAddChar        => T("+ Add Character",             "+ Ajouter un personnage");
+        public string SetSetActive      => T("Set Active",                  "Définir comme actif");
+        public string SetAutoDetected   => T("Auto-detected when you refresh the skill plan via ESI.",
+                                             "Détecté automatiquement lors de l'actualisation du plan via ESI.");
+        public string SetSave           => T("Save",                        "Enregistrer");
+        public string SetSaveClose      => T("Save & Close",                "Enregistrer et fermer");
+        public string SetCancel         => T("Cancel",                      "Annuler");
+
+        // Feature toggles — these name the panels, so they must read the same
+        // as the panel headers elsewhere in the app.
+        public string SetFeatInstances  => T("Active Instances",            "Instances actives");
+        public string SetFeatIntel      => T("Intel & Alerts",              "Intel et alertes");
+        public string SetFeatPilot      => T("Pilot Status",                "Statut pilote");
+        public string SetFeatStanding   => T("Standing Guide",              "Guide de réputation");
+        public string SetFeatMission    => T("Mission Progress",            "Progression des missions");
+        public string SetFeatSkill      => T("Skill Plan",                  "Plan de compétences");
+        public string SetFeatPilotIntel => T("🔍 Pilot Intel",        "🔍 Renseignements pilote");
+        public string SetFeatDotlan     => T("🌍 Dotlan / System Info", "🌍 Dotlan / Infos système");
+
+        // Faction names.
+        //
+        // The four empires and CONCORD follow EVE's own French client. Pirate
+        // factions and the smaller groups are proper nouns that the FR client
+        // leaves alone, so they are left alone here too -- inventing French for
+        // "Blood Raiders" would read worse than not translating it.
+        // FLAGGED FOR REVIEW: Sansha, Mordu, SoCT are the least certain.
+        public string FacCaldari        => T("Caldari State",               "État Caldari");
+        public string FacGallente       => T("Gallente Federation",         "Fédération Gallente");
+        public string FacAmarr          => T("Amarr Empire",                "Empire Amarr");
+        public string FacMinmatar       => T("Minmatar Republic",           "République Minmatar");
+        public string FacSoe            => T("Sisters of EVE",              "Sisters of EVE");
+        public string FacConcord        => T("CONCORD Assembly",            "Assemblée CONCORD");
+        public string FacOre            => T("ORE",                         "ORE");
+        public string FacEdencom        => T("EDENCOM",                     "EDENCOM");
+        public string FacTriglavian     => T("Triglavian Collective",       "Collectif Triglavian");
+        public string FacGuristas       => T("Guristas Pirates",            "Guristas Pirates");
+        public string FacAngels         => T("Angel Cartel",                "Angel Cartel");
+        public string FacBlood          => T("Blood Raiders",               "Blood Raiders");
+        public string FacSerpentis      => T("Serpentis Corporation",       "Serpentis Corporation");
+        public string FacSansha         => T("Sansha's Nation",             "Nation de Sansha");
+        public string FacMordus         => T("Mordu's Legion Command",      "Commandement de la Légion de Mordu");
+        public string FacSoct           => T("Society of Conscious Thought","Société de la Pensée Consciente");
+
+        // Settings runtime messages (code-behind, not XAML)
+        public string SetWindowTitle    => T("Settings — Cryonic Overlay",  "Paramètres — Cryonic Overlay");
+        public string SetCharsLinked(int n) => _lang == OverlayLanguage.EN
+            ? $"{n} character(s) linked."
+            : $"{n} personnage(s) lié(s).";
+        public string SetOpeningBrowser => T("⏳  Opening browser — log in as the character you want to add…",
+                                             "⏳  Ouverture du navigateur — connectez-vous avec le personnage à ajouter…");
+        public string SetLinkedOk(string who) => _lang == OverlayLanguage.EN
+            ? $"✅  {who} linked successfully!"
+            : $"✅  {who} lié avec succès !";
+        public string SetActiveOk(string who) => _lang == OverlayLanguage.EN
+            ? $"✅  {who} set as active character. Changes take effect on the next 30s refresh."
+            : $"✅  {who} défini comme personnage actif. Effet à la prochaine actualisation (30 s).";
+        public string SetUnlinkAsk(string who) => _lang == OverlayLanguage.EN
+            ? $"Unlink {who}?" : $"Délier {who} ?";
+        public string SetUnlinkedOk(string who) => _lang == OverlayLanguage.EN
+            ? $"{who} unlinked." : $"{who} délié.";
+        public string SetConfirm        => T("Confirm",                     "Confirmer");
+        public string SetCorpSkinLock   => T("Your corporation sets the skin for its members. Sponsor personally to choose your own.",
+                                             "Votre corporation impose le skin à ses membres. Sponsorisez à titre personnel pour choisir le vôtre.");
+        public string SetSkinFailed(string skin) => _lang == OverlayLanguage.EN
+            ? $"Could not load the {skin} skin." : $"Impossible de charger le skin {skin}.";
+        public string SetSavedMsg       => T("✅  Saved. Close this window to apply the panel toggles.",
+                                             "✅  Enregistré. Fermez cette fenêtre pour appliquer les panneaux.");
+        public string SetMoreSkins(int n) => _lang == OverlayLanguage.EN
+            ? $"{n} more skin(s) available to sponsors. They appear here automatically once linked."
+            : $"{n} skin(s) supplémentaire(s) pour les sponsors. Ils apparaissent ici automatiquement une fois liés.";
+
         // Title bar
         public string AppTitle          => T("◈  CRYONIC OVERLAY",          "◈  OVERLAY CRYONIC");
         public string StatusConnecting  => T("Connecting…",                  "Connexion…");

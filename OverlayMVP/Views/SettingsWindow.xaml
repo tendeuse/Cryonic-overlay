@@ -2,7 +2,7 @@
 <Window x:Class="OverlayMVP.Views.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings — Cryonic Overlay"
+        Title="{Binding Loc.SetWindowTitle}"
         Width="520" Height="600"
         MinWidth="420" MinHeight="400"
         WindowStartupLocation="CenterScreen"
@@ -68,41 +68,41 @@
 
         <!-- Heading -->
         <TextBlock Grid.Row="0"
-                   Text="⚙  Settings"
+                   Text="{Binding Loc.SetTitle}"
                    FontSize="18" FontWeight="Bold"
                    Foreground="{DynamicResource Cyan}"/>
 
         <!-- Faction Focus + Account Type -->
         <StackPanel Grid.Row="6">
-            <TextBlock Text="Faction Focus" Opacity="0.8" Margin="0,0,0,5"/>
+            <TextBlock Text="{Binding Loc.SetFactionFocus}" Opacity="0.8" Margin="0,0,0,5"/>
             <ComboBox x:Name="FactionBox" SelectedValuePath="Tag">
                 <!-- Empire -->
-                <ComboBoxItem Content="Caldari State"                  Tag="CALDARI"/>
-                <ComboBoxItem Content="Gallente Federation"            Tag="GALLENTE"/>
-                <ComboBoxItem Content="Amarr Empire"                   Tag="AMARR"/>
-                <ComboBoxItem Content="Minmatar Republic"              Tag="MINMATAR"/>
+                <ComboBoxItem Content="{Binding Loc.FacCaldari}"                  Tag="CALDARI"/>
+                <ComboBoxItem Content="{Binding Loc.FacGallente}"            Tag="GALLENTE"/>
+                <ComboBoxItem Content="{Binding Loc.FacAmarr}"                   Tag="AMARR"/>
+                <ComboBoxItem Content="{Binding Loc.FacMinmatar}"              Tag="MINMATAR"/>
                 <!-- Neutral / special -->
-                <ComboBoxItem Content="Sisters of EVE"                 Tag="SOE"/>
-                <ComboBoxItem Content="CONCORD Assembly"               Tag="CONCORD"/>
-                <ComboBoxItem Content="ORE"                            Tag="ORE"/>
-                <ComboBoxItem Content="EDENCOM"                        Tag="EDENCOM"/>
-                <ComboBoxItem Content="Triglavian Collective"          Tag="TRIGLAVIAN"/>
+                <ComboBoxItem Content="{Binding Loc.FacSoe}"                 Tag="SOE"/>
+                <ComboBoxItem Content="{Binding Loc.FacConcord}"               Tag="CONCORD"/>
+                <ComboBoxItem Content="{Binding Loc.FacOre}"                            Tag="ORE"/>
+                <ComboBoxItem Content="{Binding Loc.FacEdencom}"                        Tag="EDENCOM"/>
+                <ComboBoxItem Content="{Binding Loc.FacTriglavian}"          Tag="TRIGLAVIAN"/>
                 <!-- Pirate factions -->
-                <ComboBoxItem Content="Guristas Pirates"               Tag="GURISTAS"/>
-                <ComboBoxItem Content="Angel Cartel"                   Tag="ANGELS"/>
-                <ComboBoxItem Content="Blood Raiders"                  Tag="BLOOD"/>
-                <ComboBoxItem Content="Serpentis Corporation"          Tag="SERPENTIS"/>
-                <ComboBoxItem Content="Sansha's Nation"                Tag="SANSHA"/>
-                <ComboBoxItem Content="Mordu's Legion Command"         Tag="MORDUS"/>
+                <ComboBoxItem Content="{Binding Loc.FacGuristas}"               Tag="GURISTAS"/>
+                <ComboBoxItem Content="{Binding Loc.FacAngels}"                   Tag="ANGELS"/>
+                <ComboBoxItem Content="{Binding Loc.FacBlood}"                  Tag="BLOOD"/>
+                <ComboBoxItem Content="{Binding Loc.FacSerpentis}"          Tag="SERPENTIS"/>
+                <ComboBoxItem Content="{Binding Loc.FacSansha}"                Tag="SANSHA"/>
+                <ComboBoxItem Content="{Binding Loc.FacMordus}"         Tag="MORDUS"/>
                 <!-- Other (unique ships open to all) -->
-                <ComboBoxItem Content="Society of Conscious Thought"   Tag="SOCT"/>
+                <ComboBoxItem Content="{Binding Loc.FacSoct}"   Tag="SOCT"/>
             </ComboBox>
-            <TextBlock Text="Account Type" Opacity="0.8" Margin="0,10,0,5"/>
+            <TextBlock Text="{Binding Loc.SetAccountType}" Opacity="0.8" Margin="0,10,0,5"/>
             <ComboBox x:Name="AlphaBox" SelectedValuePath="Tag">
-                <ComboBoxItem Content="Alpha clone  (skill caps apply)" Tag="ALPHA"/>
-                <ComboBoxItem Content="Omega clone  (no skill caps)"    Tag="OMEGA"/>
+                <ComboBoxItem Content="{Binding Loc.SetAlpha}" Tag="ALPHA"/>
+                <ComboBoxItem Content="{Binding Loc.SetOmega}"    Tag="OMEGA"/>
             </ComboBox>
-            <TextBlock Text="Auto-detected when you refresh the skill plan via ESI."
+            <TextBlock Text="{Binding Loc.SetAutoDetected}"
                        Foreground="{DynamicResource SlateNavy}" FontSize="10" Margin="0,3,0,0"/>
         </StackPanel>
 
@@ -113,8 +113,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="EVE Characters (ESI)" Opacity="0.8" VerticalAlignment="Center"/>
-                <Button Grid.Column="1" Content="+ Add Character"
+                <TextBlock Text="{Binding Loc.SetEveChars}" Opacity="0.8" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="{Binding Loc.SetAddChar}"
                         x:Name="LinkEveBtn"
                         Click="LinkEve_Click"
                         Background="{DynamicResource DeepTeal}"
@@ -142,7 +142,7 @@
                                            Text="{Binding CharacterName}"
                                            FontSize="12" VerticalAlignment="Center"
                                            Foreground="{DynamicResource PaleLavender}"/>
-                                <Button Grid.Column="2" Content="Set Active"
+                                <Button Grid.Column="2" Content="{Binding Loc.SetSetActive}"
                                         Tag="{Binding}"
                                         Click="SetActive_Click"
                                         Margin="0,0,6,0"
@@ -160,17 +160,17 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
             <TextBlock x:Name="EveStatusLabel"
-                       Text="No characters linked."
+                       Text="{Binding Loc.SetNoChars}"
                        Foreground="{DynamicResource TextDim}" FontSize="11" Margin="0,2,0,0"/>
-            <TextBlock Text="Tokens stored locally — never sent to the server."
+            <TextBlock Text="{Binding Loc.SetTokensLocal}"
                        Foreground="{DynamicResource SlateNavy}" FontSize="10" Margin="0,2,0,0"/>
         </StackPanel>
 
         <!-- Font Size -->
         <StackPanel Grid.Row="10">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <TextBlock Text="Font Size" Opacity="0.8"/>
-                <TextBlock Text="  (applies on save)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
+                <TextBlock Text="{Binding Loc.SetFontSize}" Opacity="0.8"/>
+                <TextBlock Text="{Binding Loc.SetAppliesOnSave}" Foreground="{DynamicResource Cyan}" FontSize="11"/>
             </StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -191,10 +191,10 @@
                            Foreground="{DynamicResource Cyan}"/>
             </Grid>
             <WrapPanel Margin="0,8,0,0">
-                <Button Content="Small (9)"   Tag="9"  Click="FontPreset_Click" Margin="0,0,6,0" FontSize="10"/>
-                <Button Content="Normal (11)" Tag="11" Click="FontPreset_Click" Margin="0,0,6,0" FontSize="11"/>
-                <Button Content="Large (13)"  Tag="13" Click="FontPreset_Click" Margin="0,0,6,0" FontSize="13"/>
-                <Button Content="XL (15)"     Tag="15" Click="FontPreset_Click" FontSize="15"/>
+                <Button Content="{Binding Loc.SetFontSmall}"   Tag="9"  Click="FontPreset_Click" Margin="0,0,6,0" FontSize="10"/>
+                <Button Content="{Binding Loc.SetFontNormal}" Tag="11" Click="FontPreset_Click" Margin="0,0,6,0" FontSize="11"/>
+                <Button Content="{Binding Loc.SetFontLarge}"  Tag="13" Click="FontPreset_Click" Margin="0,0,6,0" FontSize="13"/>
+                <Button Content="{Binding Loc.SetFontXl}"     Tag="15" Click="FontPreset_Click" FontSize="15"/>
             </WrapPanel>
 
             <!-- ── Skin ──────────────────────────────────────────────────
@@ -203,8 +203,8 @@
                  CCP's licence forbids paywalling features, so skins gate
                  appearance and nothing else. -->
             <StackPanel Orientation="Horizontal" Margin="0,14,0,5">
-                <TextBlock Text="Skin" Opacity="0.8"/>
-                <TextBlock Text="  (applies immediately)" Foreground="{DynamicResource Cyan}" FontSize="11"/>
+                <TextBlock Text="{Binding Loc.SetSkin}" Opacity="0.8"/>
+                <TextBlock Text="{Binding Loc.SetAppliesNow}" Foreground="{DynamicResource Cyan}" FontSize="11"/>
             </StackPanel>
             <ComboBox x:Name="SkinBox"
                       DisplayMemberPath="Display"
@@ -218,17 +218,17 @@
 
         <!-- Features -->
         <StackPanel Grid.Row="12">
-            <TextBlock Text="FEATURES" Opacity="0.7" FontWeight="Bold" FontSize="10"
+            <TextBlock Text="{Binding Loc.SetFeatures}" Opacity="0.7" FontWeight="Bold" FontSize="10"
                        Foreground="{DynamicResource Accent}" Margin="0,0,0,6"/>
             <WrapPanel>
-                <CheckBox x:Name="ChkMultibox"        Content="Active Instances"       Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkIntelAlerts"     Content="Intel &amp; Alerts"     Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkPilotStatus"     Content="Pilot Status"           Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkStandingGuide"   Content="Standing Guide"         Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkMissionProgress" Content="Mission Progress"       Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkSkillPlan"       Content="Skill Plan"             Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkPilotIntelBtn"   Content="&#x1F50D; Pilot Intel"  Margin="0,0,14,5"/>
-                <CheckBox x:Name="ChkSystemInfoBtn"   Content="&#x1F30D; Dotlan / System Info" Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkMultibox"        Content="{Binding Loc.SetFeatInstances}"       Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkIntelAlerts"     Content="{Binding Loc.SetFeatIntel}"     Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkPilotStatus"     Content="{Binding Loc.SetFeatPilot}"           Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkStandingGuide"   Content="{Binding Loc.SetFeatStanding}"         Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkMissionProgress" Content="{Binding Loc.SetFeatMission}"       Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkSkillPlan"       Content="{Binding Loc.SetFeatSkill}"             Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkPilotIntelBtn"   Content="{Binding Loc.SetFeatPilotIntel}"  Margin="0,0,14,5"/>
+                <CheckBox x:Name="ChkSystemInfoBtn"   Content="{Binding Loc.SetFeatDotlan}" Margin="0,0,14,5"/>
             </WrapPanel>
         </StackPanel>
 
@@ -242,15 +242,15 @@
 
         <!-- Buttons -->
         <WrapPanel Grid.Row="18" HorizontalAlignment="Right">
-            <Button Content="Cancel"
+            <Button Content="{Binding Loc.SetCancel}"
                     Click="Cancel_Click"
                     Margin="0,0,6,0"/>
-            <Button Content="Save"
+            <Button Content="{Binding Loc.SetSave}"
                     Click="SaveOnly_Click"
                     Margin="0,0,6,0"/>
             <!-- Primary action: the panel toggles only take effect once this
                  window closes, so this is the sequence you actually want. -->
-            <Button Content="Save &amp; Close"
+            <Button Content="{Binding Loc.SetSaveClose}"
                     Click="SaveClose_Click"
                     IsDefault="True"
                     Background="{DynamicResource DeepTeal}"
