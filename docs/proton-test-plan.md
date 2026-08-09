@@ -1,165 +1,65 @@
-# Running Cryonic Overlay under Proton — first test
+# Running Cryonic Overlay under Proton — test plan v2 (v0.7.3, Wayland)
 
-Goal: find out whether the existing Windows build is usable by Linux players
-without porting anything. We are not trying to make it perfect, we are trying to
-find out where it stops.
+Goal: find out whether the Windows build is usable by Linux players without
+porting anything. We are not trying to make it perfect, we are trying to find
+out exactly where it stops.
 
-**The overlay must run inside the same Proton prefix as EVE.** A different prefix
-is a different window namespace, so the overlay would find no EVE clients and the
-log folder would be the wrong one. Everything below is about getting it into the
-right prefix.
+**Round 1 (Pop!_OS / Wayland / GE-Proton 10-34, Aug 2026) got as far as: the app
+runs, ESI works, the overlay does not appear over EVE.** This round exists to
+find out *why* — there are two completely different causes and they need
+different fixes.
 
 ---
 
-## 0. Before you start
+## Read this first: what actually counts as evidence
 
-You need:
+The round-1 report listed character linking, location detection and "EVE data"
+as passes and concluded the failure was overlay-specific. That conclusion does
+not follow yet, because **all three of those go over the network, not through
+EVE's window.**
 
-- EVE Online installed through Steam and working under Proton
-- The file `CryonicOverlay-v0.7.1-win-x64.exe`, saved somewhere simple such as
-  `~/Downloads/`
+Cryonic talks to EVE in two entirely separate ways:
 
-Find EVE's Steam App ID — it is in the store page URL
-(`store.steampowered.com/app/<ID>/`). It is almost certainly **8500**. Every
-command below uses `8500`; change it if yours differs.
+| Path | Used for | Needs |
+| --- | --- | --- |
+| **ESI over HTTPS** | character link, location, skills, standings, orders | just internet |
+| **Win32 window handles** | ACTIVE INSTANCES, anchoring, always-on-top | *same Proton prefix as EVE* |
 
-Install protontricks:
+The ESI path working tells us nothing about the window path. So the single most
+important line in this whole document is Step 2, and it is one word: does
+ACTIVE INSTANCES show a card, yes or no.
+
+Related: Steam's own overlay and MangoHud work by injecting into the game
+process. Cryonic is a separate top-level window. "Other overlays work" is not
+evidence that this one can — it is a different mechanism.
+
+---
+
+## 0. Setup
+
+You need EVE working under Proton, and `CryonicOverlay-v0.7.3-win-x64.exe` in
+`~/Downloads/`.
+
+EVE's Steam App ID is **8500**. Every command below uses it.
 
 ```bash
 flatpak install flathub com.github.Matoking.protontricks
 ```
 
-Or from your distro if it packages it (`sudo apt install protontricks`,
-`sudo pacman -S protontricks`, …).
-
 Confirm it can see EVE:
 
 ```bash
-protontricks -l
+flatpak run --command=protontricks com.github.Matoking.protontricks -l
 ```
 
-If you installed the flatpak, every `protontricks…` command below becomes:
+**If EVE is not listed** — likely with Flatpak Steam plus a library on a second
+drive — grant access to the library path and try again:
 
 ```bash
-flatpak run --command=protontricks-launch com.github.Matoking.protontricks --appid 8500 <exe>
+flatpak override --user --filesystem=/path/to/your/SteamLibrary com.github.Matoking.protontricks
 ```
 
----
-
-## Step 1 — Does it start at all?
-
-This is the make-or-break. WPF is the one part nobody can predict from reading
-the code. **Leave EVE closed for this step** — we only want to know whether the
-window appears.
-
-```bash
-protontricks-launch --appid 8500 ~/Downloads/CryonicOverlay-v0.7.1-win-x64.exe
-```
-
-First launch is slow: it is a self-contained single-file build, so it unpacks
-~70 MB into the prefix's temp folder before anything appears. Give it a minute.
-
-**Three possible outcomes:**
-
-- **A window appears** → excellent, go to Step 2.
-- **Nothing appears, no error** → capture the output and send it (see Step 5).
-- **It starts but the window is black, blank, or garbled** → WPF is failing to
-  render through Direct3D. Try software rendering:
-
-  ```bash
-  protontricks 8500 regedit
-  ```
-
-  Navigate to `HKEY_CURRENT_USER\Software\Microsoft`, create a key
-  `Avalon.Graphics`, and inside it a **DWORD** named `DisableHWAcceleration`
-  set to `1`. Then run Step 1 again.
-
-  If it is still broken, try adding the shader compiler:
-
-  ```bash
-  protontricks 8500 d3dcompiler_47
-  ```
-
----
-
-## Step 2 — Does it see your EVE clients?
-
-1. Launch EVE from Steam as usual and log a character in.
-2. **Leave EVE running**, then launch the overlay again with the Step 1 command.
-
-Look at the **ACTIVE INSTANCES** section.
-
-- A card with your character's window title → window detection works. This is
-  the important one.
-- Empty section → the overlay is in a different prefix than EVE, or
-  `EnumWindows` is not seeing the game's window.
-
-**The preview inside the card is expected to be an empty dark box.** Wine stubs
-out the DWM thumbnail API the live previews are built on. I checked the code:
-every one of those calls is guarded, so it should degrade to a blank box rather
-than crash. If it *does* crash here, that is a genuine finding — tell me.
-
----
-
-## Step 3 — Hotkeys and overlay behaviour
-
-With EVE focused, try each one:
-
-| Key | Should do |
-| --- | --- |
-| `Ctrl + Shift + O` | Overlay panel fades out, previews stay |
-| `Ctrl + Shift + H` | Everything hides |
-| `Ctrl + Shift + C` | Click-through toggles (footer switches Interactive ⇄ Click-through) |
-
-Then check:
-
-- Does the overlay stay **on top of EVE**, or does EVE cover it?
-- With click-through on, do clicks reach the game underneath?
-- Is EVE running **fullscreen** or **windowed**? Say which — fullscreen is much
-  more likely to cover the overlay, and that difference matters a lot.
-
----
-
-## Step 4 — Linking a character (optional, likely to fail)
-
-Press the ⚙ Settings button and try **Link EVE character**. This opens your web
-browser and runs a small local HTTP listener to catch the reply. Under Wine, the
-browser hand-off often does not work.
-
-If it fails, it is not a blocker for this test — the panels just stay empty. Note
-what happened and move on.
-
----
-
-## Step 5 — Send me the output
-
-Run it once more with the output captured:
-
-```bash
-protontricks-launch --appid 8500 ~/Downloads/CryonicOverlay-v0.7.1-win-x64.exe \
-  > ~/cryonic-proton.log 2>&1
-```
-
-Use the overlay for a moment, close it, then send me `~/cryonic-proton.log`.
-
-Wine is noisy — `err:` and `fixme:` lines are normal and mostly harmless. The
-interesting ones mention `dwmapi`, `d3d`, `mscoree`, `wpfgfx`, or any
-**unhandled exception**.
-
----
-
-## What to tell me
-
-Even one line each is enough:
-
-1. Did the window appear? (Step 1)
-2. Did ACTIVE INSTANCES show your client? (Step 2)
-3. Which hotkeys worked? (Step 3)
-4. Did it stay above EVE — and was EVE fullscreen or windowed? (Step 3)
-5. Anything that crashed outright.
-
-Distro, GPU vendor, and whether you are on **X11 or Wayland** are worth adding.
-Wayland is the one that could sink several of these on its own — check with:
+Record your session type; it changes what is even possible:
 
 ```bash
 echo $XDG_SESSION_TYPE
@@ -167,12 +67,148 @@ echo $XDG_SESSION_TYPE
 
 ---
 
-## My prediction, so we can see where I am wrong
+## Step 1 — Launch it in EVE's prefix
 
-- Steps 1–3 work, previews are blank boxes
-- Always-on-top and click-through are the shaky parts, especially on Wayland or
-  with EVE fullscreen
-- Character linking fails
+**This is not optional and it is what round 1 skipped.** A normal Proton launch
+creates its *own* prefix. A different prefix is a different Win32 desktop: the
+overlay cannot see EVE's window, cannot anchor to it, and cannot stack against
+it. It will still run and still do everything over ESI, which is exactly why
+round 1 looked partly successful.
 
-If Step 1 fails, that ends the Proton route and the web companion becomes the
-real answer for Linux and Mac.
+Start EVE from Steam first and log a character in. Leave it running. Then:
+
+```bash
+flatpak run --command=protontricks-launch com.github.Matoking.protontricks --appid 8500 ~/Downloads/CryonicOverlay-v0.7.3-win-x64.exe
+```
+
+First launch is slow — it is a self-contained single-file build and unpacks
+~70 MB into the prefix before anything appears. Give it a minute.
+
+> Needs ~200 MB free on the drive holding the prefix. If it exits immediately
+> with an I/O or decompression error, check free space first — that exact error
+> turned out to be a full disk on Windows, not a bug.
+
+If the window is black, blank or garbled, WPF is failing through Direct3D:
+
+```bash
+flatpak run --command=protontricks com.github.Matoking.protontricks 8500 regedit
+```
+
+Under `HKEY_CURRENT_USER\Software\Microsoft`, create key `Avalon.Graphics`, and
+inside it a DWORD `DisableHWAcceleration` = `1`. Relaunch. Still broken, try
+`protontricks 8500 d3dcompiler_47`.
+
+---
+
+## Step 2 — THE decisive check
+
+Look at **ACTIVE INSTANCES**.
+
+- **A card with your character's window title** → window detection works, you
+  are in the right prefix. Everything after this is a genuine Wayland stacking
+  problem. Go to Step 3.
+- **Empty** → still the wrong prefix, or `EnumWindows` cannot see the game.
+  Steps 3–4 are meaningless in this state; skip to Step 5 and send the log.
+
+Answer this one explicitly in your report even if it seems obvious.
+
+**The preview inside the card is expected to be an empty dark box.** Wine stubs
+out the DWM thumbnail API. Every one of those calls is guarded, so it should
+degrade to a blank box. If it *crashes* here, that is a real finding.
+
+---
+
+## Step 3 — Stacking, tested per display mode
+
+Only meaningful if Step 2 showed a card.
+
+Round 1 did not record whether EVE was fullscreen. It matters more than anything
+else here, so test all three. In EVE: Esc → Display & Graphics → Display Mode.
+
+| EVE display mode | Overlay visible over EVE? | Click-through reaches game? |
+| --- | --- | --- |
+| Windowed | | |
+| Borderless / windowed-fullscreen | | |
+| Fullscreen | | |
+
+Expect a gradient rather than pass/fail: windowed most likely to work, exclusive
+fullscreen least. **If it works in any one of the three, say so** — that alone
+decides whether Linux support is documentable-with-caveats or genuinely dead.
+
+Then the hotkeys, with EVE focused:
+
+| Key | Should do | Worked? |
+| --- | --- | --- |
+| `Ctrl + Shift + O` | Overlay panel fades, previews stay | |
+| `Ctrl + Shift + H` | Everything hides | |
+| `Ctrl + Shift + C` | Click-through toggles (footer shows Interactive ⇄ Click-through) | |
+
+Global hotkeys go through `RegisterHotKey`, which is per-prefix — they may work
+only while the overlay itself has focus, which would make them useless in
+practice. Note which case you see.
+
+**Do not run EVE under gamescope for this test.** Gamescope nests the game in
+its own compositor; a separate window cannot be composited over it, and that
+would mask whatever the real result is.
+
+---
+
+## Step 4 — Confirm character linking still works
+
+Round 1 established this works, which contradicted my prediction. Just confirm
+it survives in the correct prefix — the browser hand-off uses a local HTTP
+listener, and prefix changes can affect it.
+
+---
+
+## Step 5 — Send the log
+
+```bash
+flatpak run --command=protontricks-launch com.github.Matoking.protontricks --appid 8500 ~/Downloads/CryonicOverlay-v0.7.3-win-x64.exe > ~/cryonic-proton.log 2>&1
+```
+
+Use it briefly, close it, send `~/cryonic-proton.log`.
+
+Wine is noisy — `err:` and `fixme:` are mostly harmless. The interesting ones
+mention `dwmapi`, `d3d`, `wpfgfx`, `winex11`, `SetWindowPos`, or any unhandled
+exception.
+
+---
+
+## Report template
+
+```
+Session type (XDG_SESSION_TYPE):
+Launched via protontricks-launch:      yes / no
+Step 2 — ACTIVE INSTANCES card:        yes / no      <-- the important one
+Step 3 — visible over EVE, windowed:   yes / no
+Step 3 — visible over EVE, borderless: yes / no
+Step 3 — visible over EVE, fullscreen: yes / no
+Click-through reached the game:        yes / no / n-a
+Hotkeys working (which, and only-when-focused?):
+Character linking:                     yes / no
+Anything that crashed outright:
+```
+
+---
+
+## Predictions for round 2, so we can see where I am wrong
+
+Round 1 scored me: I predicted character linking would fail. It did not.
+
+- Step 2 shows a card once launched in the right prefix — this is the failure I
+  expect round 1 actually hit
+- Even then, exclusive fullscreen covers the overlay on Wayland and I do not
+  expect to fix that from inside a WPF app
+- Windowed or borderless is where it has a real chance
+- Click-through is unlikely to work; it relies on `WS_EX_TRANSPARENT` hit-testing
+  that XWayland handles differently
+
+Known weak points in our own code, independent of the above: `Topmost` is set
+once in XAML and never re-asserted, and the anchoring call deliberately passes
+`SWP_NOZORDER` so it never raises z-order. On Windows that is fine. If Step 3
+shows the overlay dropping *behind* EVE after a focus change rather than never
+appearing at all, that distinction is the thing to fix, and it is fixable.
+
+If Step 2 is empty even via protontricks-launch, the Proton route is finished
+and the web companion becomes the real answer for Linux and Mac.
