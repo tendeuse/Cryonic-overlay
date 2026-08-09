@@ -72,8 +72,7 @@ namespace OverlayMVP.Services
         public IntelSearchService()
         {
             _http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-            _http.DefaultRequestHeaders.UserAgent.Add(
-                new ProductInfoHeaderValue("CryonicOverlay", "1.0"));
+            EsiHttp.Configure(_http);
 
             // AutomaticDecompression is required — zKillboard always returns gzip
             var zkbHandler = new System.Net.Http.HttpClientHandler
@@ -83,9 +82,11 @@ namespace OverlayMVP.Services
                     System.Net.DecompressionMethods.Deflate
             };
             _zkb = new HttpClient(zkbHandler) { Timeout = TimeSpan.FromSeconds(30) };
+            // zKillboard, not ESI — but it wants an identifying User-Agent just
+            // as much, and the version here used to be a hardcoded "1.0" that
+            // never moved. Same string as ESI sees, from the same constant.
             _zkb.DefaultRequestHeaders.UserAgent.Clear();
-            _zkb.DefaultRequestHeaders.UserAgent.ParseAdd(
-                "CryonicGamingOverlay/1.0 (EVE Online overlay; Cryonic Gaming Discord)");
+            _zkb.DefaultRequestHeaders.UserAgent.ParseAdd(EsiHttp.UserAgent);
             _zkb.DefaultRequestHeaders.Accept.Clear();
             _zkb.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
@@ -150,7 +151,7 @@ namespace OverlayMVP.Services
         {
             var body = JsonSerializer.Serialize(new[] { name });
             var req  = new HttpRequestMessage(HttpMethod.Post,
-                "https://esi.evetech.net/latest/universe/ids/?datasource=tranquility")
+                $"{EsiHttp.Base}/universe/ids/?datasource=tranquility")
             {
                 Content = new System.Net.Http.StringContent(
                     body, System.Text.Encoding.UTF8, "application/json")
@@ -171,7 +172,7 @@ namespace OverlayMVP.Services
             try
             {
                 var resp = await _http.GetAsync(
-                    $"https://esi.evetech.net/latest/characters/{charId}/", ct);
+                    $"{EsiHttp.Base}/characters/{charId}/", ct);
                 if (!resp.IsSuccessStatusCode) return ("Unknown", 0, 0, 0);
                 using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
                 var r = doc.RootElement;
@@ -252,7 +253,7 @@ namespace OverlayMVP.Services
                 try
                 {
                     var resp = await _http.GetAsync(
-                        $"https://esi.evetech.net/latest/killmails/{r.Id}/{r.Hash}/", ct);
+                        $"{EsiHttp.Base}/killmails/{r.Id}/{r.Hash}/", ct);
                     if (!resp.IsSuccessStatusCode)
                     {
                         System.Diagnostics.Debug.WriteLine($"[ESI KM] {r.Id} → {(int)resp.StatusCode}");
@@ -450,7 +451,7 @@ namespace OverlayMVP.Services
             if (id == 0) return "";
             if (_corpNames.TryGetValue(id, out var c)) return c;
             try {
-                var r = await _http.GetAsync($"https://esi.evetech.net/latest/corporations/{id}/", ct);
+                var r = await _http.GetAsync($"{EsiHttp.Base}/corporations/{id}/", ct);
                 if (!r.IsSuccessStatusCode) return "";
                 using var d = JsonDocument.Parse(await r.Content.ReadAsStringAsync(ct));
                 var n = d.RootElement.TryGetProperty("name", out var nm) ? nm.GetString() ?? "" : "";
@@ -461,7 +462,7 @@ namespace OverlayMVP.Services
         private async Task<string> GetAllianceNameAsync(int id, CancellationToken ct)
         {
             try {
-                var r = await _http.GetAsync($"https://esi.evetech.net/latest/alliances/{id}/", ct);
+                var r = await _http.GetAsync($"{EsiHttp.Base}/alliances/{id}/", ct);
                 if (!r.IsSuccessStatusCode) return "";
                 using var d = JsonDocument.Parse(await r.Content.ReadAsStringAsync(ct));
                 return d.RootElement.TryGetProperty("name", out var n) ? n.GetString() ?? "" : "";
@@ -481,7 +482,7 @@ namespace OverlayMVP.Services
             try
             {
                 var r = await _http.GetAsync(
-                    $"https://esi.evetech.net/latest/universe/types/{id}/", ct);
+                    $"{EsiHttp.Base}/universe/types/{id}/", ct);
                 if (!r.IsSuccessStatusCode) return ($"#{id}", 0);
                 using var d = JsonDocument.Parse(await r.Content.ReadAsStringAsync(ct));
                 var n      = d.RootElement.TryGetProperty("name",     out var nm) ? nm.GetString() ?? $"#{id}" : $"#{id}";
@@ -504,7 +505,7 @@ namespace OverlayMVP.Services
             try
             {
                 var r = await _http.GetAsync(
-                    $"https://esi.evetech.net/latest/universe/groups/{groupId}/", ct);
+                    $"{EsiHttp.Base}/universe/groups/{groupId}/", ct);
                 if (!r.IsSuccessStatusCode) return 0;
                 using var d = JsonDocument.Parse(await r.Content.ReadAsStringAsync(ct));
                 int cat = d.RootElement.TryGetProperty("category_id", out var ci) ? ci.GetInt32() : 0;

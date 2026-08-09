@@ -101,15 +101,12 @@ namespace OverlayMVP.Services
         private readonly Dictionary<int, string> _constNames  = new();
         private readonly Dictionary<int, string> _alliNames   = new();
 
-        private const string ESI = "https://esi.evetech.net/latest";
+        private const string ESI = EsiHttp.Base;   // unversioned; see EsiHttp
 
         public SystemInfoService()
         {
             _http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
-            _http.DefaultRequestHeaders.UserAgent.Add(
-                new ProductInfoHeaderValue("CryonicOverlay", "1.0"));
-            _http.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            EsiHttp.Configure(_http);
         }
 
         // ── Main entry point ──────────────────────────────────────────────

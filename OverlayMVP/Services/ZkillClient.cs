@@ -21,7 +21,9 @@ namespace OverlayMVP.Services
         {
             _http = new HttpClient { Timeout = TimeSpan.FromSeconds(15) };
             // zKillboard asks every client to identify itself.
-            _http.DefaultRequestHeaders.UserAgent.ParseAdd("CryonicOverlay/0.6 (EVE third-party tool)");
+            // Was pinned at "0.6" and left behind by every release since.
+            // EsiHttp derives it from the assembly version instead.
+            _http.DefaultRequestHeaders.UserAgent.ParseAdd(EsiHttp.UserAgent);
             _http.DefaultRequestHeaders.Accept.ParseAdd("application/json");
         }
 

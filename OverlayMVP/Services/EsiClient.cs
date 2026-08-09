@@ -95,12 +95,27 @@ namespace OverlayMVP.Services
                                         "esi-industry.read_character_mining.v1 " +
                                         "esi-characters.read_corporation_roles.v1";
         private const string SsoBase  = "https://login.eveonline.com";
-        private const string EsiBase  = "https://esi.evetech.net/latest";
+        // Unversioned: "latest" was merged away with the other version
+        // prefixes. EsiHttp pins the X-Compatibility-Date that replaces them.
+        private const string EsiBase  = EsiHttp.Base;
 
         public const  string ClientIdKey = "esi_client_id";
 
         private readonly AppDb      _db;
-        private readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(10) };
+
+        // Configured through EsiHttp: this client previously sent NO
+        // User-Agent at all, on every authenticated character and standings
+        // call in the app. CCP ask third parties to identify themselves, and
+        // unidentified traffic is the first thing throttled when they clamp
+        // down.
+        private readonly HttpClient _http = CreateHttp();
+
+        private static HttpClient CreateHttp()
+        {
+            var http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+            EsiHttp.Configure(http);
+            return http;
+        }
         private static readonly JsonSerializerOptions _json = new()
             { PropertyNameCaseInsensitive = true };
 
