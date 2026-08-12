@@ -474,8 +474,10 @@ namespace OverlayMVP
         private const int WM_NCHITTEST    = 0x0084;
         private const int WM_NCLBUTTONDOWN= 0x00A1;
         private const int HTCLIENT        = 1;
+        private const int HTLEFT          = 10;
         private const int HTRIGHT         = 11;
         private const int HTBOTTOM        = 15;
+        private const int HTBOTTOMLEFT    = 16;
         private const int HTBOTTOMRIGHT   = 17;
         private const int ResizeBorder    = 8;   // px — hit-test border thickness
 
@@ -501,10 +503,14 @@ namespace OverlayMVP
                 int screenY = unchecked((short)((lParam.ToInt32() >> 16) & 0xFFFF));
 
                 var pos   = PointFromScreen(new Point(screenX, screenY));
+                bool atL  = pos.X <= ResizeBorder;
                 bool atR  = pos.X >= ActualWidth  - ResizeBorder;
                 bool atB  = pos.Y >= ActualHeight - ResizeBorder;
 
+                // Corners before edges — a corner satisfies both tests.
+                if (atL && atB) { handled = true; return (IntPtr)HTBOTTOMLEFT; }
                 if (atR && atB) { handled = true; return (IntPtr)HTBOTTOMRIGHT; }
+                if (atL)        { handled = true; return (IntPtr)HTLEFT; }
                 if (atR)        { handled = true; return (IntPtr)HTRIGHT; }
                 if (atB)        { handled = true; return (IntPtr)HTBOTTOM; }
             }
@@ -518,6 +524,15 @@ namespace OverlayMVP
             e.Handled = true;
             ReleaseCapture();
             SendMessage(_hwnd, WM_NCLBUTTONDOWN, (IntPtr)HTBOTTOMRIGHT, IntPtr.Zero);
+        }
+
+        private void ResizeLeft_MouseDown(object sender,
+            System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton != System.Windows.Input.MouseButton.Left) return;
+            e.Handled = true;
+            ReleaseCapture();
+            SendMessage(_hwnd, WM_NCLBUTTONDOWN, (IntPtr)HTLEFT, IntPtr.Zero);
         }
 
         private void ResizeRight_MouseDown(object sender,

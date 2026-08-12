@@ -677,6 +677,14 @@
                 </StackPanel>
             </ctl:SectionPanel>
 
+            <!-- Left-edge resize strip -->
+            <Border Grid.Row="0" Grid.RowSpan="7"
+                    Width="5"
+                    HorizontalAlignment="Left"
+                    Background="{DynamicResource Black01}"
+                    Cursor="SizeWE"
+                    MouseLeftButtonDown="ResizeLeft_MouseDown"/>
+
             <!-- Right-edge resize strip -->
             <Border Grid.Row="0" Grid.RowSpan="7"
                     Width="5"
