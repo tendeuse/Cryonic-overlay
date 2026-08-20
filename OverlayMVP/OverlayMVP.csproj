@@ -11,7 +11,7 @@
          Version.TryParse to decide whether an update exists, so a suffix like
          "-beta" here would make every comparison fail silently. The channel
          name lives in MainViewModel.Channel instead. -->
-    <Version>0.7.3</Version>
+    <Version>0.7.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
