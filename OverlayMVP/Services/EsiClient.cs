@@ -92,8 +92,12 @@ namespace OverlayMVP.Services
                                         "esi-skills.read_skills.v1 " +
                                         "esi-wallet.read_character_wallet.v1 " +
                                         "esi-characters.read_loyalty.v1 " +
-                                        "esi-industry.read_character_mining.v1 " +
-                                        "esi-characters.read_corporation_roles.v1";
+                                        "esi-industry.read_character_mining.v1";
+        // Every scope here shows up on the player's SSO consent screen, and this
+        // is a tool asking strangers to trust an unsigned binary. Do not request
+        // one "for later" — read_corporation_roles sat here unused and bought us
+        // nothing but a scarier consent screen. Add it back the day something
+        // calls the endpoint, not before.
         private const string SsoBase  = "https://login.eveonline.com";
         // Unversioned: "latest" was merged away with the other version
         // prefixes. EsiHttp pins the X-Compatibility-Date that replaces them.
