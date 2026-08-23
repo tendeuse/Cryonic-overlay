@@ -89,7 +89,7 @@ You have two ways to check the file is the one that was built:
 **Compare the hash.** Every release publishes a SHA-256. Run:
 
 ```powershell
-Get-FileHash .\CryonicOverlay-v0.7.4-win-x64.exe -Algorithm SHA256
+Get-FileHash .\CryonicOverlay-v0.7.5-win-x64.exe -Algorithm SHA256
 ```
 
 **Or read the build log.** Releases are built by GitHub Actions from this public
